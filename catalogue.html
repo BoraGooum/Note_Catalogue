@@ -53,8 +53,9 @@
   .view{display:none;}
   .view.active{display:block;}
 
-  /* Search */
-  .search-row{display:flex;gap:8px;margin-bottom:8px;}
+  /* Search Controls */
+  .search-controls{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .search-row{display:flex;gap:8px;}
   input[type=text], input[type=date], select, textarea{
     background:var(--surface-2);
     border:1px solid var(--border);
@@ -82,19 +83,6 @@
   button.outline{border-color:var(--accent);color:var(--accent);background:transparent;}
   button.danger-outline{border-color:var(--danger);color:var(--danger);background:transparent;}
 
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-  .chip{
-    padding:7px 12px;
-    border:1px solid var(--border);
-    border-radius:99px;
-    font-size:12px;
-    color:var(--text-dim);
-    cursor:pointer;
-    background:var(--surface);
-    user-select:none;
-  }
-  .chip.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.08);}
-
   .recent-searches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
   .recent-tag{
     font-size:11px;color:var(--text-dim);background:var(--surface);
@@ -104,7 +92,7 @@
   .status-line{font-size:12px;color:var(--text-dim);margin:6px 0 14px;min-height:16px;}
   .status-line.error{color:var(--danger);}
 
-  .result-list, .season-list{display:flex;flex-direction:column;gap:8px;}
+  .result-list{display:flex;flex-direction:column;gap:8px;}
   .result-card{
     display:flex;
     gap:12px;
@@ -132,8 +120,6 @@
 
   .panel{background:transparent;padding:0;}
   .panel-head{display:flex;gap:12px;margin-bottom:14px;}
-  .panel-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
-  .panel-sub{font-size:11px;color:var(--text-dim);margin-top:2px;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:11px;color:var(--text-dim);letter-spacing:.03em;margin-bottom:6px;}
   
@@ -181,13 +167,14 @@
     padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
   }
 
-  /* History */
-  .hist-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;}
+  /* History & Calendar */
+  .hist-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .hist-top-row{display:flex;justify-content:space-between;align-items:center;}
   .hist-count{font-size:12px;color:var(--text-dim);}
-  .hist-actions{display:flex;gap:6px;}
-  .hist-actions button{padding:8px 10px;font-size:12px;}
+  .hist-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .hist-actions button{padding:6px 10px;font-size:11px;}
   .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;}
-  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;}
+  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;display:flex;flex-direction:column;}
   .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);}
   .hist-badge{
     position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);
@@ -199,10 +186,10 @@
     color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;
   }
   .hist-type{
-    position:absolute;bottom:6px;right:6px;background:rgba(18,24,28,.85);
+    position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);
     color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;
   }
-  .hist-body{padding:8px;}
+  .hist-body{padding:8px;display:flex;flex-direction:column;flex:1;}
   .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;
     overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
   .hist-date{font-size:9.5px;color:var(--text-dim);margin-top:4px;}
@@ -211,16 +198,28 @@
     overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
     font-style:italic;
   }
-  
   .sc-link{
     display:inline-block;margin-top:6px;width:100%;text-align:center;
     padding:4px 0;background:#181818;color:#9b51e0;border:1px solid #9b51e0;
     border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;
   }
+  .hist-btn-row{display:flex;gap:4px;margin-top:auto;padding-top:6px;}
+  .hist-btn-row button{flex:1;font-size:10px;padding:4px;background:transparent;border-color:var(--border);color:var(--text-dim);}
 
-  .hist-del{
-    margin-top:6px;width:100%;font-size:10px;padding:5px;background:transparent;border-color:var(--border);color:var(--text-dim);
+  /* Calendar View */
+  .cal-container{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;}
+  .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .cal-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--accent);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
+  .cal-day-name{font-size:10px;color:var(--text-dim);padding:4px 0;}
+  .cal-cell{
+    aspect-ratio:1;border:1px solid var(--border);border-radius:4px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:11px;cursor:pointer;position:relative;background:var(--surface-2);
   }
+  .cal-cell.empty{background:transparent;border:none;cursor:default;}
+  .cal-cell.has-entries{border-color:var(--accent);background:rgba(225,166,60,.1);}
+  .cal-cell .dot{width:4px;height:4px;background:var(--accent);border-radius:50%;margin-top:2px;}
 
   /* Options View */
   .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
@@ -259,20 +258,25 @@
 
   <!-- SEARCH VIEW -->
   <section id="view-search" class="view active">
-    <div class="chips" id="type-chips">
-      <div class="chip active" data-type="Film">Film</div>
-      <div class="chip" data-type="Documentaire">Documentaire</div>
-      <div class="chip" data-type="Série">Série</div>
-      <div class="chip" data-type="Manga">Manga</div>
-      <div class="chip" data-type="BD">BD</div>
-      <div class="chip" data-type="Roman">Roman</div>
-      <div class="chip" data-type="Jeu">Jeu</div>
-    </div>
+    <div class="search-controls">
+      <div class="field" style="margin:0;">
+        <label>Type d'œuvre</label>
+        <select id="type-select">
+          <option value="Film">Film</option>
+          <option value="Documentaire">Documentaire</option>
+          <option value="Série">Série</option>
+          <option value="Manga">Manga</option>
+          <option value="BD">BD</option>
+          <option value="Roman">Roman</option>
+          <option value="Jeu">Jeu</option>
+        </select>
+      </div>
 
-    <div class="search-row">
-      <button class="outline" id="manual-btn">➕ Manuel</button>
-      <input type="text" id="search-input" placeholder="Chercher un titre…">
-      <button class="primary" id="search-btn">Go</button>
+      <div class="search-row">
+        <button class="outline" id="manual-btn">➕ Manuel</button>
+        <input type="text" id="search-input" placeholder="Chercher un titre…">
+        <button class="primary" id="search-btn">Go</button>
+      </div>
     </div>
 
     <div class="recent-searches" id="recent-searches"></div>
@@ -283,32 +287,55 @@
   <!-- HISTORY VIEW -->
   <section id="view-history" class="view">
     <div class="hist-toolbar">
-      <div class="hist-count" id="hist-count">0 œuvre(s) notée(s)</div>
+      <div class="hist-top-row">
+        <div class="hist-count" id="hist-count">0 œuvre(s)</div>
+        <button id="toggle-view-btn" class="outline">📅 Vue Calendrier</button>
+      </div>
       <div class="hist-actions">
         <button id="sync-sheet-btn" class="primary">Sync Sheet</button>
-        <button id="export-btn">Exporter</button>
+        <button id="export-btn">Exporter JSON</button>
         <button id="import-btn">Importer</button>
         <input type="file" id="import-file" accept="application/json">
       </div>
     </div>
-    <div class="hist-grid" id="hist-grid"></div>
+
+    <div id="history-list-container">
+      <div class="hist-grid" id="hist-grid"></div>
+    </div>
+
+    <div id="history-cal-container" style="display:none;">
+      <div class="cal-container">
+        <div class="cal-header">
+          <button id="cal-prev">◄</button>
+          <div class="cal-title" id="cal-title"></div>
+          <button id="cal-next">►</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
   </section>
 
   <!-- OPTIONS VIEW -->
   <section id="view-options" class="view">
     <div class="opt-card">
       <h3>Lien Webhook / Google Sheet</h3>
-      <p>Renseigne l'URL de ton Webhook ou Script Google App pour sauvegarder tes configurations d'intégration.</p>
+      <p>Renseigne l'URL de ton Webhook pour synchroniser tes notes.</p>
       <div class="field">
-        <label>URL du Webhook / Google App Script</label>
+        <label>URL du Webhook</label>
         <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/...">
       </div>
       <button class="primary" id="save-sheet-url" style="width:100%">Enregistrer l'URL</button>
     </div>
 
     <div class="opt-card">
+      <h3>À propos...</h3>
+      <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
+      <p>Application de notation personnelle d'œuvres cinématographiques, littéraires et ludiques.</p>
+    </div>
+
+    <div class="opt-card">
       <h3>Stockage Local</h3>
-      <p>Effacer le cache réinitialise l'historique enregistré dans ce navigateur.</p>
+      <p>Effacer le cache réinitialise l'historique enregistré sur cet appareil.</p>
       <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser les données locales</button>
     </div>
   </section>
@@ -331,7 +358,8 @@
 </nav>
 
 <script>
-/* ============ CONFIG ============ */
+/* ============ CONFIG & STATE ============ */
+const LAST_UPDATE_DATE = "2026-09-17T12:11:47"; // ISO Paris timestamp
 const TMDB_KEY = "a5a1ca957e940e4898e3c4b4b9f6cea1";
 const RAWG_KEY = "270141bef953462ea5386f08a3d9e27d";
 const GOOGLE_BOOKS_KEY = "AIzaSyCrDTnaCVkdvWsbi2-QGMdKIxQNw8NopcI";
@@ -342,8 +370,22 @@ const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`
 );
 
-/* ============ INDEXEDDB ============ */
 let db;
+let currentType = "Film";
+let currentResults = [];
+let selectedItem = null;
+let selectedSubtitle = null;
+let currentNote = 5;
+let isFavorite = false;
+let isEditingExisting = false;
+let editingEntryId = null;
+let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
+
+// Calendar State
+let calCurrentDate = new Date();
+let isCalendarView = false;
+
+/* ============ INDEXEDDB ============ */
 function openDB(){
   return new Promise((resolve,reject)=>{
     const req = indexedDB.open("catalogue-db", 1);
@@ -362,7 +404,7 @@ function dbAll(){
     const tx = db.transaction("entries","readonly");
     const store = tx.objectStore("entries");
     const req = store.getAll();
-    req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateAjout||"").localeCompare(a.dateAjout||"")));
+    req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateFin||b.dateAjout||"").localeCompare(a.dateFin||a.dateAjout||"")));
     req.onerror = e => reject(e);
   });
 }
@@ -383,15 +425,6 @@ function dbDelete(id){
   });
 }
 
-/* ============ STATE ============ */
-let currentType = "Film";
-let currentResults = [];
-let selectedItem = null;
-let selectedSubtitle = null;
-let currentNote = 5;
-let isFavorite = false;
-let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
-
 /* ============ UI & NAVIGATION ============ */
 document.querySelectorAll("nav.tabbar button").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -403,13 +436,9 @@ document.querySelectorAll("nav.tabbar button").forEach(btn=>{
   });
 });
 
-document.querySelectorAll("#type-chips .chip").forEach(chip=>{
-  chip.addEventListener("click", ()=>{
-    document.querySelectorAll("#type-chips .chip").forEach(c=>c.classList.remove("active"));
-    chip.classList.add("active");
-    currentType = chip.dataset.type;
-    clearResults();
-  });
+document.getElementById("type-select").addEventListener("change", (e)=>{
+  currentType = e.target.value;
+  clearResults();
 });
 
 function clearResults(){
@@ -424,6 +453,8 @@ function openModal(){ document.getElementById("modal-overlay").classList.add("ac
 function closeModal(){
   document.getElementById("modal-overlay").classList.remove("active");
   document.getElementById("panel-container").innerHTML = "";
+  isEditingExisting = false;
+  editingEntryId = null;
 }
 document.getElementById("modal-close").addEventListener("click", closeModal);
 document.getElementById("modal-overlay").addEventListener("click", (e)=>{
@@ -448,6 +479,8 @@ document.getElementById("search-input").addEventListener("keydown", e=>{
 });
 
 document.getElementById("manual-btn").addEventListener("click", () => {
+  isEditingExisting = false;
+  editingEntryId = null;
   selectedItem = {
     source: "manual",
     id: "manual_" + Date.now(),
@@ -458,7 +491,7 @@ document.getElementById("manual-btn").addEventListener("click", () => {
   selectedSubtitle = null;
   currentNote = 5;
   isFavorite = false;
-  renderManualPanel();
+  renderPanel();
   openModal();
 });
 
@@ -643,7 +676,6 @@ async function fetchSteamGridCover(gameName){
   }catch(e){ return null; }
 }
 
-/* ============ RENDER RESULTS ============ */
 function renderResults(){
   const container = document.getElementById("results");
   container.innerHTML = "";
@@ -683,6 +715,8 @@ function renderResults(){
 async function selectResult(item, cardEl){
   document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
   if(cardEl) cardEl.classList.add("selected");
+  isEditingExisting = false;
+  editingEntryId = null;
   selectedItem = item;
   selectedSubtitle = null;
   currentNote = 5;
@@ -701,76 +735,25 @@ async function selectResult(item, cardEl){
   openModal();
 }
 
-/* ============ PANEL NOTATION ============ */
-function renderManualPanel(){
+/* ============ PANEL NOTATION & ÉDITION ============ */
+function renderPanel(existingEntry = null){
   const container = document.getElementById("panel-container");
-  const today = new Date().toISOString().slice(0,10);
-  const noteBtns = [1,2,3,4,5,6,7,8,9,10].map(n => 
-    `<div class="note-btn ${n === currentNote ? 'selected' : ''}" data-note="${n}">${n}</div>`
-  ).join("");
-
-  container.innerHTML = `
-    <div class="panel">
-      <h3 class="serif" style="margin:0 0 14px;color:var(--accent);">Saisie Manuelle (${currentType})</h3>
-      <div class="field"><label>Titre *</label><input type="text" id="m-title" required></div>
-      <div class="field"><label>Saison / Tome / Plateforme</label><input type="text" id="m-sub"></div>
-      <div class="field"><label>URL Affiche</label><input type="text" id="m-poster" placeholder="https://..."></div>
-      <div class="field">
-        <label>Note (/10)</label>
-        <div class="note-grid">${noteBtns}</div>
-      </div>
-      <div class="field">
-        <button class="favorite-btn ${isFavorite ? 'active' : ''}" id="fav-btn">
-          ${isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur'}
-        </button>
-      </div>
-      <div class="field">
-        <label>Date de fin</label>
-        <input type="date" id="date-fin" value="${today}">
-      </div>
-      <div class="field">
-        <label>Mes notes / commentaire</label>
-        <textarea id="comment-input" placeholder="Ton avis..."></textarea>
-      </div>
-      <div class="panel-actions">
-        <button class="primary" id="save-manual-btn">Enregistrer</button>
-      </div>
-    </div>
-  `;
-
-  container.querySelectorAll(".note-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      container.querySelectorAll(".note-btn").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      currentNote = parseInt(btn.dataset.note);
-    });
-  });
-
-  const favBtn = container.querySelector("#fav-btn");
-  if(favBtn){
-    favBtn.addEventListener("click", () => {
-      isFavorite = !isFavorite;
-      favBtn.className = `favorite-btn ${isFavorite ? 'active' : ''}`;
-      favBtn.innerHTML = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
-    });
+  
+  if(existingEntry){
+    isEditingExisting = true;
+    editingEntryId = existingEntry.id;
+    currentNote = existingEntry.note || 5;
+    isFavorite = !!existingEntry.isFavorite;
   }
 
-  container.querySelector("#save-manual-btn").addEventListener("click", () => {
-    const titleVal = document.getElementById("m-title").value.trim();
-    if(!titleVal){ alert("Met au moins un titre !"); return; }
-    selectedItem.title = titleVal;
-    selectedItem.poster = document.getElementById("m-poster").value.trim();
-    const subVal = document.getElementById("m-sub").value.trim();
-    saveCurrentEntry(subVal);
-  });
-}
-
-function renderPanel(){
-  const container = document.getElementById("panel-container");
-  if(!selectedItem){ container.innerHTML = ""; return; }
+  const titleVal = existingEntry ? existingEntry.titre : (selectedItem ? selectedItem.title : "");
+  const subVal = existingEntry ? (existingEntry.sousTitre || "") : "";
+  const posterVal = existingEntry ? (existingEntry.posterUrl || "") : (selectedItem ? (selectedItem.poster || "") : "");
+  const dateVal = existingEntry ? (existingEntry.dateFin || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
+  const commentVal = existingEntry ? (existingEntry.comment || "") : "";
 
   let subSelectHtml = "";
-  if(selectedItem.source === "tmdb_tv" && selectedItem.seasons){
+  if(!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons){
     const chips = selectedItem.seasons.map(s => {
       const p = s.poster_path ? TMDB_IMG + s.poster_path : selectedItem.poster || NO_POSTER;
       const sel = (selectedSubtitle && selectedSubtitle.id === s.id) ? "selected" : "";
@@ -781,30 +764,26 @@ function renderPanel(){
         </div>
       `;
     }).join("");
-    subSelectHtml = `<div class="field"><label>Saison à noter</label><div class="subtitle-select">${chips}</div></div>`;
+    subSelectHtml = `<div class="field"><label>Saison pré-remplie</label><div class="subtitle-select">${chips}</div></div>`;
   }
 
   let platformHtml = "";
-  if(selectedItem.source === "rawg"){
+  if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
     const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
     const opts = list.map(p => `<option value="${p}">${p}</option>`).join("");
-    platformHtml = `<div class="field"><label>Plateforme</label><select id="platform-select">${opts}</select></div>`;
+    platformHtml = `<div class="field"><label>Plateforme pré-remplie</label><select id="platform-select">${opts}</select></div>`;
   }
 
-  const today = new Date().toISOString().slice(0,10);
   const noteBtns = [1,2,3,4,5,6,7,8,9,10].map(n => 
     `<div class="note-btn ${n === currentNote ? 'selected' : ''}" data-note="${n}">${n}</div>`
   ).join("");
 
   container.innerHTML = `
     <div class="panel">
-      <div class="panel-head">
-        <img class="poster" src="${selectedItem.poster || NO_POSTER}" alt="">
-        <div>
-          <div class="panel-title">${selectedItem.title}</div>
-          <div class="panel-sub">${selectedItem.year || ""}</div>
-        </div>
-      </div>
+      <h3 class="serif" style="margin:0 0 14px;color:var(--accent);">${isEditingExisting ? 'Modifier l\'œuvre' : 'Fiche de notation'}</h3>
+      <div class="field"><label>Titre</label><input type="text" id="edit-title" value="${titleVal}"></div>
+      <div class="field"><label>Saison / Tome / Plateforme / Precision</label><input type="text" id="edit-sub" value="${subVal}"></div>
+      <div class="field"><label>URL Affiche (Jaquette)</label><input type="text" id="edit-poster" value="${posterVal}"></div>
       ${subSelectHtml}
       ${platformHtml}
       <div class="field">
@@ -818,11 +797,11 @@ function renderPanel(){
       </div>
       <div class="field">
         <label>Date de fin</label>
-        <input type="date" id="date-fin" value="${today}">
+        <input type="date" id="date-fin" value="${dateVal}">
       </div>
       <div class="field">
         <label>Mes notes / commentaire</label>
-        <textarea id="comment-input" placeholder="Ton avis sur l'œuvre…"></textarea>
+        <textarea id="comment-input" placeholder="Ton avis...">${commentVal}</textarea>
       </div>
       <div class="panel-actions">
         <button class="primary" id="save-entry-btn">Enregistrer</button>
@@ -847,68 +826,87 @@ function renderPanel(){
     });
   }
 
-  if(selectedItem.seasons){
+  if(selectedItem && selectedItem.seasons){
     container.querySelectorAll(".subtitle-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         container.querySelectorAll(".subtitle-chip").forEach(c => c.classList.remove("selected"));
         chip.classList.add("selected");
         const sId = parseInt(chip.dataset.seasonId);
         selectedSubtitle = selectedItem.seasons.find(s => s.id === sId);
+        if(selectedSubtitle){
+          document.getElementById("edit-sub").value = `Saison ${selectedSubtitle.season_number}`;
+          if(selectedSubtitle.poster_path) document.getElementById("edit-poster").value = TMDB_IMG + selectedSubtitle.poster_path;
+        }
       });
     });
   }
 
-  const saveBtn = container.querySelector("#save-entry-btn");
-  if(saveBtn) saveBtn.addEventListener("click", () => saveCurrentEntry());
+  if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
+    const pEl = document.getElementById("platform-select");
+    if(pEl) pEl.addEventListener("change", () => {
+      document.getElementById("edit-sub").value = pEl.value;
+    });
+  }
+
+  container.querySelector("#save-entry-btn").addEventListener("click", () => saveCurrentEntry());
 }
 
-async function saveCurrentEntry(overrideSub = null){
-  if(!selectedItem) return;
-  
-  let entryId = `${currentType}_${selectedItem.id}`;
-  let subTitle = overrideSub || "";
-  let poster = selectedItem.poster || "";
+async function saveCurrentEntry(){
+  const titleVal = document.getElementById("edit-title").value.trim();
+  if(!titleVal){ alert("Le titre est obligatoire !"); return; }
 
-  if(selectedItem.source === "tmdb_tv"){
-    if(!selectedSubtitle){
-      alert("Sélectionne une saison !");
-      return;
-    }
+  let entryId = isEditingExisting ? editingEntryId : `${currentType}_${selectedItem ? selectedItem.id : Date.now()}`;
+  if(!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle){
     entryId += `_s${selectedSubtitle.season_number}`;
-    subTitle = `Saison ${selectedSubtitle.season_number}`;
-    if(selectedSubtitle.poster_path) poster = TMDB_IMG + selectedSubtitle.poster_path;
-  } else if(selectedItem.source === "rawg" && !overrideSub){
-    const pEl = document.getElementById("platform-select");
-    if(pEl) subTitle = pEl.value;
   }
 
   const entry = {
     id: entryId,
     type: currentType,
-    titre: selectedItem.title,
-    sousTitre: subTitle,
+    titre: titleVal,
+    sousTitre: document.getElementById("edit-sub").value.trim(),
     note: currentNote,
     isFavorite: isFavorite,
     dateFin: document.getElementById("date-fin").value,
     comment: (document.getElementById("comment-input")?.value || "").trim(),
-    posterUrl: poster,
+    posterUrl: document.getElementById("edit-poster").value.trim(),
     dateAjout: new Date().toISOString()
   };
 
   await dbPut(entry);
-  showToast("Enregistré dans l'historique !");
+  showToast("Enregistré !");
   closeModal();
+  if(document.getElementById("view-history").classList.contains("active")) renderHistory();
 }
 
-/* ============ HISTORY ============ */
+/* ============ HISTORY & CALENDAR ============ */
+document.getElementById("toggle-view-btn").addEventListener("click", () => {
+  isCalendarView = !isCalendarView;
+  const btn = document.getElementById("toggle-view-btn");
+  const listCont = document.getElementById("history-list-container");
+  const calCont = document.getElementById("history-cal-container");
+  
+  if(isCalendarView){
+    btn.textContent = "📋 Vue Liste";
+    listCont.style.display = "none";
+    calCont.style.display = "block";
+    renderCalendar();
+  } else {
+    btn.textContent = "📅 Vue Calendrier";
+    listCont.style.display = "block";
+    calCont.style.display = "none";
+    renderHistory();
+  }
+});
+
 async function renderHistory(){
   const entries = await dbAll();
   const grid = document.getElementById("hist-grid");
-  document.getElementById("hist-count").textContent = `${entries.length} œuvre(s) notée(s)`;
+  document.getElementById("hist-count").textContent = `${entries.length} œuvre(s)`;
   grid.innerHTML = "";
 
   if(!entries.length){
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée pour l'instant.</div>`;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée.</div>`;
     return;
   }
 
@@ -932,10 +930,19 @@ async function renderHistory(){
         ${subHtml}
         <div class="hist-date">${e.dateFin || ''}</div>
         ${commentHtml}
-        <a href="${scUrl}" target="_blank" class="sc-link">Fiche SC ↗</a>
-        <button class="hist-del">Supprimer</button>
+        <a href="${scUrl}" target="_blank" class="sc-link">SensCritique ↗</a>
+        <div class="hist-btn-row">
+          <button class="hist-edit">📝 Modifier</button>
+          <button class="hist-del">🗑️</button>
+        </div>
       </div>
     `;
+
+    card.querySelector(".hist-edit").addEventListener("click", () => {
+      currentType = e.type || "Film";
+      renderPanel(e);
+      openModal();
+    });
 
     card.querySelector(".hist-del").addEventListener("click", async () => {
       if(confirm(`Supprimer "${e.titre}" ?`)){
@@ -946,23 +953,96 @@ async function renderHistory(){
 
     grid.appendChild(card);
   });
+
+  if(isCalendarView) renderCalendar();
 }
 
-/* ============ EXPORT / IMPORT / SYNC / OPTIONS ============ */
+/* ============ CALENDAR LOGIC ============ */
+document.getElementById("cal-prev").addEventListener("click", () => {
+  calCurrentDate.setMonth(calCurrentDate.getMonth() - 1);
+  renderCalendar();
+});
+document.getElementById("cal-next").addEventListener("click", () => {
+  calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
+  renderCalendar();
+});
+
+async function renderCalendar(){
+  const entries = await dbAll();
+  const grid = document.getElementById("cal-grid");
+  const title = document.getElementById("cal-title");
+  grid.innerHTML = "";
+
+  const year = calCurrentDate.getFullYear();
+  const month = calCurrentDate.getMonth();
+  
+  const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  title.textContent = `${monthNames[month]} ${year}`;
+
+  const dayNames = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+  dayNames.forEach(d => {
+    const el = document.createElement("div");
+    el.className = "cal-day-name";
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  for(let i = 0; i < firstDayIndex; i++){
+    const empty = document.createElement("div");
+    empty.className = "cal-cell empty";
+    grid.appendChild(empty);
+  }
+
+  for(let day = 1; day <= daysInMonth; day++){
+    const cell = document.createElement("div");
+    cell.className = "cal-cell";
+    
+    const dStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dayEntries = entries.filter(e => e.dateFin === dStr);
+
+    cell.textContent = day;
+    if(dayEntries.length > 0){
+      cell.classList.add("has-entries");
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      cell.appendChild(dot);
+      
+      cell.addEventListener("click", () => {
+        let msg = `Œuvres du ${dStr} :\n`;
+        dayEntries.forEach(e => {
+          msg += `• ${e.titre} (${e.note}/10)\n`;
+        });
+        alert(msg);
+      });
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+/* ============ EXPORT / IMPORT / SYNC ============ */
 document.getElementById("sync-sheet-btn").addEventListener("click", async () => {
   const url = localStorage.getItem("sheet_url");
   if(!url){
-    alert("Ajoute d'abord l'URL de ton Webhook dans l'onglet Options.");
+    alert("Ajoute l'URL de ton Webhook dans l'onglet Options.");
     return;
   }
   const entries = await dbAll();
+  const enrichedEntries = entries.map(e => ({
+    ...e,
+    sensCritiqueUrl: `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`
+  }));
+
   showToast("Synchronisation…");
   try {
     await fetch(url, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(entries)
+      body: JSON.stringify(enrichedEntries)
     });
     showToast("Envoyé au Google Sheet !");
   } catch(err) {
@@ -1014,7 +1094,7 @@ document.getElementById("save-sheet-url").addEventListener("click", () => {
 });
 
 document.getElementById("clear-local-db").addEventListener("click", async () => {
-  if(confirm("Effacer tout le stockage local ? Tes notes seront supprimées de cet appareil.")){
+  if(confirm("Effacer tout le stockage local ?")){
     const entries = await dbAll();
     for(const e of entries) await dbDelete(e.id);
     renderHistory();
@@ -1022,9 +1102,23 @@ document.getElementById("clear-local-db").addEventListener("click", async () => 
   }
 });
 
+function initAboutBuildDate(){
+  const dateObj = new Date(LAST_UPDATE_DATE);
+  const formatted = dateObj.toLocaleString("fr-FR", {
+    timeZone: "Europe/Paris",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+  document.getElementById("about-build-date").textContent = `Dernière mise à jour : ${formatted} (Paris)`;
+}
+
 /* ============ INIT ============ */
 openDB().then(() => {
   renderRecentSearches();
+  initAboutBuildDate();
 });
 </script>
 </body>
