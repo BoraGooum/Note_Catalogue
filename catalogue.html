@@ -227,7 +227,7 @@
       <h3>À propos...</h3>
       <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
       <p>Application de notation personnelle d'œuvres cinématographiques, littéraires et ludiques.</p>
-      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn"> Créé par Gooumbora</a>
+      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Créé par Gooumbora</a>
     </div>
 
     <div class="opt-card">
@@ -256,7 +256,7 @@
 <script type="module">
 /* ============ CONFIG & STATE ============ */
 const PROXY_URL = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-const LAST_UPDATE_DATE = "2026-09-17T15:30:00";
+const LAST_UPDATE_DATE = "2026-09-17T16:15:00";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
 const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`);
@@ -570,13 +570,22 @@ function renderPanel(existingEntry = null){
   h3.textContent = isEditingExisting ? "Modifier l'œuvre" : "Fiche de notation";
   panel.appendChild(h3);
 
-  const createField = (label, id, type, value, placeholder="") => {
+  // Fonction corrigée pour gérer correctement input et textarea
+  const createField = (label, id, inputType, value, placeholder="") => {
     const f = document.createElement('div'); f.className = 'field';
     const l = document.createElement('label'); l.textContent = label;
-    const inp = document.createElement(type === 'textarea' ? 'textarea' : 'input');
-    inp.type = type === 'textarea' ? 'text' : type; inp.id = id; inp.value = value;
+    const inp = document.createElement(inputType === 'textarea' ? 'textarea' : 'input');
+    if (inputType !== 'textarea') {
+      inp.type = inputType;
+    }
+    inp.id = id; 
+    inp.value = value;
     if(placeholder) inp.placeholder = placeholder;
-    if(type !== 'textarea') inp.style.width = '100%';
+    inp.style.width = '100%';
+    if (inputType === 'textarea') {
+      inp.style.minHeight = '80px';
+      inp.style.resize = 'vertical';
+    }
     f.appendChild(l); f.appendChild(inp); return f;
   };
 
@@ -637,7 +646,7 @@ function renderPanel(existingEntry = null){
   favBtn.addEventListener('click', ()=> {
     isFavorite = !isFavorite;
     favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
-    favBtn.textContent = isFavorite ? ' Coup de cœur !' : '🤍 Ajouter en coup de cœur';
+    favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
   });
   fFav.appendChild(favBtn); panel.appendChild(fFav);
 
@@ -799,7 +808,7 @@ async function renderCalendar(){
 
 function showDayModal(dateStr, dayEntries){
   const container = document.getElementById("panel-container");
-  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 uvres du ${dateStr}</h3>`;
+  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 Œuvres du ${dateStr}</h3>`;
   if(dayEntries.length === 0) {
     container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre ce jour-là.</p>`;
   } else {
@@ -839,7 +848,7 @@ document.getElementById("sync-sheet-btn").addEventListener("click", async () => 
 document.getElementById("export-btn").addEventListener("click", async () => {
   const entries = await dbAll();
   const backupData = {
-    version: "V4",
+    version: "V4.1",
     exportDate: new Date().toISOString(),
     settings: { sheet_url: localStorage.getItem("sheet_url") || "" },
     entries: entries
