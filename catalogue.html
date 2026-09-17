@@ -53,9 +53,9 @@
   .view.active{display:block;}
 
   /* Search */
-  .search-row{display:flex;gap:8px;margin-bottom:12px;}
-  input[type=text], input[type=date]{
-    background:var(--surface);
+  .search-row{display:flex;gap:8px;margin-bottom:8px;}
+  input[type=text], input[type=date], select, textarea{
+    background:var(--surface-2);
     border:1px solid var(--border);
     color:var(--text);
     border-radius:var(--radius);
@@ -64,7 +64,7 @@
     font-size:14px;
     width:100%;
   }
-  input[type=text]:focus, input[type=date]:focus{outline:1px solid var(--accent);}
+  input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus{outline:1px solid var(--accent);}
   button{
     font-family:'IBM Plex Mono',monospace;
     font-size:13px;
@@ -92,6 +92,12 @@
   }
   .chip.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.08);}
 
+  .recent-searches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .recent-tag{
+    font-size:11px;color:var(--text-dim);background:var(--surface);
+    border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer;
+  }
+
   .status-line{font-size:12px;color:var(--text-dim);margin:6px 0 14px;min-height:16px;}
   .status-line.error{color:var(--danger);}
 
@@ -115,27 +121,20 @@
     flex-shrink:0;
     border:1px solid var(--border);
   }
-  .poster.wide{width:78px;height:52px;}
-  .result-info{min-width:0;}
+  .result-info{min-width:0;flex:1;}
   .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;
     overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .result-original-title{font-size:11px;color:var(--accent-2);margin-top:2px;font-style:italic;}
   .result-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
 
-  .panel{
-    background:transparent;
-    padding:0;
-  }
+  .panel{background:transparent;padding:0;}
   .panel-head{display:flex;gap:12px;margin-bottom:14px;}
   .panel-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
   .panel-sub{font-size:11px;color:var(--text-dim);margin-top:2px;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:11px;color:var(--text-dim);letter-spacing:.03em;margin-bottom:6px;}
-  .note-row{display:flex;align-items:center;gap:14px;}
-  .note-value{font-family:'Fraunces',serif;font-size:32px;font-weight:700;color:var(--accent);width:44px;text-align:center;}
-  input[type=range]{-webkit-appearance:none;flex:1;height:4px;background:var(--border);border-radius:2px;}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;}
-  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;}
-  .panel-actions{display:flex;gap:8px;margin-top:4px;}
+  
+  .panel-actions{display:flex;gap:8px;margin-top:14px;}
   .panel-actions button{flex:1;}
 
   .subtitle-select{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;}
@@ -155,17 +154,12 @@
   }
   .note-btn.selected{border-color:var(--accent);background:var(--accent);color:#1B1400;}
 
-  select{
-    background:var(--surface-2);border:1px solid var(--border);color:var(--text);
-    border-radius:var(--radius);padding:11px 12px;font-family:'IBM Plex Mono',monospace;
-    font-size:14px;width:100%;
+  .favorite-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);
+    background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;
   }
-  textarea{
-    background:var(--surface-2);border:1px solid var(--border);color:var(--text);
-    border-radius:var(--radius);padding:10px 12px;font-family:'IBM Plex Mono',monospace;
-    font-size:13px;width:100%;min-height:64px;resize:vertical;
-  }
-  textarea:focus{outline:1px solid var(--accent);}
+  .favorite-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.1);}
 
   .modal-overlay{
     position:fixed;inset:0;background:rgba(8,10,12,.62);
@@ -197,8 +191,12 @@
     color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;
     font-family:'Fraunces',serif;
   }
-  .hist-type{
+  .hist-fav{
     position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);
+    color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;
+  }
+  .hist-type{
+    position:absolute;bottom:6px;right:6px;background:rgba(18,24,28,.85);
     color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;
   }
   .hist-body{padding:8px;}
@@ -213,7 +211,11 @@
   .hist-del{
     margin-top:6px;width:100%;font-size:10px;padding:5px;background:transparent;border-color:var(--border);color:var(--text-dim);
   }
-  .empty-state{color:var(--text-dim);font-size:13px;text-align:center;padding:40px 10px;line-height:1.6;}
+
+  /* Options View */
+  .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+  .opt-card h3{margin:0 0 8px;font-size:16px;}
+  .opt-card p{font-size:12px;color:var(--text-dim);margin:0 0 12px;line-height:1.4;}
 
   nav.tabbar{
     position:fixed;bottom:0;left:0;right:0;
@@ -231,7 +233,7 @@
     position:fixed;bottom:86px;left:50%;transform:translateX(-50%);
     background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);
     padding:10px 16px;border-radius:var(--radius);font-size:12px;
-    opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:88%;text-align:center;
+    opacity:0;transition:opacity .25s;pointer-events:none;z-index:300;max-width:88%;text-align:center;
   }
   .toast.show{opacity:1;}
 </style>
@@ -262,6 +264,7 @@
       <button class="primary" id="search-btn">Go</button>
     </div>
 
+    <div class="recent-searches" id="recent-searches"></div>
     <div class="status-line" id="search-status"></div>
     <div class="result-list" id="results"></div>
   </section>
@@ -279,6 +282,25 @@
     <div class="hist-grid" id="hist-grid"></div>
   </section>
 
+  <!-- OPTIONS VIEW -->
+  <section id="view-options" class="view">
+    <div class="opt-card">
+      <h3>Lien Webhook / Google Sheet</h3>
+      <p>Renseigne l'URL de ton Webhook ou Script Google App pour sauvegarder tes configurations d'intégration.</p>
+      <div class="field">
+        <label>URL du Webhook / Google App Script</label>
+        <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/...">
+      </div>
+      <button class="primary" id="save-sheet-url" style="width:100%">Enregistrer l'URL</button>
+    </div>
+
+    <div class="opt-card">
+      <h3>Stockage Local</h3>
+      <p>Effacer le cache réinitialise l'historique enregistré dans ce navigateur.</p>
+      <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser les données locales</button>
+    </div>
+  </section>
+
 </main>
 
 <div class="toast" id="toast"></div>
@@ -293,6 +315,7 @@
 <nav class="tabbar">
   <button class="active" data-view="search">Recherche</button>
   <button data-view="history">Historique</button>
+  <button data-view="options">Options</button>
 </nav>
 
 <script>
@@ -327,7 +350,7 @@ function dbAll(){
     const tx = db.transaction("entries","readonly");
     const store = tx.objectStore("entries");
     const req = store.getAll();
-    req.onsuccess = () => resolve(req.result.sort((a,b)=> b.dateAjout.localeCompare(a.dateAjout)));
+    req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateAjout||"").localeCompare(a.dateAjout||"")));
     req.onerror = e => reject(e);
   });
 }
@@ -351,10 +374,13 @@ function dbDelete(id){
 /* ============ STATE ============ */
 let currentType = "Film";
 let currentResults = [];
-let selectedItem = null;     // the raw picked search result
-let selectedSubtitle = null; // e.g. chosen season object, for series
+let selectedItem = null;
+let selectedSubtitle = null;
+let currentNote = 5;
+let isFavorite = false;
+let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
 
-/* ============ UI: TABS ============ */
+/* ============ UI & NAVIGATION ============ */
 document.querySelectorAll("nav.tabbar button").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.remove("active"));
@@ -382,9 +408,7 @@ function clearResults(){
   closeModal();
   setStatus("");
 }
-function openModal(){
-  document.getElementById("modal-overlay").classList.add("active");
-}
+function openModal(){ document.getElementById("modal-overlay").classList.add("active"); }
 function closeModal(){
   document.getElementById("modal-overlay").classList.remove("active");
   document.getElementById("panel-container").innerHTML = "";
@@ -411,9 +435,30 @@ document.getElementById("search-input").addEventListener("keydown", e=>{
   if(e.key === "Enter") runSearch();
 });
 
+function renderRecentSearches(){
+  const container = document.getElementById("recent-searches");
+  container.innerHTML = "";
+  recentSearches.forEach(term => {
+    const tag = document.createElement("div");
+    tag.className = "recent-tag";
+    tag.textContent = term;
+    tag.onclick = () => {
+      document.getElementById("search-input").value = term;
+      runSearch();
+    };
+    container.appendChild(tag);
+  });
+}
+function addRecentSearch(term){
+  recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 5);
+  localStorage.setItem("recent_searches", JSON.stringify(recentSearches));
+  renderRecentSearches();
+}
+
 async function runSearch(){
   const q = document.getElementById("search-input").value.trim();
   if(!q){ setStatus("Tape un titre à chercher.", true); return; }
+  addRecentSearch(q);
   closeModal();
   selectedItem = null; selectedSubtitle = null;
   setStatus("Recherche…");
@@ -421,9 +466,13 @@ async function runSearch(){
   try{
     let results = [];
     if(currentType === "Film"){
-      results = (await searchTMDB(q, "movie")).filter(r => !(r.raw.genre_ids||[]).includes(99));
+      results = await searchTMDB(q, "movie");
+      const filtered = results.filter(r => !(r.raw.genre_ids||[]).includes(99));
+      results = filtered.length ? filtered : results;
     } else if(currentType === "Documentaire"){
-      results = (await searchTMDB(q, "movie")).filter(r => (r.raw.genre_ids||[]).includes(99));
+      results = await searchTMDB(q, "movie");
+      const filtered = results.filter(r => (r.raw.genre_ids||[]).includes(99));
+      results = filtered.length ? filtered : results;
     } else if(currentType === "Série"){
       results = await searchTMDB(q, "tv");
     } else if(currentType === "Manga" || currentType === "BD" || currentType === "Roman"){
@@ -432,15 +481,11 @@ async function runSearch(){
       results = await searchRAWG(q);
     }
     currentResults = results;
-    if(results.length === 0){
-      setStatus("Aucun résultat.");
-    } else {
-      setStatus(results.length + " résultat(s)");
-    }
+    setStatus(results.length === 0 ? "Aucun résultat." : results.length + " résultat(s)");
     renderResults();
   }catch(err){
     console.error(err);
-    setStatus("Erreur pendant la recherche (connexion ou clé API). " + err.message, true);
+    setStatus("Erreur pendant la recherche. " + err.message, true);
   }
 }
 
@@ -453,6 +498,7 @@ async function searchTMDB(q, kind){
     source:"tmdb_"+kind,
     id:r.id,
     title: kind==="movie" ? r.title : r.name,
+    original_title: kind==="movie" ? r.original_title : r.original_name,
     year: (kind==="movie" ? r.release_date : r.first_air_date || "").slice(0,4),
     poster: r.poster_path ? TMDB_IMG + r.poster_path : null,
     raw:r
@@ -463,19 +509,23 @@ async function searchGoogleBooks(q, type){
   let query = q;
   if(type === "BD") query += " bande dessinée";
   if(type === "Manga") query += " manga";
-  const url = `https://www.googleapis.com/books/v1/volumes?maxResults=24&q=${encodeURIComponent(query)}&key=${GOOGLE_BOOKS_KEY}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?maxResults=20&q=${encodeURIComponent(query)}&key=${GOOGLE_BOOKS_KEY}`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("Google Books " + res.status);
   const data = await res.json();
   return (data.items||[]).map(it=>{
     const v = it.volumeInfo || {};
+    let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
+    if(!poster && it.id){
+      poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
+    }
     return {
       source:"book",
       id: it.id,
       title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
       year: (v.publishedDate||"").slice(0,4),
       author: (v.authors||[]).join(", "),
-      poster: v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null,
+      poster: poster,
       categories: v.categories || [],
       raw: v
     };
@@ -483,7 +533,7 @@ async function searchGoogleBooks(q, type){
 }
 
 async function searchOpenLibrary(q, type){
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=24&fields=title,author_name,first_publish_year,cover_i,key,subject`;
+  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("Open Library " + res.status);
   const data = await res.json();
@@ -494,376 +544,374 @@ async function searchOpenLibrary(q, type){
     year: d.first_publish_year ? String(d.first_publish_year) : "",
     author: (d.author_name||[]).join(", "),
     poster: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : null,
-    categories: (d.subject||[]).slice(0,6),
+    categories: d.subject || [],
     raw: d
   }));
 }
 
-function normTitle(t){
-  return (t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
-}
-
 function relevantForType(item, type){
-  const text = ((item.categories||[]).join(" ") + " " + (item.title||"")).toLowerCase();
+  const cats = Array.isArray(item.categories) ? item.categories.join(" ") : "";
+  const text = (cats + " " + (item.title||"")).toLowerCase();
   const hasComicSignal = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
   const hasMangaSignal = text.includes("manga");
   if(type === "BD"){
     if(hasMangaSignal && !hasComicSignal) return false;
-    if(hasComicSignal) return true;
-    if(item.categories && item.categories.length) return false; // catégorisé mais pas BD -> exclu
-    return true; // pas d'info -> on garde par défaut
+    return true;
   }
   if(type === "Manga"){
     if(hasMangaSignal) return true;
-    if(hasComicSignal) return true;
-    if(item.categories && item.categories.length) return false;
-    return true;
-  }
-  if(type === "Roman"){
-    if(hasComicSignal || hasMangaSignal) return false;
+    if(hasComicSignal) return false;
     return true;
   }
   return true;
 }
 
 async function searchBooksMerged(q, type){
-  const [gRes, oRes] = await Promise.allSettled([searchGoogleBooks(q, type), searchOpenLibrary(q, type)]);
-  const combined = [];
-  if(gRes.status === "fulfilled") combined.push(...gRes.value);
-  if(oRes.status === "fulfilled") combined.push(...oRes.value);
-  if(combined.length === 0 && gRes.status === "rejected" && oRes.status === "rejected"){
-    throw new Error("Google Books & Open Library indisponibles");
-  }
+  const [gb, ol] = await Promise.allSettled([searchGoogleBooks(q, type), searchOpenLibrary(q, type)]);
+  const listA = gb.status === "fulfilled" ? gb.value : [];
+  const listB = ol.status === "fulfilled" ? ol.value : [];
+  const merged = [...listA, ...listB].filter(item => relevantForType(item, type));
   const seen = new Set();
-  const deduped = [];
-  combined.forEach(item=>{
-    const key = normTitle(item.title) + "|" + normTitle(item.author);
-    if(!seen.has(key)){
-      seen.add(key);
-      deduped.push(item);
-    }
+  return merged.filter(it => {
+    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g,"");
+    if(!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
-  return deduped.filter(item => relevantForType(item, type)).slice(0, 24);
 }
 
 async function searchRAWG(q){
-  const url = `https://api.rawg.io/api/games?key=${RAWG_KEY}&search=${encodeURIComponent(q)}&page_size=20`;
+  const url = `https://api.rawg.io/api/games?key=${RAWG_KEY}&search=${encodeURIComponent(q)}&page_size=15`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("RAWG " + res.status);
   const data = await res.json();
-  return (data.results||[]).map(g=>{
-    const platforms = (g.platforms||[]).map(p=> p.platform && p.platform.name).filter(Boolean);
-    return {
-      source:"game",
-      id:g.id,
-      title:g.name,
-      year:(g.released||"").slice(0,4),
-      poster:null, // remplie ensuite via SteamGridDB (jaquette, pas de screenshot)
-      platforms: platforms.length ? platforms : DEFAULT_PLATFORMS,
-      raw:g
-    };
-  });
+  return (data.results||[]).map(g=>({
+    source:"rawg",
+    id: g.id,
+    title: g.name,
+    year: (g.released||"").slice(0,4),
+    poster: g.background_image,
+    platforms: (g.platforms||[]).map(p=>p.platform.name),
+    raw: g
+  }));
 }
 
-async function fetchSteamGridCover(name){
+async function fetchSteamGridCover(gameName){
   try{
-    const searchRes = await fetch(`https://www.steamgriddb.com/api/v2/search/autocomplete/${encodeURIComponent(name)}`, {
-      headers:{ "Authorization": `Bearer ${STEAMGRID_KEY}` }
+    const searchRes = await fetch(`https://www.steamgriddb.com/api/v2/search/autocomplete/${encodeURIComponent(gameName)}`, {
+      headers: { "Authorization": `Bearer ${STEAMGRID_KEY}` }
     });
     if(!searchRes.ok) return null;
     const searchData = await searchRes.json();
-    const game = (searchData.data||[])[0];
-    if(!game) return null;
-    const gridRes = await fetch(`https://www.steamgriddb.com/api/v2/grids/game/${game.id}?dimensions=600x900`, {
-      headers:{ "Authorization": `Bearer ${STEAMGRID_KEY}` }
+    if(!searchData.success || !searchData.data || !searchData.data.length) return null;
+    const gameId = searchData.data[0].id;
+
+    const gridRes = await fetch(`https://www.steamgriddb.com/api/v2/grids/game/${gameId}?dimensions=600x900&styles=alternate`, {
+      headers: { "Authorization": `Bearer ${STEAMGRID_KEY}` }
     });
     if(!gridRes.ok) return null;
     const gridData = await gridRes.json();
-    const grids = gridData.data || [];
-    if(!grids.length) return null;
-    const clean = grids.filter(g => !g.nsfw && !g.humor);
-    const best = clean.find(g => g.style === "alternate") || clean[0] || grids[0];
-    return best ? best.url : null;
-  }catch(e){
-    return null;
-  }
+    if(!gridData.success || !gridData.data || !gridData.data.length) return null;
+    return gridData.data[0].url;
+  }catch(e){ return null; }
 }
 
+/* ============ RENDER RESULTS ============ */
 function renderResults(){
-  const wrap = document.getElementById("results");
-  wrap.innerHTML = "";
-  currentResults.forEach((item, idx)=>{
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+  currentResults.forEach(item => {
     const card = document.createElement("div");
     card.className = "result-card";
-    card.innerHTML = `
-      <img class="poster" src="${item.poster || NO_POSTER}" onerror="this.src='${NO_POSTER}'" id="poster-${idx}">
-      <div class="result-info">
-        <div class="result-title">${escapeHtml(item.title)}</div>
-        <div class="result-meta">${item.year || ""}${item.author ? " · " + escapeHtml(item.author) : ""}</div>
-      </div>`;
-    card.addEventListener("click", ()=> selectResult(idx));
-    wrap.appendChild(card);
+    const posterUrl = item.poster || NO_POSTER;
+    
+    let origTitleHtml = "";
+    if(item.original_title && item.original_title !== item.title){
+      origTitleHtml = `<div class="result-original-title">(${item.original_title})</div>`;
+    }
 
-    if(item.source === "game"){
-      fetchSteamGridCover(item.title).then(url=>{
-        const finalUrl = url || item.raw.background_image || null;
-        if(finalUrl){
-          item.poster = finalUrl;
-          const img = document.getElementById("poster-"+idx);
-          if(img) img.src = finalUrl;
+    card.innerHTML = `
+      <img class="poster" src="${posterUrl}" alt="" loading="lazy">
+      <div class="result-info">
+        <div class="result-title">${item.title}</div>
+        ${origTitleHtml}
+        <div class="result-meta">${item.year ? item.year : ""}${item.author ? " • " + item.author : ""}</div>
+      </div>
+    `;
+    card.addEventListener("click", () => selectResult(item, card));
+    container.appendChild(card);
+
+    if(item.source === "rawg"){
+      fetchSteamGridCover(item.title).then(cover => {
+        if(cover){
+          item.poster = cover;
+          const imgEl = card.querySelector("img");
+          if(imgEl) imgEl.src = cover;
         }
       });
     }
   });
 }
 
-function escapeHtml(s){
-  const d = document.createElement("div");
-  d.textContent = s || "";
-  return d.innerHTML;
-}
-
-/* ============ SELECT + PANEL ============ */
-let seasonsList = null; // populated when a série is selected
-
-let selectedNote = 7;
-
-async function selectResult(idx){
-  document.querySelectorAll(".result-card").forEach((c,i)=>c.classList.toggle("selected", i===idx));
-  selectedItem = currentResults[idx];
+async function selectResult(item, cardEl){
+  document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
+  if(cardEl) cardEl.classList.add("selected");
+  selectedItem = item;
   selectedSubtitle = null;
-  seasonsList = null;
-  selectedNote = 7;
-  openModal();
+  currentNote = 5;
+  isFavorite = false;
 
-  if(selectedItem.source === "tmdb_tv"){
-    const container = document.getElementById("panel-container");
-    container.innerHTML = `<div class="panel"><div class="status-line">Chargement des saisons…</div></div>`;
+  if(item.source === "tmdb_tv"){
+    setStatus("Chargement des saisons…");
     try{
-      const url = `https://api.themoviedb.org/3/tv/${selectedItem.id}?api_key=${TMDB_KEY}&language=fr-FR`;
-      const res = await fetch(url);
-      if(!res.ok) throw new Error("TMDB " + res.status);
-      const data = await res.json();
-      seasonsList = (data.seasons||[]).filter(s=>s.season_number >= 0);
-    }catch(err){
-      container.innerHTML = `<div class="panel"><div class="status-line error">Erreur chargement saisons: ${err.message}</div></div>`;
-      return;
-    }
+      const res = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${TMDB_KEY}&language=fr-FR`);
+      const details = await res.json();
+      item.seasons = (details.seasons||[]).filter(s => s.season_number > 0);
+      setStatus("");
+    }catch(e){ setStatus("Impossible de charger les saisons", true); }
   }
   renderPanel();
+  openModal();
 }
 
+/* ============ PANEL NOTATION ============ */
 function renderPanel(){
   const container = document.getElementById("panel-container");
-  const isSeries = selectedItem.source === "tmdb_tv";
-  const isGame = selectedItem.source === "game";
-  const posterUrl = selectedSubtitle
-    ? (selectedSubtitle.poster_path ? TMDB_IMG+selectedSubtitle.poster_path : selectedItem.poster)
-    : selectedItem.poster;
-  const subtitleLabel = selectedSubtitle ? selectedSubtitle.name : null;
+  if(!selectedItem){ container.innerHTML = ""; return; }
 
-  let html = `<div class="panel">
-    <div class="panel-head">
-      <img class="poster" src="${posterUrl || NO_POSTER}" onerror="this.src='${NO_POSTER}'">
-      <div>
-        <div class="panel-title">${escapeHtml(selectedItem.title)}</div>
-        <div class="panel-sub">${subtitleLabel ? escapeHtml(subtitleLabel)+" · " : ""}${selectedItem.year||""}${selectedItem.author? " · "+escapeHtml(selectedItem.author):""}</div>
-      </div>
-    </div>`;
-
-  if(isSeries){
-    html += `<div class="field">
-      <label>Saisons disponibles</label>
-      <div class="subtitle-select" id="season-select"></div>
-    </div>`;
+  let subSelectHtml = "";
+  if(selectedItem.source === "tmdb_tv" && selectedItem.seasons){
+    const chips = selectedItem.seasons.map(s => {
+      const p = s.poster_path ? TMDB_IMG + s.poster_path : selectedItem.poster || NO_POSTER;
+      const sel = (selectedSubtitle && selectedSubtitle.id === s.id) ? "selected" : "";
+      return `
+        <div class="subtitle-chip ${sel}" data-season-id="${s.id}">
+          <img src="${p}" alt="">
+          <div class="lbl">Saison ${s.season_number}</div>
+        </div>
+      `;
+    }).join("");
+    subSelectHtml = `<div class="field"><label>Saison à noter</label><div class="subtitle-select">${chips}</div></div>`;
   }
 
-  if(!isSeries || selectedSubtitle){
-    if(isGame){
-      html += `<div class="field">
-        <label>Plateforme</label>
-        <select id="platform-select">
-          ${selectedItem.platforms.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("")}
-        </select>
-      </div>`;
-    }
-    html += `
+  let platformHtml = "";
+  if(selectedItem.source === "rawg"){
+    const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
+    const opts = list.map(p => `<option value="${p}">${p}</option>`).join("");
+    platformHtml = `<div class="field"><label>Plateforme</label><select id="platform-select">${opts}</select></div>`;
+  }
+
+  const today = new Date().toISOString().slice(0,10);
+  const noteBtns = [1,2,3,4,5,6,7,8,9,10].map(n => 
+    `<div class="note-btn ${n === currentNote ? 'selected' : ''}" data-note="${n}">${n}</div>`
+  ).join("");
+
+  container.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <img class="poster" src="${selectedItem.poster || NO_POSTER}" alt="">
+        <div>
+          <div class="panel-title">${selectedItem.title}</div>
+          <div class="panel-sub">${selectedItem.year || ""}</div>
+        </div>
+      </div>
+      ${subSelectHtml}
+      ${platformHtml}
       <div class="field">
-        <label>Note (1–10)</label>
-        <div class="note-grid" id="note-grid"></div>
+        <label>Note (/10)</label>
+        <div class="note-grid">${noteBtns}</div>
       </div>
       <div class="field">
-        <label>Date de fin (visionnage / lecture)</label>
-        <input type="date" id="date-fin" value="${new Date().toISOString().slice(0,10)}">
+        <button class="favorite-btn ${isFavorite ? 'active' : ''}" id="fav-btn">
+          ${isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur'}
+        </button>
       </div>
       <div class="field">
-        <label>Mes notes (optionnel)</label>
-        <textarea id="comment-field" placeholder="Ce que tu en penses, un souvenir, une remarque…"></textarea>
+        <label>Date de fin</label>
+        <input type="date" id="date-fin" value="${today}">
+      </div>
+      <div class="field">
+        <label>Mes notes / commentaire</label>
+        <textarea id="comment-input" placeholder="Ton avis sur l'œuvre…"></textarea>
       </div>
       <div class="panel-actions">
         <button class="primary" id="save-entry-btn">Enregistrer</button>
-      </div>`;
-  } else {
-    html += `<div class="status-line">Choisis une saison ci-dessus pour la noter.</div>`;
-  }
+      </div>
+    </div>
+  `;
 
-  html += `</div>`;
-  container.innerHTML = html;
+  container.querySelectorAll(".note-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      container.querySelectorAll(".note-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      currentNote = parseInt(btn.dataset.note);
+    });
+  });
 
-  if(isSeries){
-    const sel = document.getElementById("season-select");
-    seasonsList.forEach(s=>{
-      const chip = document.createElement("div");
-      chip.className = "subtitle-chip" + (selectedSubtitle && selectedSubtitle.season_number === s.season_number ? " selected" : "");
-      chip.innerHTML = `<img src="${s.poster_path ? TMDB_IMG+s.poster_path : (selectedItem.poster||NO_POSTER)}" onerror="this.src='${NO_POSTER}'">
-        <div class="lbl">${escapeHtml(s.name)}</div>`;
-      chip.addEventListener("click", ()=>{
-        selectedSubtitle = s;
-        renderPanel();
-      });
-      sel.appendChild(chip);
+  const favBtn = container.querySelector("#fav-btn");
+  if(favBtn){
+    favBtn.addEventListener("click", () => {
+      isFavorite = !isFavorite;
+      favBtn.className = `favorite-btn ${isFavorite ? 'active' : ''}`;
+      favBtn.innerHTML = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
     });
   }
 
-  const noteGrid = document.getElementById("note-grid");
-  if(noteGrid){
-    for(let n=1;n<=10;n++){
-      const btn = document.createElement("div");
-      btn.className = "note-btn" + (n===selectedNote ? " selected" : "");
-      btn.textContent = n;
-      btn.addEventListener("click", ()=>{
-        selectedNote = n;
-        noteGrid.querySelectorAll(".note-btn").forEach(b=>b.classList.remove("selected"));
-        btn.classList.add("selected");
+  if(selectedItem.seasons){
+    container.querySelectorAll(".subtitle-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        container.querySelectorAll(".subtitle-chip").forEach(c => c.classList.remove("selected"));
+        chip.classList.add("selected");
+        const sId = parseInt(chip.dataset.seasonId);
+        selectedSubtitle = selectedItem.seasons.find(s => s.id === sId);
       });
-      noteGrid.appendChild(btn);
-    }
+    });
   }
 
-  const saveBtn = document.getElementById("save-entry-btn");
+  const saveBtn = container.querySelector("#save-entry-btn");
   if(saveBtn) saveBtn.addEventListener("click", saveCurrentEntry);
 }
 
 async function saveCurrentEntry(){
-  const dateFin = document.getElementById("date-fin").value;
-  const commentaire = document.getElementById("comment-field").value.trim();
-  const posterUrl = selectedSubtitle
-    ? (selectedSubtitle.poster_path ? TMDB_IMG+selectedSubtitle.poster_path : selectedItem.poster)
-    : selectedItem.poster;
-  const platformEl = document.getElementById("platform-select");
-  const platformValue = platformEl ? platformEl.value : null;
+  if(!selectedItem) return;
+  
+  let entryId = `${currentType}_${selectedItem.id}`;
+  let subTitle = "";
+  let poster = selectedItem.poster || "";
 
-  let subtitle = "";
-  if(selectedSubtitle) subtitle = selectedSubtitle.name;
-  else if(platformValue) subtitle = platformValue;
-  else if(selectedItem.author) subtitle = selectedItem.author;
+  if(selectedItem.source === "tmdb_tv"){
+    if(!selectedSubtitle){
+      alert("Sélectionne une saison !");
+      return;
+    }
+    entryId += `_s${selectedSubtitle.season_number}`;
+    subTitle = `Saison ${selectedSubtitle.season_number}`;
+    if(selectedSubtitle.poster_path) poster = TMDB_IMG + selectedSubtitle.poster_path;
+  } else if(selectedItem.source === "rawg"){
+    const pEl = document.getElementById("platform-select");
+    if(pEl) subTitle = pEl.value;
+  }
 
-  const idParts = [selectedItem.source, selectedItem.id, selectedSubtitle ? selectedSubtitle.season_number : (platformValue || "")];
   const entry = {
-    id: idParts.join("_"),
+    id: entryId,
     type: currentType,
-    title: selectedItem.title,
-    subtitle: subtitle,
-    note: selectedNote,
-    dateFin: dateFin || "",
-    commentaire: commentaire || "",
-    posterUrl: posterUrl || "",
+    titre: selectedItem.title,
+    sousTitre: subTitle,
+    note: currentNote,
+    isFavorite: isFavorite,
+    dateFin: document.getElementById("date-fin").value,
+    comment: (document.getElementById("comment-input")?.value || "").trim(),
+    posterUrl: poster,
     dateAjout: new Date().toISOString()
   };
-  try{
-    await dbPut(entry);
-    showToast("Enregistré ✓ " + entry.title + (entry.subtitle ? " — "+entry.subtitle : ""));
-    closeModal();
-    document.querySelectorAll(".result-card").forEach(c=>c.classList.remove("selected"));
-  }catch(err){
-    showToast("Erreur d'enregistrement: " + err.message);
-  }
+
+  await dbPut(entry);
+  showToast("Enregistré dans l'historique !");
+  closeModal();
 }
 
 /* ============ HISTORY ============ */
 async function renderHistory(){
-  const grid = document.getElementById("hist-grid");
   const entries = await dbAll();
-  document.getElementById("hist-count").textContent = entries.length + " œuvre(s) notée(s)";
-  if(entries.length === 0){
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Rien noté pour l'instant.<br>Va dans l'onglet Recherche pour ajouter ta première œuvre.</div>`;
+  const grid = document.getElementById("hist-grid");
+  document.getElementById("hist-count").textContent = `${entries.length} œuvre(s) notée(s)`;
+  grid.innerHTML = "";
+
+  if(!entries.length){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée pour l'instant.</div>`;
     return;
   }
-  grid.innerHTML = "";
-  entries.forEach(e=>{
+
+  entries.forEach(e => {
     const card = document.createElement("div");
     card.className = "hist-card";
-    const dateLabel = e.dateFin ? formatDate(e.dateFin) : "";
+    const poster = e.posterUrl || NO_POSTER;
+    
+    let subHtml = e.sousTitre ? `<div style="font-size:10px;color:var(--accent-2);">${e.sousTitre}</div>` : "";
+    let commentHtml = e.comment ? `<div class="hist-comment">"${e.comment}"</div>` : "";
+    let favHtml = e.isFavorite ? `<div class="hist-fav">★</div>` : "";
+
     card.innerHTML = `
-      <img src="${e.posterUrl || NO_POSTER}" onerror="this.src='${NO_POSTER}'">
+      <img src="${poster}" alt="" loading="lazy">
       <div class="hist-badge">${e.note}/10</div>
+      ${favHtml}
       <div class="hist-type">${e.type}</div>
       <div class="hist-body">
-        <div class="hist-title">${escapeHtml(e.title)}${e.subtitle ? " — "+escapeHtml(e.subtitle) : ""}</div>
-        <div class="hist-date">${dateLabel}</div>
-        ${e.commentaire ? `<div class="hist-comment">${escapeHtml(e.commentaire)}</div>` : ""}
-        <button class="hist-del" data-id="${e.id}">Supprimer</button>
-      </div>`;
-    grid.appendChild(card);
-  });
-  grid.querySelectorAll(".hist-del").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      if(confirm("Supprimer cette entrée ?")){
-        await dbDelete(btn.dataset.id);
+        <div class="hist-title">${e.titre}</div>
+        ${subHtml}
+        <div class="hist-date">${e.dateFin || ''}</div>
+        ${commentHtml}
+        <button class="hist-del">Supprimer</button>
+      </div>
+    `;
+
+    card.querySelector(".hist-del").addEventListener("click", async () => {
+      if(confirm(`Supprimer "${e.titre}" ?`)){
+        await dbDelete(e.id);
         renderHistory();
       }
     });
+
+    grid.appendChild(card);
   });
 }
-function formatDate(iso){
-  const parts = iso.split("-");
-  if(parts.length!==3) return iso;
-  return `${parts[2]}/${parts[1]}/${parts[0]}`;
-}
 
-/* ============ EXPORT / IMPORT ============ */
-document.getElementById("export-btn").addEventListener("click", async ()=>{
+/* ============ EXPORT / IMPORT / OPTIONS ============ */
+document.getElementById("export-btn").addEventListener("click", async () => {
   const entries = await dbAll();
-  const blob = new Blob([JSON.stringify(entries, null, 2)], {type:"application/json"});
+  const blob = new Blob([JSON.stringify(entries, null, 2)], {type : 'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const stamp = new Date().toISOString().slice(0,10);
+  const a = document.createElement('a');
   a.href = url;
-  a.download = `catalogue-sauvegarde-${stamp}.json`;
-  document.body.appendChild(a);
+  a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  showToast("Export lancé");
 });
 
-document.getElementById("import-btn").addEventListener("click", ()=>{
+document.getElementById("import-btn").addEventListener("click", () => {
   document.getElementById("import-file").click();
 });
-document.getElementById("import-file").addEventListener("change", async (e)=>{
-  const file = e.target.files[0];
+
+document.getElementById("import-file").addEventListener("change", (evt) => {
+  const file = evt.target.files[0];
   if(!file) return;
-  try{
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if(!Array.isArray(data)) throw new Error("Format inattendu");
-    for(const entry of data){
-      if(entry.id) await dbPut(entry);
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const entries = JSON.parse(e.target.result);
+      if(Array.isArray(entries)){
+        for(const entry of entries){
+          if(entry.id) await dbPut(entry);
+        }
+        showToast("Importation réussie !");
+        renderHistory();
+      }
+    } catch(err) {
+      alert("Fichier JSON invalide.");
     }
-    showToast(`${data.length} entrée(s) importée(s)`);
+  };
+  reader.readAsText(file);
+});
+
+// Options
+document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
+document.getElementById("save-sheet-url").addEventListener("click", () => {
+  const val = document.getElementById("sheet-url").value.trim();
+  localStorage.setItem("sheet_url", val);
+  showToast("URL enregistrée !");
+});
+
+document.getElementById("clear-local-db").addEventListener("click", async () => {
+  if(confirm("Effacer tout le stockage local ? Tes notes seront supprimées de cet appareil.")){
+    const entries = await dbAll();
+    for(const e of entries) await dbDelete(e.id);
     renderHistory();
-  }catch(err){
-    showToast("Erreur d'import: " + err.message);
+    showToast("Base réinitialisée.");
   }
-  e.target.value = "";
 });
 
 /* ============ INIT ============ */
-openDB().then(()=>{
-  renderHistory();
-}).catch(err=>{
-  console.error(err);
-  showToast("Erreur d'ouverture de la base locale.");
+openDB().then(() => {
+  renderRecentSearches();
 });
 </script>
 </body>
