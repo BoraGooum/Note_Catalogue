@@ -1,918 +1,460 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Mon Catalogue</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#12181C;
-    --surface:#1B2329;
-    --surface-2:#222C33;
-    --border:#2E3941;
-    --text:#E9E6DD;
-    --text-dim:#8FA0A6;
-    --accent:#E1A63C;
-    --accent-dim:#8A6A2C;
-    --accent-2:#4FA98C;
-    --danger:#C1554A;
-    --radius:6px;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
-  body{
-    font-family:'IBM Plex Mono',monospace;
-    -webkit-font-smoothing:antialiased;
-    padding-bottom:76px;
-    min-height:100vh;
-  }
-  h1,h2,h3,.serif{font-family:'Fraunces',serif;}
-  header.top{
-    padding:22px 18px 16px;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-  }
-  header.top h1{
-    margin:0;
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:-0.01em;
-  }
-  header.top .sub{
-    font-size:11px;
-    color:var(--text-dim);
-    letter-spacing:.04em;
-  }
-  main{padding:16px;}
-  .view{display:none;}
-  .view.active{display:block;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Médiathèque Perso</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-light: #334155;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --success: #10b981;
+      --success-hover: #059669;
+    }
 
-  /* Search */
-  .search-row{display:flex;gap:8px;margin-bottom:8px;}
-  input[type=text], input[type=date], select, textarea{
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    color:var(--text);
-    border-radius:var(--radius);
-    padding:11px 12px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    width:100%;
-  }
-  input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus{outline:1px solid var(--accent);}
-  button{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    border-radius:var(--radius);
-    border:1px solid var(--border);
-    background:var(--surface-2);
-    color:var(--text);
-    padding:11px 14px;
-    cursor:pointer;
-  }
-  button:active{transform:translateY(1px);}
-  button.primary{background:var(--accent);border-color:var(--accent);color:#1B1400;font-weight:600;}
-  button.danger-outline{border-color:var(--danger);color:var(--danger);background:transparent;}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-  .chip{
-    padding:7px 12px;
-    border:1px solid var(--border);
-    border-radius:99px;
-    font-size:12px;
-    color:var(--text-dim);
-    cursor:pointer;
-    background:var(--surface);
-    user-select:none;
-  }
-  .chip.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.08);}
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 80px;
+    }
 
-  .recent-searches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-  .recent-tag{
-    font-size:11px;color:var(--text-dim);background:var(--surface);
-    border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer;
-  }
+    header {
+      background-color: var(--surface);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-  .status-line{font-size:12px;color:var(--text-dim);margin:6px 0 14px;min-height:16px;}
-  .status-line.error{color:var(--danger);}
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  .result-list, .season-list{display:flex;flex-direction:column;gap:8px;}
-  .result-card{
-    display:flex;
-    gap:12px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:8px;
-    cursor:pointer;
-    align-items:center;
-  }
-  .result-card.selected{border-color:var(--accent);background:rgba(225,166,60,.06);}
-  .poster{
-    width:52px;height:78px;
-    object-fit:cover;
-    border-radius:4px;
-    background:var(--surface-2);
-    flex-shrink:0;
-    border:1px solid var(--border);
-  }
-  .result-info{min-width:0;flex:1;}
-  .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-  .result-original-title{font-size:11px;color:var(--accent-2);margin-top:2px;font-style:italic;}
-  .result-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
+    h1 { font-size: 1.25rem; color: var(--primary); }
 
-  .panel{background:transparent;padding:0;}
-  .panel-head{display:flex;gap:12px;margin-bottom:14px;}
-  .panel-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
-  .panel-sub{font-size:11px;color:var(--text-dim);margin-top:2px;}
-  .field{margin-bottom:14px;}
-  .field label{display:block;font-size:11px;color:var(--text-dim);letter-spacing:.03em;margin-bottom:6px;}
-  
-  .panel-actions{display:flex;gap:8px;margin-top:14px;}
-  .panel-actions button{flex:1;}
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+    }
 
-  .subtitle-select{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;}
-  .subtitle-chip{
-    flex-shrink:0;width:66px;text-align:center;cursor:pointer;
-    border:1px solid var(--border);border-radius:var(--radius);padding:6px;background:var(--surface-2);
-  }
-  .subtitle-chip.selected{border-color:var(--accent);}
-  .subtitle-chip img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px;background:var(--surface);}
-  .subtitle-chip .lbl{font-size:9px;color:var(--text-dim);margin-top:4px;line-height:1.2;}
+    .btn-add, .btn-export {
+      background-color: var(--primary);
+      color: #000;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
 
-  .note-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
-  .note-btn{
-    padding:12px 0;text-align:center;border:1px solid var(--border);border-radius:var(--radius);
-    background:var(--surface-2);font-family:'Fraunces',serif;font-size:16px;font-weight:600;
-    cursor:pointer;color:var(--text);
-  }
-  .note-btn.selected{border-color:var(--accent);background:var(--accent);color:#1B1400;}
+    .btn-export {
+      background-color: var(--success);
+      color: #fff;
+    }
 
-  .favorite-btn{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);
-    background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;
-  }
-  .favorite-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.1);}
+    .btn-export:active { background-color: var(--success-hover); }
 
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(8,10,12,.62);
-    display:none;align-items:flex-end;justify-content:center;z-index:200;
-  }
-  .modal-overlay.active{display:flex;}
-  .modal-panel{
-    width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
-    background:var(--surface);border:1px solid var(--accent-dim);
-    border-radius:16px 16px 0 0;padding:18px;position:relative;
-    animation:slideUp .18s ease-out;
-  }
-  @keyframes slideUp{from{transform:translateY(18px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
-  .modal-close{
-    position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;
-    padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
-  }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
 
-  /* History */
-  .hist-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;}
-  .hist-count{font-size:12px;color:var(--text-dim);}
-  .hist-actions{display:flex;gap:6px;}
-  .hist-actions button{padding:8px 10px;font-size:12px;}
-  .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;}
-  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;}
-  .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);}
-  .hist-badge{
-    position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);
-    color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;
-    font-family:'Fraunces',serif;
-  }
-  .hist-fav{
-    position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);
-    color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;
-  }
-  .hist-type{
-    position:absolute;bottom:6px;right:6px;background:rgba(18,24,28,.85);
-    color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;
-  }
-  .hist-body{padding:8px;}
-  .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
-  .hist-date{font-size:9.5px;color:var(--text-dim);margin-top:4px;}
-  .hist-comment{
-    font-size:9.5px;color:var(--text-dim);margin-top:4px;line-height:1.3;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-    font-style:italic;
-  }
-  .hist-del{
-    margin-top:6px;width:100%;font-size:10px;padding:5px;background:transparent;border-color:var(--border);color:var(--text-dim);
-  }
+    .tab {
+      background: var(--surface-light);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      color: var(--text);
+    }
 
-  /* Options View */
-  .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
-  .opt-card h3{margin:0 0 8px;font-size:16px;}
-  .opt-card p{font-size:12px;color:var(--text-dim);margin:0 0 12px;line-height:1.4;}
+    .tab.active {
+      background: var(--primary);
+      color: #000;
+      font-weight: bold;
+    }
 
-  nav.tabbar{
-    position:fixed;bottom:0;left:0;right:0;
-    display:flex;background:var(--surface);border-top:1px solid var(--border);
-    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
-  }
-  nav.tabbar button{
-    flex:1;background:none;border:none;color:var(--text-dim);
-    font-family:'Fraunces',serif;font-size:14px;padding:8px;border-radius:6px;
-  }
-  nav.tabbar button.active{color:var(--accent);background:rgba(225,166,60,.08);}
+    .container { padding: 1rem; }
 
-  input[type=file]{display:none;}
-  .toast{
-    position:fixed;bottom:86px;left:50%;transform:translateX(-50%);
-    background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);
-    padding:10px 16px;border-radius:var(--radius);font-size:12px;
-    opacity:0;transition:opacity .25s;pointer-events:none;z-index:300;max-width:88%;text-align:center;
-  }
-  .toast.show{opacity:1;}
-</style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 1px solid var(--surface-light);
+    }
+
+    .card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background-color: #000;
+    }
+
+    .card-body {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .card-type {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .rating { color: #f59e0b; font-size: 0.8rem; font-weight: bold; }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      padding: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: var(--surface);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      padding: 1rem;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .search-box { display: flex; gap: 8px; }
+
+    .search-box input, select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--surface-light);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .results-list {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 50vh;
+    }
+
+    .result-item {
+      display: flex;
+      gap: 10px;
+      background: var(--bg);
+      padding: 8px;
+      border-radius: 6px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .result-item img {
+      width: 40px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .result-info { flex: 1; }
+    .result-title { font-size: 0.85rem; font-weight: bold; }
+    .result-sub { font-size: 0.75rem; color: var(--text-muted); }
+  </style>
 </head>
 <body>
 
-<header class="top">
-  <h1>Mon Catalogue</h1>
-  <div class="sub">notes & historique perso</div>
-</header>
-
-<main>
-
-  <!-- SEARCH VIEW -->
-  <section id="view-search" class="view active">
-    <div class="chips" id="type-chips">
-      <div class="chip active" data-type="Film">Film</div>
-      <div class="chip" data-type="Documentaire">Documentaire</div>
-      <div class="chip" data-type="Série">Série</div>
-      <div class="chip" data-type="Manga">Manga</div>
-      <div class="chip" data-type="BD">BD</div>
-      <div class="chip" data-type="Roman">Roman</div>
-      <div class="chip" data-type="Jeu">Jeu</div>
-    </div>
-
-    <div class="search-row">
-      <input type="text" id="search-input" placeholder="Chercher un titre…">
-      <button class="primary" id="search-btn">Go</button>
-    </div>
-
-    <div class="recent-searches" id="recent-searches"></div>
-    <div class="status-line" id="search-status"></div>
-    <div class="result-list" id="results"></div>
-  </section>
-
-  <!-- HISTORY VIEW -->
-  <section id="view-history" class="view">
-    <div class="hist-toolbar">
-      <div class="hist-count" id="hist-count">0 œuvre(s) notée(s)</div>
-      <div class="hist-actions">
-        <button id="export-btn">Exporter</button>
-        <button id="import-btn">Importer</button>
-        <input type="file" id="import-file" accept="application/json">
+  <header>
+    <div class="header-top">
+      <h1>Ma Médiathèque</h1>
+      <div class="header-buttons">
+        <button class="btn-export" onclick="exporterVersGoogleSheet()"><i class="fa-solid fa-file-excel"></i> Sheet</button>
+        <button class="btn-add" onclick="ouvrirModal()"><i class="fa-solid fa-plus"></i> Ajouter</button>
       </div>
     </div>
-    <div class="hist-grid" id="hist-grid"></div>
-  </section>
-
-  <!-- OPTIONS VIEW -->
-  <section id="view-options" class="view">
-    <div class="opt-card">
-      <h3>Lien Webhook / Google Sheet</h3>
-      <p>Renseigne l'URL de ton Webhook ou Script Google App pour sauvegarder tes configurations d'intégration.</p>
-      <div class="field">
-        <label>URL du Webhook / Google App Script</label>
-        <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/...">
-      </div>
-      <button class="primary" id="save-sheet-url" style="width:100%">Enregistrer l'URL</button>
+    <div class="nav-tabs">
+      <button class="tab active" onclick="filtrer('tous', this)">Tous</button>
+      <button class="tab" onclick="filtrer('jeu', this)">Jeux</button>
+      <button class="tab" onclick="filtrer('film', this)">Films</button>
+      <button class="tab" onclick="filtrer('serie', this)">Séries</button>
+      <button class="tab" onclick="filtrer('livre', this)">Livres</button>
     </div>
+  </header>
 
-    <div class="opt-card">
-      <h3>Stockage Local</h3>
-      <p>Effacer le cache réinitialise l'historique enregistré dans ce navigateur.</p>
-      <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser les données locales</button>
-    </div>
-  </section>
-
-</main>
-
-<div class="toast" id="toast"></div>
-
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal-panel">
-    <button class="modal-close" id="modal-close">✕</button>
-    <div id="panel-container"></div>
+  <div class="container">
+    <div id="grid" class="grid"></div>
   </div>
-</div>
 
-<nav class="tabbar">
-  <button class="active" data-view="search">Recherche</button>
-  <button data-view="history">Historique</button>
-  <button data-view="options">Options</button>
-</nav>
-
-<script>
-/* ============ CONFIG ============ */
-const TMDB_KEY = "a5a1ca957e940e4898e3c4b4b9f6cea1";
-const RAWG_KEY = "270141bef953462ea5386f08a3d9e27d";
-const GOOGLE_BOOKS_KEY = "AIzaSyCrDTnaCVkdvWsbi2-QGMdKIxQNw8NopcI";
-const STEAMGRID_KEY = "123698009560a02b008c9cf98c607671";
-const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
-const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
-const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`
-);
-
-/* ============ INDEXEDDB ============ */
-let db;
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req = indexedDB.open("catalogue-db", 1);
-    req.onupgradeneeded = e => {
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains("entries")){
-        d.createObjectStore("entries", {keyPath:"id"});
-      }
-    };
-    req.onsuccess = e => { db = e.target.result; resolve(db); };
-    req.onerror = e => reject(e);
-  });
-}
-function dbAll(){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readonly");
-    const store = tx.objectStore("entries");
-    const req = store.getAll();
-    req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateAjout||"").localeCompare(a.dateAjout||"")));
-    req.onerror = e => reject(e);
-  });
-}
-function dbPut(entry){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readwrite");
-    tx.objectStore("entries").put(entry);
-    tx.oncomplete = () => resolve();
-    tx.onerror = e => reject(e);
-  });
-}
-function dbDelete(id){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readwrite");
-    tx.objectStore("entries").delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = e => reject(e);
-  });
-}
-
-/* ============ STATE ============ */
-let currentType = "Film";
-let currentResults = [];
-let selectedItem = null;
-let selectedSubtitle = null;
-let currentNote = 5;
-let isFavorite = false;
-let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
-
-/* ============ UI & NAVIGATION ============ */
-document.querySelectorAll("nav.tabbar button").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-    document.getElementById("view-"+btn.dataset.view).classList.add("active");
-    if(btn.dataset.view === "history") renderHistory();
-  });
-});
-
-document.querySelectorAll("#type-chips .chip").forEach(chip=>{
-  chip.addEventListener("click", ()=>{
-    document.querySelectorAll("#type-chips .chip").forEach(c=>c.classList.remove("active"));
-    chip.classList.add("active");
-    currentType = chip.dataset.type;
-    clearResults();
-  });
-});
-
-function clearResults(){
-  currentResults = [];
-  selectedItem = null;
-  selectedSubtitle = null;
-  document.getElementById("results").innerHTML = "";
-  closeModal();
-  setStatus("");
-}
-function openModal(){ document.getElementById("modal-overlay").classList.add("active"); }
-function closeModal(){
-  document.getElementById("modal-overlay").classList.remove("active");
-  document.getElementById("panel-container").innerHTML = "";
-}
-document.getElementById("modal-close").addEventListener("click", closeModal);
-document.getElementById("modal-overlay").addEventListener("click", (e)=>{
-  if(e.target.id === "modal-overlay") closeModal();
-});
-function setStatus(msg, isError){
-  const el = document.getElementById("search-status");
-  el.textContent = msg || "";
-  el.className = "status-line" + (isError ? " error" : "");
-}
-function showToast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 1800);
-}
-
-/* ============ SEARCH ============ */
-document.getElementById("search-btn").addEventListener("click", runSearch);
-document.getElementById("search-input").addEventListener("keydown", e=>{
-  if(e.key === "Enter") runSearch();
-});
-
-function renderRecentSearches(){
-  const container = document.getElementById("recent-searches");
-  container.innerHTML = "";
-  recentSearches.forEach(term => {
-    const tag = document.createElement("div");
-    tag.className = "recent-tag";
-    tag.textContent = term;
-    tag.onclick = () => {
-      document.getElementById("search-input").value = term;
-      runSearch();
-    };
-    container.appendChild(tag);
-  });
-}
-function addRecentSearch(term){
-  recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 5);
-  localStorage.setItem("recent_searches", JSON.stringify(recentSearches));
-  renderRecentSearches();
-}
-
-async function runSearch(){
-  const q = document.getElementById("search-input").value.trim();
-  if(!q){ setStatus("Tape un titre à chercher.", true); return; }
-  addRecentSearch(q);
-  closeModal();
-  selectedItem = null; selectedSubtitle = null;
-  setStatus("Recherche…");
-  document.getElementById("results").innerHTML = "";
-  try{
-    let results = [];
-    if(currentType === "Film"){
-      results = await searchTMDB(q, "movie");
-      const filtered = results.filter(r => !(r.raw.genre_ids||[]).includes(99));
-      results = filtered.length ? filtered : results;
-    } else if(currentType === "Documentaire"){
-      results = await searchTMDB(q, "movie");
-      const filtered = results.filter(r => (r.raw.genre_ids||[]).includes(99));
-      results = filtered.length ? filtered : results;
-    } else if(currentType === "Série"){
-      results = await searchTMDB(q, "tv");
-    } else if(currentType === "Manga" || currentType === "BD" || currentType === "Roman"){
-      results = await searchBooksMerged(q, currentType);
-    } else if(currentType === "Jeu"){
-      results = await searchRAWG(q);
-    }
-    currentResults = results;
-    setStatus(results.length === 0 ? "Aucun résultat." : results.length + " résultat(s)");
-    renderResults();
-  }catch(err){
-    console.error(err);
-    setStatus("Erreur pendant la recherche. " + err.message, true);
-  }
-}
-
-async function searchTMDB(q, kind){
-  const url = `https://api.themoviedb.org/3/search/${kind}?api_key=${TMDB_KEY}&language=fr-FR&query=${encodeURIComponent(q)}`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error("TMDB " + res.status);
-  const data = await res.json();
-  return (data.results||[]).slice(0,20).map(r=>({
-    source:"tmdb_"+kind,
-    id:r.id,
-    title: kind==="movie" ? r.title : r.name,
-    original_title: kind==="movie" ? r.original_title : r.original_name,
-    year: (kind==="movie" ? r.release_date : r.first_air_date || "").slice(0,4),
-    poster: r.poster_path ? TMDB_IMG + r.poster_path : null,
-    raw:r
-  }));
-}
-
-async function searchGoogleBooks(q, type){
-  let query = q;
-  if(type === "BD") query += " bande dessinée";
-  if(type === "Manga") query += " manga";
-  const url = `https://www.googleapis.com/books/v1/volumes?maxResults=20&q=${encodeURIComponent(query)}&key=${GOOGLE_BOOKS_KEY}`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error("Google Books " + res.status);
-  const data = await res.json();
-  return (data.items||[]).map(it=>{
-    const v = it.volumeInfo || {};
-    let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
-    if(!poster && it.id){
-      poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
-    }
-    return {
-      source:"book",
-      id: it.id,
-      title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
-      year: (v.publishedDate||"").slice(0,4),
-      author: (v.authors||[]).join(", "),
-      poster: poster,
-      categories: v.categories || [],
-      raw: v
-    };
-  });
-}
-
-async function searchOpenLibrary(q, type){
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error("Open Library " + res.status);
-  const data = await res.json();
-  return (data.docs||[]).map(d=>({
-    source:"openlib",
-    id: d.key,
-    title: d.title,
-    year: d.first_publish_year ? String(d.first_publish_year) : "",
-    author: (d.author_name||[]).join(", "),
-    poster: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : null,
-    categories: d.subject || [],
-    raw: d
-  }));
-}
-
-function relevantForType(item, type){
-  const cats = Array.isArray(item.categories) ? item.categories.join(" ") : "";
-  const text = (cats + " " + (item.title||"")).toLowerCase();
-  const hasComicSignal = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
-  const hasMangaSignal = text.includes("manga");
-  if(type === "BD"){
-    if(hasMangaSignal && !hasComicSignal) return false;
-    return true;
-  }
-  if(type === "Manga"){
-    if(hasMangaSignal) return true;
-    if(hasComicSignal) return false;
-    return true;
-  }
-  return true;
-}
-
-async function searchBooksMerged(q, type){
-  const [gb, ol] = await Promise.allSettled([searchGoogleBooks(q, type), searchOpenLibrary(q, type)]);
-  const listA = gb.status === "fulfilled" ? gb.value : [];
-  const listB = ol.status === "fulfilled" ? ol.value : [];
-  const merged = [...listA, ...listB].filter(item => relevantForType(item, type));
-  const seen = new Set();
-  return merged.filter(it => {
-    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g,"");
-    if(!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-async function searchRAWG(q){
-  const url = `https://api.rawg.io/api/games?key=${RAWG_KEY}&search=${encodeURIComponent(q)}&page_size=15`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error("RAWG " + res.status);
-  const data = await res.json();
-  return (data.results||[]).map(g=>({
-    source:"rawg",
-    id: g.id,
-    title: g.name,
-    year: (g.released||"").slice(0,4),
-    poster: g.background_image,
-    platforms: (g.platforms||[]).map(p=>p.platform.name),
-    raw: g
-  }));
-}
-
-async function fetchSteamGridCover(gameName){
-  try{
-    const searchRes = await fetch(`https://www.steamgriddb.com/api/v2/search/autocomplete/${encodeURIComponent(gameName)}`, {
-      headers: { "Authorization": `Bearer ${STEAMGRID_KEY}` }
-    });
-    if(!searchRes.ok) return null;
-    const searchData = await searchRes.json();
-    if(!searchData.success || !searchData.data || !searchData.data.length) return null;
-    const gameId = searchData.data[0].id;
-
-    const gridRes = await fetch(`https://www.steamgriddb.com/api/v2/grids/game/${gameId}?dimensions=600x900&styles=alternate`, {
-      headers: { "Authorization": `Bearer ${STEAMGRID_KEY}` }
-    });
-    if(!gridRes.ok) return null;
-    const gridData = await gridRes.json();
-    if(!gridData.success || !gridData.data || !gridData.data.length) return null;
-    return gridData.data[0].url;
-  }catch(e){ return null; }
-}
-
-/* ============ RENDER RESULTS ============ */
-function renderResults(){
-  const container = document.getElementById("results");
-  container.innerHTML = "";
-  currentResults.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "result-card";
-    const posterUrl = item.poster || NO_POSTER;
-    
-    let origTitleHtml = "";
-    if(item.original_title && item.original_title !== item.title){
-      origTitleHtml = `<div class="result-original-title">(${item.original_title})</div>`;
-    }
-
-    card.innerHTML = `
-      <img class="poster" src="${posterUrl}" alt="" loading="lazy">
-      <div class="result-info">
-        <div class="result-title">${item.title}</div>
-        ${origTitleHtml}
-        <div class="result-meta">${item.year ? item.year : ""}${item.author ? " • " + item.author : ""}</div>
+  <!-- Modal Recherche -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Ajouter un média</h3>
+        <button onclick="fermerModal()" style="background:none; border:none; color:var(--text); font-size:1.2rem; cursor:pointer;">&times;</button>
       </div>
-    `;
-    card.addEventListener("click", () => selectResult(item, card));
-    container.appendChild(card);
-
-    if(item.source === "rawg"){
-      fetchSteamGridCover(item.title).then(cover => {
-        if(cover){
-          item.poster = cover;
-          const imgEl = card.querySelector("img");
-          if(imgEl) imgEl.src = cover;
-        }
-      });
-    }
-  });
-}
-
-async function selectResult(item, cardEl){
-  document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
-  if(cardEl) cardEl.classList.add("selected");
-  selectedItem = item;
-  selectedSubtitle = null;
-  currentNote = 5;
-  isFavorite = false;
-
-  if(item.source === "tmdb_tv"){
-    setStatus("Chargement des saisons…");
-    try{
-      const res = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${TMDB_KEY}&language=fr-FR`);
-      const details = await res.json();
-      item.seasons = (details.seasons||[]).filter(s => s.season_number > 0);
-      setStatus("");
-    }catch(e){ setStatus("Impossible de charger les saisons", true); }
-  }
-  renderPanel();
-  openModal();
-}
-
-/* ============ PANEL NOTATION ============ */
-function renderPanel(){
-  const container = document.getElementById("panel-container");
-  if(!selectedItem){ container.innerHTML = ""; return; }
-
-  let subSelectHtml = "";
-  if(selectedItem.source === "tmdb_tv" && selectedItem.seasons){
-    const chips = selectedItem.seasons.map(s => {
-      const p = s.poster_path ? TMDB_IMG + s.poster_path : selectedItem.poster || NO_POSTER;
-      const sel = (selectedSubtitle && selectedSubtitle.id === s.id) ? "selected" : "";
-      return `
-        <div class="subtitle-chip ${sel}" data-season-id="${s.id}">
-          <img src="${p}" alt="">
-          <div class="lbl">Saison ${s.season_number}</div>
-        </div>
-      `;
-    }).join("");
-    subSelectHtml = `<div class="field"><label>Saison à noter</label><div class="subtitle-select">${chips}</div></div>`;
-  }
-
-  let platformHtml = "";
-  if(selectedItem.source === "rawg"){
-    const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
-    const opts = list.map(p => `<option value="${p}">${p}</option>`).join("");
-    platformHtml = `<div class="field"><label>Plateforme</label><select id="platform-select">${opts}</select></div>`;
-  }
-
-  const today = new Date().toISOString().slice(0,10);
-  const noteBtns = [1,2,3,4,5,6,7,8,9,10].map(n => 
-    `<div class="note-btn ${n === currentNote ? 'selected' : ''}" data-note="${n}">${n}</div>`
-  ).join("");
-
-  container.innerHTML = `
-    <div class="panel">
-      <div class="panel-head">
-        <img class="poster" src="${selectedItem.poster || NO_POSTER}" alt="">
-        <div>
-          <div class="panel-title">${selectedItem.title}</div>
-          <div class="panel-sub">${selectedItem.year || ""}</div>
-        </div>
+      
+      <div class="search-box">
+        <select id="mediaType">
+          <option value="film">Film (TMDB)</option>
+          <option value="serie">Série (TMDB)</option>
+          <option value="jeu">Jeu (RAWG)</option>
+          <option value="livre">Livre (Google)</option>
+        </select>
       </div>
-      ${subSelectHtml}
-      ${platformHtml}
-      <div class="field">
-        <label>Note (/10)</label>
-        <div class="note-grid">${noteBtns}</div>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Rechercher un titre...">
+        <button class="btn-add" onclick="rechercher()">Chercher</button>
       </div>
-      <div class="field">
-        <button class="favorite-btn ${isFavorite ? 'active' : ''}" id="fav-btn">
-          ${isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur'}
-        </button>
-      </div>
-      <div class="field">
-        <label>Date de fin</label>
-        <input type="date" id="date-fin" value="${today}">
-      </div>
-      <div class="field">
-        <label>Mes notes / commentaire</label>
-        <textarea id="comment-input" placeholder="Ton avis sur l'œuvre…"></textarea>
-      </div>
-      <div class="panel-actions">
-        <button class="primary" id="save-entry-btn">Enregistrer</button>
-      </div>
+
+      <div id="results" class="results-list"></div>
     </div>
-  `;
+  </div>
 
-  container.querySelectorAll(".note-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      container.querySelectorAll(".note-btn").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      currentNote = parseInt(btn.dataset.note);
-    });
-  });
+  <script>
+    // Configuration API & Webhook
+    const TMDB_KEY = "4f2249c30f40d7c71f0dd3a55a8f4c2c";
+    const RAWG_KEY = "79dbfbf62a5649b5a0342cb23fb2711d";
+    const STEAMGRID_KEY = "123698009560a02b008c9cf98c607671";
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx1ntJcOrokJrdn9YF1amTiDCeWo_FASmJ8My3h1ZmZ2Z9mjnxwjnjHYKvSyjWyoF8J/exec";
 
-  const favBtn = container.querySelector("#fav-btn");
-  if(favBtn){
-    favBtn.addEventListener("click", () => {
-      isFavorite = !isFavorite;
-      favBtn.className = `favorite-btn ${isFavorite ? 'active' : ''}`;
-      favBtn.innerHTML = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
-    });
-  }
+    let catalogue = JSON.parse(localStorage.getItem('mediaCatalog')) || [];
+    let filtreActif = 'tous';
 
-  if(selectedItem.seasons){
-    container.querySelectorAll(".subtitle-chip").forEach(chip => {
-      chip.addEventListener("click", () => {
-        container.querySelectorAll(".subtitle-chip").forEach(c => c.classList.remove("selected"));
-        chip.classList.add("selected");
-        const sId = parseInt(chip.dataset.seasonId);
-        selectedSubtitle = selectedItem.seasons.find(s => s.id === sId);
+    function enregistrer() {
+      localStorage.setItem('mediaCatalog', JSON.stringify(catalogue));
+      afficher();
+    }
+
+    function afficher() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      const items = catalogue.filter(i => filtreActif === 'tous' || i.type === filtreActif);
+
+      if (items.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">Aucun élément dans cette catégorie.</p>';
+        return;
+      }
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${item.image || 'https://via.placeholder.com/150x200?text=No+Cover'}" alt="${item.titre}">
+          <div class="card-body">
+            <div>
+              <div class="card-title">${item.titre}</div>
+              <div class="card-type">${item.type}</div>
+            </div>
+            <div class="card-actions">
+              <span class="rating"><i class="fa-solid fa-star"></i> ${item.note || 'N/A'}</span>
+              <button class="btn-delete" onclick="supprimer(${item.id})"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
       });
-    });
-  }
-
-  const saveBtn = container.querySelector("#save-entry-btn");
-  if(saveBtn) saveBtn.addEventListener("click", saveCurrentEntry);
-}
-
-async function saveCurrentEntry(){
-  if(!selectedItem) return;
-  
-  let entryId = `${currentType}_${selectedItem.id}`;
-  let subTitle = "";
-  let poster = selectedItem.poster || "";
-
-  if(selectedItem.source === "tmdb_tv"){
-    if(!selectedSubtitle){
-      alert("Sélectionne une saison !");
-      return;
     }
-    entryId += `_s${selectedSubtitle.season_number}`;
-    subTitle = `Saison ${selectedSubtitle.season_number}`;
-    if(selectedSubtitle.poster_path) poster = TMDB_IMG + selectedSubtitle.poster_path;
-  } else if(selectedItem.source === "rawg"){
-    const pEl = document.getElementById("platform-select");
-    if(pEl) subTitle = pEl.value;
-  }
 
-  const entry = {
-    id: entryId,
-    type: currentType,
-    titre: selectedItem.title,
-    sousTitre: subTitle,
-    note: currentNote,
-    isFavorite: isFavorite,
-    dateFin: document.getElementById("date-fin").value,
-    comment: (document.getElementById("comment-input")?.value || "").trim(),
-    posterUrl: poster,
-    dateAjout: new Date().toISOString()
-  };
+    function filtrer(type, elem) {
+      filtreActif = type;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      elem.classList.add('active');
+      afficher();
+    }
 
-  await dbPut(entry);
-  showToast("Enregistré dans l'historique !");
-  closeModal();
-}
+    function supprimer(id) {
+      catalogue = catalogue.filter(i => i.id !== id);
+      enregistrer();
+    }
 
-/* ============ HISTORY ============ */
-async function renderHistory(){
-  const entries = await dbAll();
-  const grid = document.getElementById("hist-grid");
-  document.getElementById("hist-count").textContent = `${entries.length} œuvre(s) notée(s)`;
-  grid.innerHTML = "";
+    function ouvrirModal() { document.getElementById('modal').classList.add('active'); }
+    function fermerModal() { 
+      document.getElementById('modal').classList.remove('active'); 
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('searchInput').value = '';
+    }
 
-  if(!entries.length){
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée pour l'instant.</div>`;
-    return;
-  }
+    async function rechercher() {
+      const query = document.getElementById('searchInput').value.trim();
+      const type = document.getElementById('mediaType').value;
+      const resultsDiv = document.getElementById('results');
 
-  entries.forEach(e => {
-    const card = document.createElement("div");
-    card.className = "hist-card";
-    const poster = e.posterUrl || NO_POSTER;
-    
-    let subHtml = e.sousTitre ? `<div style="font-size:10px;color:var(--accent-2);">${e.sousTitre}</div>` : "";
-    let commentHtml = e.comment ? `<div class="hist-comment">"${e.comment}"</div>` : "";
-    let favHtml = e.isFavorite ? `<div class="hist-fav">★</div>` : "";
+      if (!query) return;
+      resultsDiv.innerHTML = '<p style="text-align:center; padding:1rem;">Recherche en cours...</p>';
 
-    card.innerHTML = `
-      <img src="${poster}" alt="" loading="lazy">
-      <div class="hist-badge">${e.note}/10</div>
-      ${favHtml}
-      <div class="hist-type">${e.type}</div>
-      <div class="hist-body">
-        <div class="hist-title">${e.titre}</div>
-        ${subHtml}
-        <div class="hist-date">${e.dateFin || ''}</div>
-        ${commentHtml}
-        <button class="hist-del">Supprimer</button>
-      </div>
-    `;
+      let results = [];
 
-    card.querySelector(".hist-del").addEventListener("click", async () => {
-      if(confirm(`Supprimer "${e.titre}" ?`)){
-        await dbDelete(e.id);
-        renderHistory();
-      }
-    });
-
-    grid.appendChild(card);
-  });
-}
-
-/* ============ EXPORT / IMPORT / OPTIONS ============ */
-document.getElementById("export-btn").addEventListener("click", async () => {
-  const entries = await dbAll();
-  const blob = new Blob([JSON.stringify(entries, null, 2)], {type : 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-});
-
-document.getElementById("import-btn").addEventListener("click", () => {
-  document.getElementById("import-file").click();
-});
-
-document.getElementById("import-file").addEventListener("change", (evt) => {
-  const file = evt.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const entries = JSON.parse(e.target.result);
-      if(Array.isArray(entries)){
-        for(const entry of entries){
-          if(entry.id) await dbPut(entry);
+      try {
+        if (type === 'film') {
+          const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}&language=fr-FR`);
+          const data = await res.json();
+          results = (data.results || []).map(r => ({
+            id: Date.now() + Math.random(),
+            titre: r.title,
+            type: 'film',
+            image: r.poster_path ? `https://image.tmdb.org/t/p/w500${r.poster_path}` : '',
+            note: r.vote_average ? r.vote_average.toFixed(1) : 'N/A'
+          }));
+        } else if (type === 'serie') {
+          const res = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}&language=fr-FR`);
+          const data = await res.json();
+          results = (data.results || []).map(r => ({
+            id: Date.now() + Math.random(),
+            titre: r.name,
+            type: 'serie',
+            image: r.poster_path ? `https://image.tmdb.org/t/p/w500${r.poster_path}` : '',
+            note: r.vote_average ? r.vote_average.toFixed(1) : 'N/A'
+          }));
+        } else if (type === 'jeu') {
+          const res = await fetch(`https://api.rawg.io/api/games?key=${RAWG_KEY}&search=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          results = (data.results || []).map(r => ({
+            id: Date.now() + Math.random(),
+            titre: r.name,
+            type: 'jeu',
+            image: r.background_image || '',
+            note: r.rating ? r.rating.toFixed(1) : 'N/A'
+          }));
+        } else if (type === 'livre') {
+          const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          results = (data.items || []).map(r => ({
+            id: Date.now() + Math.random(),
+            titre: r.volumeInfo.title,
+            type: 'livre',
+            image: r.volumeInfo.imageLinks?.thumbnail ? r.volumeInfo.imageLinks.thumbnail.replace('http:', 'https:') : '',
+            note: r.volumeInfo.averageRating || 'N/A'
+          }));
         }
-        showToast("Importation réussie !");
-        renderHistory();
+
+        afficherResultats(results);
+      } catch (err) {
+        console.error(err);
+        resultsDiv.innerHTML = '<p style="color:var(--danger); text-align:center;">Erreur lors de la recherche.</p>';
       }
-    } catch(err) {
-      alert("Fichier JSON invalide.");
     }
-  };
-  reader.readAsText(file);
-});
 
-// Options
-document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
-document.getElementById("save-sheet-url").addEventListener("click", () => {
-  const val = document.getElementById("sheet-url").value.trim();
-  localStorage.setItem("sheet_url", val);
-  showToast("URL enregistrée !");
-});
+    function afficherResultats(list) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
 
-document.getElementById("clear-local-db").addEventListener("click", async () => {
-  if(confirm("Effacer tout le stockage local ? Tes notes seront supprimées de cet appareil.")){
-    const entries = await dbAll();
-    for(const e of entries) await dbDelete(e.id);
-    renderHistory();
-    showToast("Base réinitialisée.");
-  }
-});
+      if (list.length === 0) {
+        resultsDiv.innerHTML = '<p style="text-align:center;">Aucun résultat trouvé.</p>';
+        return;
+      }
 
-/* ============ INIT ============ */
-openDB().then(() => {
-  renderRecentSearches();
-});
-</script>
+      list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'result-item';
+        div.innerHTML = `
+          <img src="${item.image || 'https://via.placeholder.com/40x60'}" alt="">
+          <div class="result-info">
+            <div class="result-title">${item.titre}</div>
+            <div class="result-sub">${item.type.toUpperCase()} • Note: ${item.note}</div>
+          </div>
+        `;
+        div.onclick = () => {
+          catalogue.push(item);
+          enregistrer();
+          fermerModal();
+        };
+        resultsDiv.appendChild(div);
+      });
+    }
+
+    // Exportation automatique vers Google Sheet
+    async function exporterVersGoogleSheet() {
+      if (catalogue.length === 0) {
+        alert("Ton catalogue est totalement vide !");
+        return;
+      }
+
+      try {
+        await fetch(WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(catalogue)
+        });
+
+        alert("Catalogue exporté avec succès vers ton Google Sheet !");
+      } catch (erreur) {
+        console.error("Erreur lors de l'export :", erreur);
+        alert("Une erreur s'est produite lors de l'exportation.");
+      }
+    }
+
+    // Initialisation
+    document.addEventListener("DOMContentLoaded", afficher);
+  </script>
 </body>
 </html>
