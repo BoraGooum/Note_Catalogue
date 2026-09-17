@@ -211,7 +211,7 @@
   .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
   .cal-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--accent);}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
-  .cal-day-name{font-size:10px;color:var(--text-dim);padding:4px 0;}
+  .cal-day-name{font-size:10px;color:var(--text-dim);Padding:4px 0;}
   .cal-cell{
     aspect-ratio:1;border:1px solid var(--border);border-radius:4px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -294,6 +294,7 @@
       <div class="hist-actions">
         <button id="sync-sheet-btn" class="primary">Sync Sheet</button>
         <button id="export-btn">Exporter JSON</button>
+        <button id="export-csv-btn">Exporter CSV</button>
         <button id="import-btn">Importer</button>
         <input type="file" id="import-file" accept="application/json">
       </div>
@@ -344,26 +345,28 @@
 
 <div class="toast" id="toast"></div>
 
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal-panel">
-    <button class="modal-close" id="modal-close">✕</button>
+<div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modal-close" aria-label="Fermer">✕</button>
     <div id="panel-container"></div>
   </div>
 </div>
 
-<nav class="tabbar">
+<nav class="tabbar" role="navigation" aria-label="Navigation">
   <button class="active" data-view="search">Recherche</button>
   <button data-view="history">Historique</button>
   <button data-view="options">Options</button>
 </nav>
 
-<script>
+<!-- config.js est généré par GitHub Actions au déploiement -->
+<script type="module" src="config.js"></script>
+
+<script type="module">
 /* ============ CONFIG & STATE ============ */
+/* Les clés API sont importées depuis config.js (généré par GitHub Actions) */
+import { TMDB_KEY, RAWG_KEY, GOOGLE_BOOKS_KEY, STEAMGRID_KEY } from './config.js';
+
 const LAST_UPDATE_DATE = "2026-09-17T12:11:47"; // ISO Paris timestamp
-const TMDB_KEY = "a5a1ca957e940e4898e3c4b4b9f6cea1";
-const RAWG_KEY = "270141bef953462ea5386f08a3d9e27d";
-const GOOGLE_BOOKS_KEY = "AIzaSyCrDTnaCVkdvWsbi2-QGMdKIxQNw8NopcI";
-const STEAMGRID_KEY = "123698009560a02b008c9cf98c607671";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
 const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(
@@ -449,9 +452,15 @@ function clearResults(){
   closeModal();
   setStatus("");
 }
-function openModal(){ document.getElementById("modal-overlay").classList.add("active"); }
+function openModal(){ 
+  const overlay = document.getElementById("modal-overlay");
+  overlay.classList.add("active");
+  overlay.setAttribute('aria-hidden','false');
+}
 function closeModal(){
-  document.getElementById("modal-overlay").classList.remove("active");
+  const overlay = document.getElementById("modal-overlay");
+  overlay.classList.remove("active");
+  overlay.setAttribute('aria-hidden','true');
   document.getElementById("panel-container").innerHTML = "";
   isEditingExisting = false;
   editingEntryId = null;
@@ -465,11 +474,11 @@ function setStatus(msg, isError){
   el.textContent = msg || "";
   el.className = "status-line" + (isError ? " error" : "");
 }
-function showToast(msg){
+function showToast(msg, timeout = 1800){
   const t = document.getElementById("toast");
   t.textContent = msg;
   t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 1800);
+  setTimeout(()=>t.classList.remove("show"), timeout);
 }
 
 /* ============ SEARCH ============ */
@@ -545,7 +554,7 @@ async function runSearch(){
     renderResults();
   }catch(err){
     console.error(err);
-    setStatus("Erreur pendant la recherche. " + err.message, true);
+    setStatus("Erreur pendant la recherche. " + (err && err.message ? err.message : ''), true);
   }
 }
 
@@ -676,6 +685,7 @@ async function fetchSteamGridCover(gameName){
   }catch(e){ return null; }
 }
 
+/* ============ RENDER RESULTS (DOM-safe) ============ */
 function renderResults(){
   const container = document.getElementById("results");
   container.innerHTML = "";
@@ -683,20 +693,40 @@ function renderResults(){
     const card = document.createElement("div");
     card.className = "result-card";
     const posterUrl = item.poster || NO_POSTER;
-    
-    let origTitleHtml = "";
+
+    const img = document.createElement("img");
+    img.className = "poster";
+    img.src = posterUrl;
+    img.alt = "";
+    img.loading = "lazy";
+
+    const info = document.createElement("div");
+    info.className = "result-info";
+
+    const title = document.createElement("div");
+    title.className = "result-title";
+    title.textContent = item.title || '';
+
+    info.appendChild(title);
+
     if(item.original_title && item.original_title !== item.title){
-      origTitleHtml = `<div class="result-original-title">(${item.original_title})</div>`;
+      const orig = document.createElement("div");
+      orig.className = "result-original-title";
+      orig.textContent = `(${item.original_title})`;
+      info.appendChild(orig);
     }
 
-    card.innerHTML = `
-      <img class="poster" src="${posterUrl}" alt="" loading="lazy">
-      <div class="result-info">
-        <div class="result-title">${item.title}</div>
-        ${origTitleHtml}
-        <div class="result-meta">${item.year ? item.year : ""}${item.author ? " • " + item.author : ""}</div>
-      </div>
-    `;
+    const meta = document.createElement("div");
+    meta.className = "result-meta";
+    const metaParts = [];
+    if(item.year) metaParts.push(item.year);
+    if(item.author) metaParts.push(item.author);
+    meta.textContent = metaParts.join(" • ");
+    info.appendChild(meta);
+
+    card.appendChild(img);
+    card.appendChild(info);
+
     card.addEventListener("click", () => selectResult(item, card));
     container.appendChild(card);
 
@@ -704,14 +734,14 @@ function renderResults(){
       fetchSteamGridCover(item.title).then(cover => {
         if(cover){
           item.poster = cover;
-          const imgEl = card.querySelector("img");
-          if(imgEl) imgEl.src = cover;
+          img.src = cover;
         }
       });
     }
   });
 }
 
+/* ============ SELECT RESULT ============ */
 async function selectResult(item, cardEl){
   document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
   if(cardEl) cardEl.classList.add("selected");
@@ -726,6 +756,7 @@ async function selectResult(item, cardEl){
     setStatus("Chargement des saisons…");
     try{
       const res = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${TMDB_KEY}&language=fr-FR`);
+      if(!res.ok) throw new Error('TMDB details ' + res.status);
       const details = await res.json();
       item.seasons = (details.seasons||[]).filter(s => s.season_number > 0);
       setStatus("");
@@ -735,15 +766,19 @@ async function selectResult(item, cardEl){
   openModal();
 }
 
-/* ============ PANEL NOTATION & ÉDITION ============ */
+/* ============ PANEL NOTATION & ÉDITION (DOM-safe) ============ */
 function renderPanel(existingEntry = null){
   const container = document.getElementById("panel-container");
-  
+  container.innerHTML = "";
+
   if(existingEntry){
     isEditingExisting = true;
     editingEntryId = existingEntry.id;
     currentNote = existingEntry.note || 5;
     isFavorite = !!existingEntry.isFavorite;
+  } else {
+    isEditingExisting = false;
+    editingEntryId = null;
   }
 
   const titleVal = existingEntry ? existingEntry.titre : (selectedItem ? selectedItem.title : "");
@@ -752,112 +787,152 @@ function renderPanel(existingEntry = null){
   const dateVal = existingEntry ? (existingEntry.dateFin || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
   const commentVal = existingEntry ? (existingEntry.comment || "") : "";
 
-  let subSelectHtml = "";
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+
+  const h3 = document.createElement('h3');
+  h3.className = 'serif';
+  h3.style.margin = '0 0 14px';
+  h3.style.color = 'var(--accent)';
+  h3.textContent = isEditingExisting ? "Modifier l'œuvre" : "Fiche de notation";
+  panel.appendChild(h3);
+
+  // Title
+  const fTitle = document.createElement('div'); fTitle.className = 'field';
+  const lTitle = document.createElement('label'); lTitle.textContent = 'Titre';
+  const inTitle = document.createElement('input'); inTitle.type = 'text'; inTitle.id = 'edit-title'; inTitle.value = titleVal;
+  fTitle.appendChild(lTitle); fTitle.appendChild(inTitle);
+  panel.appendChild(fTitle);
+
+  // Sub
+  const fSub = document.createElement('div'); fSub.className = 'field';
+  const lSub = document.createElement('label'); lSub.textContent = 'Saison / Tome / Plateforme / Precision';
+  const inSub = document.createElement('input'); inSub.type = 'text'; inSub.id = 'edit-sub'; inSub.value = subVal;
+  fSub.appendChild(lSub); fSub.appendChild(inSub);
+  panel.appendChild(fSub);
+
+  // Poster
+  const fPoster = document.createElement('div'); fPoster.className = 'field';
+  const lPoster = document.createElement('label'); lPoster.textContent = 'URL Affiche (Jaquette)';
+  const inPoster = document.createElement('input'); inPoster.type = 'text'; inPoster.id = 'edit-poster'; inPoster.value = posterVal;
+  fPoster.appendChild(lPoster); fPoster.appendChild(inPoster);
+  panel.appendChild(fPoster);
+
+  // Season chips (if any)
   if(!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons){
-    const chips = selectedItem.seasons.map(s => {
-      const p = s.poster_path ? TMDB_IMG + s.poster_path : selectedItem.poster || NO_POSTER;
-      const sel = (selectedSubtitle && selectedSubtitle.id === s.id) ? "selected" : "";
-      return `
-        <div class="subtitle-chip ${sel}" data-season-id="${s.id}">
-          <img src="${p}" alt="">
-          <div class="lbl">Saison ${s.season_number}</div>
-        </div>
-      `;
-    }).join("");
-    subSelectHtml = `<div class="field"><label>Saison pré-remplie</label><div class="subtitle-select">${chips}</div></div>`;
-  }
-
-  let platformHtml = "";
-  if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
-    const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
-    const opts = list.map(p => `<option value="${p}">${p}</option>`).join("");
-    platformHtml = `<div class="field"><label>Plateforme pré-remplie</label><select id="platform-select">${opts}</select></div>`;
-  }
-
-  const noteBtns = [1,2,3,4,5,6,7,8,9,10].map(n => 
-    `<div class="note-btn ${n === currentNote ? 'selected' : ''}" data-note="${n}">${n}</div>`
-  ).join("");
-
-  container.innerHTML = `
-    <div class="panel">
-      <h3 class="serif" style="margin:0 0 14px;color:var(--accent);">${isEditingExisting ? 'Modifier l\'œuvre' : 'Fiche de notation'}</h3>
-      <div class="field"><label>Titre</label><input type="text" id="edit-title" value="${titleVal}"></div>
-      <div class="field"><label>Saison / Tome / Plateforme / Precision</label><input type="text" id="edit-sub" value="${subVal}"></div>
-      <div class="field"><label>URL Affiche (Jaquette)</label><input type="text" id="edit-poster" value="${posterVal}"></div>
-      ${subSelectHtml}
-      ${platformHtml}
-      <div class="field">
-        <label>Note (/10)</label>
-        <div class="note-grid">${noteBtns}</div>
-      </div>
-      <div class="field">
-        <button class="favorite-btn ${isFavorite ? 'active' : ''}" id="fav-btn">
-          ${isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur'}
-        </button>
-      </div>
-      <div class="field">
-        <label>Date de fin</label>
-        <input type="date" id="date-fin" value="${dateVal}">
-      </div>
-      <div class="field">
-        <label>Mes notes / commentaire</label>
-        <textarea id="comment-input" placeholder="Ton avis...">${commentVal}</textarea>
-      </div>
-      <div class="panel-actions">
-        <button class="primary" id="save-entry-btn">Enregistrer</button>
-      </div>
-    </div>
-  `;
-
-  container.querySelectorAll(".note-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      container.querySelectorAll(".note-btn").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      currentNote = parseInt(btn.dataset.note);
-    });
-  });
-
-  const favBtn = container.querySelector("#fav-btn");
-  if(favBtn){
-    favBtn.addEventListener("click", () => {
-      isFavorite = !isFavorite;
-      favBtn.className = `favorite-btn ${isFavorite ? 'active' : ''}`;
-      favBtn.innerHTML = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
-    });
-  }
-
-  if(selectedItem && selectedItem.seasons){
-    container.querySelectorAll(".subtitle-chip").forEach(chip => {
-      chip.addEventListener("click", () => {
-        container.querySelectorAll(".subtitle-chip").forEach(c => c.classList.remove("selected"));
-        chip.classList.add("selected");
-        const sId = parseInt(chip.dataset.seasonId);
-        selectedSubtitle = selectedItem.seasons.find(s => s.id === sId);
+    const fChips = document.createElement('div'); fChips.className = 'field';
+    const lChips = document.createElement('label'); lChips.textContent = 'Saison pré-remplie';
+    const chipsWrap = document.createElement('div'); chipsWrap.className = 'subtitle-select';
+    selectedItem.seasons.forEach(s => {
+      const chip = document.createElement('div');
+      chip.className = 'subtitle-chip';
+      chip.dataset.seasonId = s.id;
+      const img = document.createElement('img');
+      img.src = s.poster_path ? TMDB_IMG + s.poster_path : (selectedItem.poster || NO_POSTER);
+      img.alt = '';
+      const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Saison ' + s.season_number;
+      chip.appendChild(img); chip.appendChild(lbl);
+      chip.addEventListener('click', () => {
+        chipsWrap.querySelectorAll('.subtitle-chip').forEach(c=>c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedSubtitle = selectedItem.seasons.find(x => x.id === s.id);
         if(selectedSubtitle){
-          document.getElementById("edit-sub").value = `Saison ${selectedSubtitle.season_number}`;
-          if(selectedSubtitle.poster_path) document.getElementById("edit-poster").value = TMDB_IMG + selectedSubtitle.poster_path;
+          inSub.value = `Saison ${selectedSubtitle.season_number}`;
+          if(selectedSubtitle.poster_path) inPoster.value = TMDB_IMG + selectedSubtitle.poster_path;
         }
       });
+      chipsWrap.appendChild(chip);
     });
+    fChips.appendChild(lChips); fChips.appendChild(chipsWrap);
+    panel.appendChild(fChips);
   }
 
+  // Platform select for RAWG
   if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
-    const pEl = document.getElementById("platform-select");
-    if(pEl) pEl.addEventListener("change", () => {
-      document.getElementById("edit-sub").value = pEl.value;
+    const fPlat = document.createElement('div'); fPlat.className = 'field';
+    const lPlat = document.createElement('label'); lPlat.textContent = 'Plateforme pré-remplie';
+    const selPlat = document.createElement('select'); selPlat.id = 'platform-select';
+    const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
+    list.forEach(p => {
+      const o = document.createElement('option'); o.value = p; o.textContent = p; selPlat.appendChild(o);
     });
+    selPlat.addEventListener('change', ()=> { inSub.value = selPlat.value; });
+    fPlat.appendChild(lPlat); fPlat.appendChild(selPlat);
+    panel.appendChild(fPlat);
   }
 
-  container.querySelector("#save-entry-btn").addEventListener("click", () => saveCurrentEntry());
+  // Note grid
+  const fNote = document.createElement('div'); fNote.className = 'field';
+  const lNote = document.createElement('label'); lNote.textContent = 'Note (/10)';
+  const grid = document.createElement('div'); grid.className = 'note-grid';
+  for(let n=1;n<=10;n++){
+    const btn = document.createElement('div');
+    btn.className = 'note-btn' + (n === currentNote ? ' selected' : '');
+    btn.dataset.note = n;
+    btn.textContent = n;
+    btn.addEventListener('click', ()=> {
+      grid.querySelectorAll('.note-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      currentNote = parseInt(btn.dataset.note);
+    });
+    grid.appendChild(btn);
+  }
+  fNote.appendChild(lNote); fNote.appendChild(grid);
+  panel.appendChild(fNote);
+
+  // Favorite
+  const fFav = document.createElement('div'); fFav.className = 'field';
+  const favBtn = document.createElement('button'); favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : ''); favBtn.id = 'fav-btn';
+  favBtn.type = 'button';
+  favBtn.textContent = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
+  favBtn.addEventListener('click', ()=> {
+    isFavorite = !isFavorite;
+    favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
+    favBtn.textContent = isFavorite ? '★ Coup de cœur !' : '☆ Ajouter en coup de cœur';
+  });
+  fFav.appendChild(favBtn);
+  panel.appendChild(fFav);
+
+  // Date
+  const fDate = document.createElement('div'); fDate.className = 'field';
+  const lDate = document.createElement('label'); lDate.textContent = 'Date de fin';
+  const inDate = document.createElement('input'); inDate.type = 'date'; inDate.id = 'date-fin'; inDate.value = dateVal;
+  fDate.appendChild(lDate); fDate.appendChild(inDate);
+  panel.appendChild(fDate);
+
+  // Comment
+  const fComment = document.createElement('div'); fComment.className = 'field';
+  const lComment = document.createElement('label'); lComment.textContent = 'Mes notes / commentaire';
+  const taComment = document.createElement('textarea'); taComment.id = 'comment-input'; taComment.placeholder = 'Ton avis...'; taComment.value = commentVal;
+  fComment.appendChild(lComment); fComment.appendChild(taComment);
+  panel.appendChild(fComment);
+
+  // Actions
+  const actions = document.createElement('div'); actions.className = 'panel-actions';
+  const saveBtn = document.createElement('button'); saveBtn.className = 'primary'; saveBtn.id = 'save-entry-btn'; saveBtn.textContent = 'Enregistrer';
+  actions.appendChild(saveBtn);
+  panel.appendChild(actions);
+
+  container.appendChild(panel);
+
+  saveBtn.addEventListener('click', () => saveCurrentEntry());
 }
 
+/* ============ SAVE ENTRY (with validation & id normalization) ============ */
 async function saveCurrentEntry(){
   const titleVal = document.getElementById("edit-title").value.trim();
   if(!titleVal){ alert("Le titre est obligatoire !"); return; }
 
-  let entryId = isEditingExisting ? editingEntryId : `${currentType}_${selectedItem ? selectedItem.id : Date.now()}`;
+  let baseId = isEditingExisting ? editingEntryId : `${currentType}_${selectedItem ? (selectedItem.id || Date.now()) : Date.now()}`;
   if(!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle){
-    entryId += `_s${selectedSubtitle.season_number}`;
+    baseId += `_s${selectedSubtitle.season_number}`;
+  }
+
+  // ensure unique id if collision
+  const entries = await dbAll();
+  let entryId = baseId;
+  if(!isEditingExisting && entries.some(e => e.id === entryId)){
+    entryId = baseId + '_' + Date.now();
   }
 
   const entry = {
@@ -873,10 +948,15 @@ async function saveCurrentEntry(){
     dateAjout: new Date().toISOString()
   };
 
-  await dbPut(entry);
-  showToast("Enregistré !");
-  closeModal();
-  if(document.getElementById("view-history").classList.contains("active")) renderHistory();
+  try {
+    await dbPut(entry);
+    showToast("Enregistré !");
+    closeModal();
+    if(document.getElementById("view-history").classList.contains("active")) renderHistory();
+  } catch(e){
+    console.error(e);
+    alert('Erreur lors de l\'enregistrement : ' + (e && e.message ? e.message : ''));
+  }
 }
 
 /* ============ HISTORY & CALENDAR ============ */
@@ -914,40 +994,53 @@ async function renderHistory(){
     const card = document.createElement("div");
     card.className = "hist-card";
     const poster = e.posterUrl || NO_POSTER;
-    
-    let subHtml = e.sousTitre ? `<div style="font-size:10px;color:var(--accent-2);">${e.sousTitre}</div>` : "";
-    let commentHtml = e.comment ? `<div class="hist-comment">"${e.comment}"</div>` : "";
-    let favHtml = e.isFavorite ? `<div class="hist-fav">★</div>` : "";
-    const scUrl = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`;
 
-    card.innerHTML = `
-      <img src="${poster}" alt="" loading="lazy">
-      <div class="hist-badge">${e.note}/10</div>
-      ${favHtml}
-      <div class="hist-type">${e.type}</div>
-      <div class="hist-body">
-        <div class="hist-title">${e.titre}</div>
-        ${subHtml}
-        <div class="hist-date">${e.dateFin || ''}</div>
-        ${commentHtml}
-        <a href="${scUrl}" target="_blank" class="sc-link">SensCritique ↗</a>
-        <div class="hist-btn-row">
-          <button class="hist-edit">📝 Modifier</button>
-          <button class="hist-del">🗑️</button>
-        </div>
-      </div>
-    `;
+    const img = document.createElement('img'); img.src = poster; img.alt = ''; img.loading = 'lazy';
+    const badge = document.createElement('div'); badge.className = 'hist-badge'; badge.textContent = `${e.note}/10`;
+    const favHtml = e.isFavorite ? (()=>{ const d=document.createElement('div'); d.className='hist-fav'; d.textContent='★'; return d; })() : null;
+    const typeTag = document.createElement('div'); typeTag.className='hist-type'; typeTag.textContent = e.type;
+    const body = document.createElement('div'); body.className='hist-body';
+    const title = document.createElement('div'); title.className='hist-title'; title.textContent = e.titre;
+    const sub = document.createElement('div'); sub.style.fontSize='10px'; sub.style.color='var(--accent-2)'; sub.textContent = e.sousTitre || '';
+    const date = document.createElement('div'); date.className='hist-date'; date.textContent = e.dateFin || '';
+    const comment = document.createElement('div'); comment.className='hist-comment'; comment.textContent = e.comment ? `"${e.comment}"` : '';
+    const scLink = document.createElement('a'); scLink.className='sc-link'; scLink.href = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`; scLink.target='_blank'; scLink.textContent = 'SensCritique ↗';
+    const btnRow = document.createElement('div'); btnRow.className='hist-btn-row';
+    const editBtn = document.createElement('button'); editBtn.className='hist-edit'; editBtn.textContent='📝 Modifier';
+    const delBtn = document.createElement('button'); delBtn.className='hist-del'; delBtn.textContent='🗑️';
 
-    card.querySelector(".hist-edit").addEventListener("click", () => {
+    btnRow.appendChild(editBtn); btnRow.appendChild(delBtn);
+
+    body.appendChild(title);
+    if(e.sousTitre) body.appendChild(sub);
+    body.appendChild(date);
+    if(e.comment) body.appendChild(comment);
+    body.appendChild(scLink);
+    body.appendChild(btnRow);
+
+    card.appendChild(img);
+    card.appendChild(badge);
+    if(favHtml) card.appendChild(favHtml);
+    card.appendChild(typeTag);
+    card.appendChild(body);
+
+    editBtn.addEventListener("click", () => {
       currentType = e.type || "Film";
       renderPanel(e);
       openModal();
     });
 
-    card.querySelector(".hist-del").addEventListener("click", async () => {
+    delBtn.addEventListener("click", async () => {
       if(confirm(`Supprimer "${e.titre}" ?`)){
+        // create undo backup
+        const removed = Object.assign({}, e);
         await dbDelete(e.id);
         renderHistory();
+        showUndoToast(`"${e.titre}" supprimé`, async () => {
+          // restore
+          try { await dbPut(removed); renderHistory(); showToast('Restauration effectuée'); }
+          catch(err){ console.error(err); alert('Impossible de restaurer : ' + (err && err.message ? err.message : '')); }
+        });
       }
     });
 
@@ -1003,7 +1096,9 @@ async function renderCalendar(){
     const dStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const dayEntries = entries.filter(e => e.dateFin === dStr);
 
-    cell.textContent = day;
+    const dayText = document.createElement('div'); dayText.textContent = day;
+    cell.appendChild(dayText);
+
     if(dayEntries.length > 0){
       cell.classList.add("has-entries");
       const dot = document.createElement("div");
@@ -1023,7 +1118,7 @@ async function renderCalendar(){
   }
 }
 
-/* ============ EXPORT / IMPORT / SYNC ============ */
+/* ============ EXPORT / IMPORT / SYNC (robust & validated) ============ */
 document.getElementById("sync-sheet-btn").addEventListener("click", async () => {
   const url = localStorage.getItem("sheet_url");
   if(!url){
@@ -1036,17 +1131,31 @@ document.getElementById("sync-sheet-btn").addEventListener("click", async () => 
     sensCritiqueUrl: `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`
   }));
 
-  showToast("Synchronisation…");
+  showToast("Synchronisation…", 2500);
   try {
-    await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(enrichedEntries)
-    });
-    showToast("Envoyé au Google Sheet !");
+    // Try a normal fetch first; if CORS blocks, fallback to no-cors attempt
+    let ok = false;
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enrichedEntries)
+      });
+      if(res.ok) ok = true;
+    } catch(e){
+      // fallback to no-cors (best-effort)
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(enrichedEntries)
+      });
+      ok = true;
+    }
+    if(ok) showToast("Envoyé au Google Sheet !");
+    else alert("La synchronisation a échoué.");
   } catch(err) {
-    alert("Erreur lors de la synchronisation : " + err.message);
+    alert("Erreur lors de la synchronisation : " + (err && err.message ? err.message : ''));
   }
 });
 
@@ -1057,10 +1166,39 @@ document.getElementById("export-btn").addEventListener("click", async () => {
   const a = document.createElement('a');
   a.href = url;
   a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
   a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('Export JSON prêt');
+});
+
+document.getElementById("export-csv-btn").addEventListener("click", async () => {
+  const entries = await dbAll();
+  if(!entries.length){ alert('Aucun item à exporter'); return; }
+  const keys = ['id','type','titre','sousTitre','note','isFavorite','dateFin','comment','posterUrl','dateAjout'];
+  const rows = entries.map(it => keys.map(k => {
+    let v = it[k];
+    if(Array.isArray(v)) v = v.join(';');
+    if(v === undefined || v === null) v = '';
+    v = String(v).replace(/"/g, '""');
+    return `"${v}"`;
+  }).join(','));
+  const csv = [keys.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `catalogue_export_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('Export CSV prêt');
 });
 
 document.getElementById("import-btn").addEventListener("click", () => {
+  document.getElementById("import-file").value = '';
   document.getElementById("import-file").click();
 });
 
@@ -1072,11 +1210,20 @@ document.getElementById("import-file").addEventListener("change", (evt) => {
     try {
       const entries = JSON.parse(e.target.result);
       if(Array.isArray(entries)){
+        let imported = 0;
         for(const entry of entries){
-          if(entry.id) await dbPut(entry);
+          if(entry && entry.id){
+            // normalize minimal fields
+            if(!entry.titre) entry.titre = 'Sans titre';
+            if(!entry.dateAjout) entry.dateAjout = new Date().toISOString();
+            await dbPut(entry);
+            imported++;
+          }
         }
-        showToast("Importation réussie !");
+        showToast(`Importation réussie (${imported})`);
         renderHistory();
+      } else {
+        alert('Fichier JSON invalide : attendu un tableau d\'entrées.');
       }
     } catch(err) {
       alert("Fichier JSON invalide.");
@@ -1102,6 +1249,7 @@ document.getElementById("clear-local-db").addEventListener("click", async () => 
   }
 });
 
+/* ============ Helpers: recent searches, undo toast, about ============ */
 function initAboutBuildDate(){
   const dateObj = new Date(LAST_UPDATE_DATE);
   const formatted = dateObj.toLocaleString("fr-FR", {
@@ -1115,10 +1263,32 @@ function initAboutBuildDate(){
   document.getElementById("about-build-date").textContent = `Dernière mise à jour : ${formatted} (Paris)`;
 }
 
+function showUndoToast(message, undoFn, timeout = 8000){
+  const t = document.getElementById('toast');
+  t.textContent = message;
+  const btn = document.createElement('button');
+  btn.textContent = 'Annuler';
+  btn.style.marginLeft = '10px';
+  btn.className = 'outline';
+  btn.addEventListener('click', () => {
+    try { undoFn(); } catch(e){ console.error(e); }
+    t.classList.remove('show');
+  });
+  t.appendChild(btn);
+  t.classList.add('show');
+  setTimeout(()=> {
+    if(t.contains(btn)) t.removeChild(btn);
+    t.classList.remove('show');
+  }, timeout);
+}
+
 /* ============ INIT ============ */
 openDB().then(() => {
   renderRecentSearches();
   initAboutBuildDate();
+}).catch(err => {
+  console.error('IndexedDB error', err);
+  alert('Impossible d\'ouvrir la base locale : ' + (err && err.message ? err.message : ''));
 });
 </script>
 </body>
