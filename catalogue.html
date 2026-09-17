@@ -145,7 +145,7 @@
     <h1>Mes Notes</h1>
     <div class="sub">Note que j'attribue des œuvres que je lis/vois/joue</div>
   </div>
-  <button id="home-btn" class="outline">🏠 Accueil</button</button>
+  <button id="home-btn" class="outline">🏠 Accueil</button>
 </header>
 
 <main>
@@ -227,7 +227,7 @@
       <h3>À propos...</h3>
       <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
       <p>Application de notation personnelle d'œuvres cinématographiques, littéraires et ludiques.</p>
-      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Créé par Gooumbora</a>
+      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn"> Créé par Gooumbora</a>
     </div>
 
     <div class="opt-card">
@@ -256,7 +256,7 @@
 <script type="module">
 /* ============ CONFIG & STATE ============ */
 const PROXY_URL = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-const LAST_UPDATE_DATE = "2026-09-17T16:00:00";
+const LAST_UPDATE_DATE = "2026-09-17T15:30:00";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
 const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`);
@@ -637,7 +637,7 @@ function renderPanel(existingEntry = null){
   favBtn.addEventListener('click', ()=> {
     isFavorite = !isFavorite;
     favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
-    favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
+    favBtn.textContent = isFavorite ? ' Coup de cœur !' : '🤍 Ajouter en coup de cœur';
   });
   fFav.appendChild(favBtn); panel.appendChild(fFav);
 
@@ -678,7 +678,7 @@ async function saveCurrentEntry(){
     await dbPut(entry);
     showToast("Enregistré !");
     closeModal();
-    syncToSheet(entry, isEditingExisting ? 'update' : 'add'); // AUTO SYNC
+    syncToSheet(entry, isEditingExisting ? 'update' : 'add');
     if(document.getElementById("view-history").classList.contains("active")) renderHistory();
   } catch(e){
     console.error(e); alert('Erreur : ' + (e.message || ''));
@@ -717,7 +717,6 @@ async function renderHistory(){
   const entries = await dbAll();
   document.getElementById("hist-count").textContent = `${entries.length} œuvre(s)`;
   
-  // STATS
   const stats = {};
   entries.forEach(e => { stats[e.type] = (stats[e.type] || 0) + 1; });
   const statsBar = document.getElementById("stats-bar");
@@ -758,7 +757,7 @@ async function renderHistory(){
       if(confirm(`Supprimer "${e.titre}" ?`)){
         const removed = Object.assign({}, e);
         await dbDelete(e.id);
-        syncToSheet({id: e.id}, 'delete'); // AUTO SYNC DELETE
+        syncToSheet({id: e.id}, 'delete');
         renderHistory();
         showToast("Supprimé");
       }
@@ -800,7 +799,7 @@ async function renderCalendar(){
 
 function showDayModal(dateStr, dayEntries){
   const container = document.getElementById("panel-container");
-  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 Œuvres du ${dateStr}</h3>`;
+  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 uvres du ${dateStr}</h3>`;
   if(dayEntries.length === 0) {
     container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre ce jour-là.</p>`;
   } else {
