@@ -52,12 +52,10 @@
   .result-card{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;}
   .result-card.selected{border-color:var(--accent);background:rgba(225,166,60,.06);}
   .poster{width:52px;height:78px;object-fit:cover;border-radius:4px;background:var(--surface-2);flex-shrink:0;border:1px solid var(--border);}
-  .poster-lg{width:140px;height:210px;object-fit:cover;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);flex-shrink:0;}
   .result-info{min-width:0;flex:1;}
   .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
   .result-original-title{font-size:11px;color:var(--accent-2);margin-top:2px;font-style:italic;}
   .result-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
-  .result-volumes{font-size:10px;color:var(--accent);margin-top:2px;font-weight:600;}
 
   .panel{background:transparent;padding:0;}
   .field{margin-bottom:14px;}
@@ -84,23 +82,6 @@
   @keyframes slideUp{from{transform:translateY(18px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
   .modal-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);}
 
-  /* Détails modal */
-  .details-header{display:flex;gap:14px;margin-bottom:16px;}
-  .details-info{flex:1;min-width:0;}
-  .details-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--accent);margin:0 0 6px;line-height:1.2;}
-  .details-sub{font-size:12px;color:var(--accent-2);margin-bottom:8px;}
-  .details-meta{font-size:12px;color:var(--text-dim);line-height:1.6;}
-  .details-meta strong{color:var(--text);}
-  .details-comment-box{
-    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px; margin-top:14px; min-height:80px;
-  }
-  .details-comment-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-  .details-comment-text{font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap;font-style:italic;}
-  .details-comment-empty{font-size:12px;color:var(--text-dim);font-style:italic;}
-  .details-actions{display:flex;gap:8px;margin-top:16px;}
-  .details-actions button{flex:1;}
-
   .hist-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
   .hist-top-row{display:flex;justify-content:space-between;align-items:center;}
   .hist-count{font-size:12px;color:var(--text-dim);}
@@ -112,12 +93,11 @@
   .hist-actions{display:flex;gap:6px;flex-wrap:wrap;}
   .hist-actions button{padding:6px 10px;font-size:11px;}
   .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;}
-  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;display:flex;flex-direction:column;cursor:pointer;transition:border-color 0.15s;}
-  .hist-card:hover{border-color:var(--accent-dim);}
-  .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);pointer-events:none;}
-  .hist-badge{position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;font-family:'Fraunces',serif;pointer-events:none;}
-  .hist-fav{position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;pointer-events:none;}
-  .hist-type{position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;pointer-events:none;}
+  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+  .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);}
+  .hist-badge{position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;font-family:'Fraunces',serif;}
+  .hist-fav{position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;}
+  .hist-type{position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;}
   .hist-body{padding:8px;display:flex;flex-direction:column;flex:1;}
   .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
   .hist-date{font-size:9.5px;color:var(--text-dim);margin-top:4px;}
@@ -140,17 +120,6 @@
   .opt-card h3{margin:0 0 8px;font-size:16px;}
   .opt-card p{font-size:12px;color:var(--text-dim);margin:0 0 12px;line-height:1.4;}
   
-  .sheet-config-btn{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:8px 12px; background:var(--surface-2); border:1px solid var(--border);
-    border-radius:var(--radius); color:var(--text-dim); font-size:12px; cursor:pointer;
-  }
-  .sheet-config-btn:hover{border-color:var(--accent);color:var(--accent);}
-  .sheet-config-btn.connected{border-color:var(--accent-2);color:var(--accent-2);}
-  .sheet-input-row{display:none;margin-top:10px;gap:8px;}
-  .sheet-input-row.visible{display:flex;}
-  .sheet-status{font-size:11px;color:var(--accent-2);margin-top:8px;}
-  
   .cinema-btn{
     display:inline-flex; align-items:center; gap:8px; width:100%; justify-content:center;
     padding:12px; background:linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -159,6 +128,17 @@
     box-shadow:0 4px 6px rgba(0,0,0,0.3); transition:transform 0.1s, box-shadow 0.1s;
   }
   .cinema-btn:hover{transform:translateY(-1px); box-shadow:0 6px 8px rgba(0,0,0,0.4); border-color:#E1A63C;}
+
+  .details-comment-box{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px; margin-top:14px; min-height:80px;
+    word-wrap: break-word; overflow-wrap: break-word;
+  }
+  .details-comment-text{
+    font-size:13px; line-height:1.6; color:var(--text);
+    white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;
+    font-style:italic; max-width:100%;
+  }
 
   nav.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));}
   nav.tabbar button{flex:1;background:none;border:none;color:var(--text-dim);font-family:'Fraunces',serif;font-size:14px;padding:8px;border-radius:6px;}
@@ -176,11 +156,10 @@
     <h1>Mes Notes</h1>
     <div class="sub">Note que j'attribue des œuvres que je lis/vois/joue</div>
   </div>
-  <button id="home-btn" class="outline">🏠 Accueil</button>
+  <button id="home-btn" class="outline"> Accueil</button>
 </header>
 
 <main>
-  <!-- SEARCH VIEW -->
   <section id="view-search" class="view active">
     <div class="search-controls">
       <div class="field" style="margin:0;">
@@ -206,7 +185,6 @@
     <div class="result-list" id="results"></div>
   </section>
 
-  <!-- HISTORY VIEW -->
   <section id="view-history" class="view">
     <div class="hist-toolbar">
       <div class="stats-bar" id="stats-bar"></div>
@@ -233,25 +211,25 @@
     </div>
   </section>
 
-  <!-- OPTIONS VIEW -->
   <section id="view-options" class="view">
     <div class="opt-card">
-      <h3>🔗 Synchronisation Google Sheet</h3>
-      <p>Lien webhook pour la synchro automatique à chaque modification.</p>
-      <button id="sheet-toggle-btn" class="sheet-config-btn">🔗 Configurer le lien Sheet</button>
-      <div id="sheet-input-row" class="sheet-input-row">
-        <input type="text" id="sheet-url" placeholder="https://script.google.com/..." style="flex:1;">
-        <button class="primary" id="save-sheet-url">💾</button>
+      <h3> Synchronisation Google Sheet</h3>
+      <p>Configure l'URL du Webhook pour la synchro automatique.</p>
+      <button class="outline" id="config-sheet-btn" style="width:100%">🔗 Configurer le lien Sheet</button>
+      <div id="sheet-url-container" style="display:none; margin-top:12px;">
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="sheet-url" placeholder="https://script.google.com/..." style="flex:1;">
+          <button class="primary" id="save-sheet-url">💾</button>
+        </div>
       </div>
-      <div id="sheet-status" class="sheet-status"></div>
     </div>
 
     <div class="opt-card">
-      <h3> Sauvegarde Complète (Backup)</h3>
-      <p>Exporte ou importe TOUT (œuvres + réglages) dans un fichier .json.</p>
+      <h3>💾 Sauvegarde Complète</h3>
+      <p>Exporte ou importe TOUT (œuvres + réglages).</p>
       <div style="display:flex; gap:8px;">
-        <button class="outline" id="export-btn" style="flex:1;">📤 Exporter .json</button>
-        <button class="outline" id="import-btn" style="flex:1;">📥 Importer .json</button>
+        <button class="outline" id="export-btn" style="flex:1;">📤 Exporter</button>
+        <button class="outline" id="import-btn" style="flex:1;">📥 Importer</button>
         <input type="file" id="import-file" accept="application/json">
       </div>
     </div>
@@ -259,14 +237,13 @@
     <div class="opt-card">
       <h3>À propos...</h3>
       <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
-      <p>Application de notation personnelle d'œuvres cinématographiques, littéraires et ludiques.</p>
+      <p>Application de notation personnelle.</p>
       <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Créé par Gooumbora</a>
     </div>
 
     <div class="opt-card">
       <h3>Stockage Local</h3>
-      <p>Effacer le cache réinitialise l'historique enregistré sur cet appareil.</p>
-      <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser les données locales</button>
+      <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser</button>
     </div>
   </section>
 </main>
@@ -280,80 +257,63 @@
   </div>
 </div>
 
-<nav class="tabbar" role="navigation" aria-label="Navigation">
+<nav class="tabbar">
   <button class="active" data-view="search">Recherche</button>
   <button data-view="history">Historique</button>
   <button data-view="options">Options</button>
 </nav>
 
 <script type="module">
-/* ============ CONFIG & STATE ============ */
 const PROXY_URL = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-// Fuseau Paris explicite (+02:00) pour éviter tout décalage automatique
-const LAST_UPDATE_DATE = "2026-09-17T18:45:00+02:00";
+const LAST_UPDATE_DATE = "2026-09-17T16:45:00+02:00";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
 const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`);
 
-let db;
-let currentType = "Film";
-let currentResults = [];
-let selectedItem = null;
-let selectedSubtitle = null;
-let currentNote = 5;
-let isFavorite = false;
-let isEditingExisting = false;
-let editingEntryId = null;
+let db, currentType = "Film", currentResults = [], selectedItem = null, selectedSubtitle = null;
+let currentNote = 5, isFavorite = false, isEditingExisting = false, editingEntryId = null;
 let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
-let calCurrentDate = new Date();
-let isCalendarView = false;
+let calCurrentDate = new Date(), isCalendarView = false;
 
-/* ============ HELPERS ============ */
-// Format dd/mm/yyyy pour affichage
-function formatDateFR(isoStr) {
-  if (!isoStr) return '';
-  const [y, m, d] = isoStr.slice(0, 10).split('-');
-  return `${d}/${m}/${y}`;
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const [year, month, day] = dateStr.split('-');
+  return `${day}/${month}/${year}`;
 }
 
-/* ============ INDEXEDDB ============ */
-function openDB(){
-  return new Promise((resolve,reject)=>{
+function openDB() {
+  return new Promise((resolve, reject) => {
     const req = indexedDB.open("catalogue-db", 1);
-    req.onupgradeneeded = e => {
-      const d = e.target.result;
-      if(!d.objectStoreNames.contains("entries")) d.createObjectStore("entries", {keyPath:"id"});
-    };
+    req.onupgradeneeded = e => { const d = e.target.result; if (!d.objectStoreNames.contains("entries")) d.createObjectStore("entries", { keyPath: "id" }); };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e);
   });
 }
-function dbAll(){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readonly");
+function dbAll() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("entries", "readonly");
     const req = tx.objectStore("entries").getAll();
-    req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateFin||b.dateAjout||"").localeCompare(a.dateFin||a.dateAjout||"")));
+    req.onsuccess = () => resolve((req.result || []).sort((a, b) => (b.dateFin || b.dateAjout || "").localeCompare(a.dateFin || a.dateAjout || "")));
     req.onerror = e => reject(e);
   });
 }
-function dbPut(entry){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readwrite");
+function dbPut(entry) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("entries", "readwrite");
     tx.objectStore("entries").put(entry);
     tx.oncomplete = () => resolve();
     tx.onerror = e => reject(e);
   });
 }
-function dbDelete(id){
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction("entries","readwrite");
+function dbDelete(id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("entries", "readwrite");
     tx.objectStore("entries").delete(id);
     tx.oncomplete = () => resolve();
     tx.onerror = e => reject(e);
   });
 }
 
-/* ============ UI & NAVIGATION ============ */
 document.getElementById("home-btn").addEventListener("click", () => {
   document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("active"));
   document.querySelector('nav.tabbar button[data-view="search"]').classList.add("active");
@@ -361,47 +321,32 @@ document.getElementById("home-btn").addEventListener("click", () => {
   document.getElementById("view-search").classList.add("active");
 });
 
-document.querySelectorAll("nav.tabbar button").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll("nav.tabbar button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-    document.getElementById("view-"+btn.dataset.view).classList.add("active");
-    if(btn.dataset.view === "history") renderHistory();
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById("view-" + btn.dataset.view).classList.add("active");
+    if (btn.dataset.view === "history") renderHistory();
   });
 });
 
-document.getElementById("type-select").addEventListener("change", (e)=>{ currentType = e.target.value; clearResults(); });
+document.getElementById("type-select").addEventListener("change", (e) => { currentType = e.target.value; clearResults(); });
 
-function clearResults(){
+function clearResults() {
   currentResults = []; selectedItem = null; selectedSubtitle = null;
   document.getElementById("results").innerHTML = ""; closeModal(); setStatus("");
 }
-function openModal(){ 
-  const overlay = document.getElementById("modal-overlay");
-  overlay.classList.add("active"); overlay.setAttribute('aria-hidden','false');
-}
-function closeModal(){
-  const overlay = document.getElementById("modal-overlay");
-  overlay.classList.remove("active"); overlay.setAttribute('aria-hidden','true');
-  document.getElementById("panel-container").innerHTML = "";
-  isEditingExisting = false; editingEntryId = null;
-}
+function openModal() { const o = document.getElementById("modal-overlay"); o.classList.add("active"); o.setAttribute('aria-hidden', 'false'); }
+function closeModal() { const o = document.getElementById("modal-overlay"); o.classList.remove("active"); o.setAttribute('aria-hidden', 'true'); document.getElementById("panel-container").innerHTML = ""; isEditingExisting = false; editingEntryId = null; }
 document.getElementById("modal-close").addEventListener("click", closeModal);
-document.getElementById("modal-overlay").addEventListener("click", (e)=>{ if(e.target.id === "modal-overlay") closeModal(); });
+document.getElementById("modal-overlay").addEventListener("click", (e) => { if (e.target.id === "modal-overlay") closeModal(); });
 
-function setStatus(msg, isError){
-  const el = document.getElementById("search-status");
-  el.textContent = msg || ""; el.className = "status-line" + (isError ? " error" : "");
-}
-function showToast(msg, timeout = 1800){
-  const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), timeout);
-}
+function setStatus(msg, isError) { const el = document.getElementById("search-status"); el.textContent = msg || ""; el.className = "status-line" + (isError ? " error" : ""); }
+function showToast(msg, timeout = 1800) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), timeout); }
 
-/* ============ SEARCH ============ */
 document.getElementById("search-btn").addEventListener("click", runSearch);
-document.getElementById("search-input").addEventListener("keydown", e=>{ if(e.key === "Enter") runSearch(); });
+document.getElementById("search-input").addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
 
 document.getElementById("manual-btn").addEventListener("click", () => {
   isEditingExisting = false; editingEntryId = null;
@@ -410,217 +355,139 @@ document.getElementById("manual-btn").addEventListener("click", () => {
   renderPanel(); openModal();
 });
 
-function renderRecentSearches(){
-  const container = document.getElementById("recent-searches"); container.innerHTML = "";
+function renderRecentSearches() {
+  const c = document.getElementById("recent-searches"); c.innerHTML = "";
   recentSearches.forEach(term => {
     const tag = document.createElement("div"); tag.className = "recent-tag"; tag.textContent = term;
     tag.onclick = () => { document.getElementById("search-input").value = term; runSearch(); };
-    container.appendChild(tag);
+    c.appendChild(tag);
   });
 }
-function addRecentSearch(term){
+function addRecentSearch(term) {
   recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 5);
   localStorage.setItem("recent_searches", JSON.stringify(recentSearches));
   renderRecentSearches();
 }
 
-async function runSearch(){
+async function runSearch() {
   const q = document.getElementById("search-input").value.trim();
-  if(!q){ setStatus("Tape un titre à chercher.", true); return; }
+  if (!q) { setStatus("Tape un titre.", true); return; }
   addRecentSearch(q); closeModal(); selectedItem = null; selectedSubtitle = null;
   setStatus("Recherche…"); document.getElementById("results").innerHTML = "";
-  try{
+  try {
     let results = [];
-    if(currentType === "Film"){
-      results = await searchTMDB(q, "movie");
-      results = results.filter(r => !(r.raw.genre_ids||[]).includes(99));
-    } else if(currentType === "Documentaire"){
-      results = await searchTMDB(q, "movie");
-      const filtered = results.filter(r => (r.raw.genre_ids||[]).includes(99));
-      results = filtered.length ? filtered : results;
-    } else if(currentType === "Série"){
-      results = await searchTMDB(q, "tv");
-    } else if(currentType === "Manga"){
-      results = await searchJikan(q);
-    } else if(currentType === "BD"){
-      results = await searchBDOptimized(q);
-    } else if(currentType === "Roman"){
-      results = await searchRomanOptimized(q);
-    } else if(currentType === "Jeu"){
-      results = await searchRAWG(q);
-    }
+    if (currentType === "Film") { results = await searchTMDB(q, "movie"); results = results.filter(r => !(r.raw.genre_ids || []).includes(99)); }
+    else if (currentType === "Documentaire") { results = await searchTMDB(q, "movie"); const f = results.filter(r => (r.raw.genre_ids || []).includes(99)); results = f.length ? f : results; }
+    else if (currentType === "Série") { results = await searchTMDB(q, "tv"); }
+    else if (["Manga", "BD", "Roman"].includes(currentType)) { results = await searchBooksMerged(q, currentType); }
+    else if (currentType === "Jeu") { results = await searchRAWG(q); }
     currentResults = results;
     setStatus(results.length === 0 ? "Aucun résultat." : results.length + " résultat(s)");
     renderResults();
-  }catch(err){
-    console.error(err);
-    setStatus("Erreur pendant la recherche. " + (err.message || ''), true);
-  }
+  } catch (err) { console.error(err); setStatus("Erreur: " + (err.message || ''), true); }
 }
 
-async function searchTMDB(q, kind){
+async function searchTMDB(q, kind) {
   const url = `${PROXY_URL}/tmdb/search/${kind}?language=fr-FR&query=${encodeURIComponent(q)}`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error("TMDB " + res.status);
+  if (!res.ok) throw new Error("TMDB " + res.status);
   const data = await res.json();
-  return (data.results||[]).slice(0,20).map(r=>({
-    source:"tmdb_"+kind, id:r.id,
-    title: kind==="movie" ? r.title : r.name,
-    original_title: kind==="movie" ? r.original_title : r.original_name,
-    year: (kind==="movie" ? r.release_date : r.first_air_date || "").slice(0,4),
-    poster: r.poster_path ? TMDB_IMG + r.poster_path : null, raw:r
+  return (data.results || []).slice(0, 20).map(r => ({
+    source: "tmdb_" + kind, id: r.id,
+    title: kind === "movie" ? r.title : r.name,
+    original_title: kind === "movie" ? r.original_title : r.original_name,
+    year: (kind === "movie" ? r.release_date : r.first_air_date || "").slice(0, 4),
+    poster: r.poster_path ? TMDB_IMG + r.poster_path : null, raw: r
   }));
 }
 
-/* ============ JIKAN API (MANGA) - GRATUIT, SANS CLÉ ============ */
-async function searchJikan(q){
-  // Jikan a un rate limit de 3 req/sec, on respecte
-  const url = `https://api.jikan.moe/v4/manga?q=${encodeURIComponent(q)}&sfw=true&limit=20&order_by=popularity&sort=asc`;
+async function searchGoogleBooks(q, type) {
+  let query = q;
+  if (type === "BD") query += " bande dessinée comics";
+  if (type === "Manga") query += " manga";
+  if (type === "Roman") query += " roman fiction";
+  const url = `${PROXY_URL}/books/v1/volumes?maxResults=20&q=${encodeURIComponent(query)}&filter=full`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error("Jikan " + res.status);
+  if (!res.ok) throw new Error("Google Books " + res.status);
   const data = await res.json();
-  return (data.data||[]).map(m=>({
-    source:"jikan",
-    id: m.mal_id,
-    title: m.title_english || m.title,
-    original_title: m.title,
-    year: m.published?.from ? m.published.from.slice(0,4) : "",
-    poster: m.images?.jpg?.large_image_url || m.images?.jpg?.image_url || null,
-    volumes: m.volumes,
-    chapters: m.chapters,
-    author: (m.authors||[]).map(a => a.name).join(", "),
-    raw: m
-  }));
-}
-
-/* ============ BD OPTIMISÉ ============ */
-async function searchBDOptimized(q){
-  // On cherche avec plusieurs variantes pour maximiser les résultats BD
-  const queries = [
-    `${q} bande dessinée`,
-    `${q} comics graphic novel`,
-    q
-  ];
-  const allResults = [];
-  for (const query of queries) {
-    try {
-      const url = `${PROXY_URL}/books/v1/volumes?maxResults=15&q=${encodeURIComponent(query)}&filter=full&orderBy=relevance`;
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        const items = (data.items||[]).map(it=>{
-          const v = it.volumeInfo || {};
-          let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
-          if(!poster && it.id) poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
-          return { source:"book", id: it.id, title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
-            year: (v.publishedDate||"").slice(0,4), author: (v.authors||[]).join(", "),
-            poster: poster, categories: v.categories || [], raw: v };
-        });
-        allResults.push(...items);
-      }
-    } catch(e) { /* continue */ }
-  }
-  // Filtrage strict : ne garder que les vrais BD/comics
-  const filtered = allResults.filter(item => {
-    const cats = (item.categories || []).join(' ').toLowerCase();
-    const title = (item.title || '').toLowerCase();
-    const bdSignals = ['comic', 'graphic novel', 'bande dessin', 'manga', 'bd ', ' comics', ' superhero', ' marvel', ' dc comics', ' manga'];
-    const hasBDSignal = bdSignals.some(s => cats.includes(s) || title.includes(s));
-    // Exclure les romans purs (fiction/littérature sans signal BD)
-    const novelOnly = ['fiction', 'literary', 'romance', 'biography', 'history', 'science', 'self-help'];
-    const hasNovelOnly = novelOnly.some(s => cats.includes(s)) && !hasBDSignal;
-    return hasBDSignal && !hasNovelOnly;
-  });
-  // Dédoublonner par titre
-  const seen = new Set();
-  return filtered.filter(it => {
-    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0, 30);
-    if(!key || seen.has(key)) return false;
-    seen.add(key); return true;
-  }).slice(0, 20);
-}
-
-/* ============ ROMAN OPTIMISÉ ============ */
-async function searchRomanOptimized(q){
-  const [gb, ol] = await Promise.allSettled([
-    searchGoogleBooksRoman(q),
-    searchOpenLibrary(q)
-  ]);
-  const listA = gb.status === "fulfilled" ? gb.value : [];
-  const listB = ol.status === "fulfilled" ? ol.value : [];
-  const merged = [...listA, ...listB].filter(item => {
-    const cats = (item.categories || []).join(' ').toLowerCase();
-    const title = (item.title || '').toLowerCase();
-    // Exclure TOUT ce qui sent la BD/Manga
-    const bdSignals = ['comic', 'graphic novel', 'bande dessin', 'manga', 'bd ', ' comics'];
-    const hasBDSignal = bdSignals.some(s => cats.includes(s) || title.includes(s));
-    return !hasBDSignal;
-  });
-  const seen = new Set();
-  return merged.filter(it => {
-    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0, 30);
-    if(!key || seen.has(key)) return false;
-    seen.add(key); return true;
-  }).slice(0, 20);
-}
-
-async function searchGoogleBooksRoman(q){
-  const url = `${PROXY_URL}/books/v1/volumes?maxResults=20&q=${encodeURIComponent(q)}&filter=full&orderBy=relevance`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error("Google Books " + res.status);
-  const data = await res.json();
-  return (data.items||[]).map(it=>{
+  return (data.items || []).map(it => {
     const v = it.volumeInfo || {};
     let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
-    if(!poster && it.id) poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
-    return { source:"book", id: it.id, title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
-      year: (v.publishedDate||"").slice(0,4), author: (v.authors||[]).join(", "),
+    if (!poster && it.id) poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
+    return { source: "book", id: it.id, title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
+      year: (v.publishedDate || "").slice(0, 4), author: (v.authors || []).join(", "),
       poster: poster, categories: v.categories || [], raw: v };
   });
 }
 
-async function searchOpenLibrary(q){
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject`;
+async function searchOpenLibrary(q, type) {
+  let query = q;
+  if (type === "BD") query += " graphic novel";
+  if (type === "Manga") query += " manga";
+  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error("Open Library " + res.status);
+  if (!res.ok) throw new Error("Open Library " + res.status);
   const data = await res.json();
-  return (data.docs||[]).map(d=>({
-    source:"openlib", id: d.key, title: d.title,
+  return (data.docs || []).map(d => ({
+    source: "openlib", id: d.key, title: d.title,
     year: d.first_publish_year ? String(d.first_publish_year) : "",
-    author: (d.author_name||[]).join(", "),
+    author: (d.author_name || []).join(", "),
     poster: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : null,
     categories: d.subject || [], raw: d
   }));
 }
 
-async function searchRAWG(q){
+function relevantForType(item, type) {
+  const cats = Array.isArray(item.categories) ? item.categories.join(" ") : "";
+  const text = (cats + " " + (item.title || "")).toLowerCase();
+  const hasComic = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
+  const hasManga = text.includes("manga");
+  if (type === "BD") return !(hasManga && !hasComic);
+  if (type === "Manga") return hasManga || !hasComic;
+  if (type === "Roman") return !(hasComic || hasManga);
+  return true;
+}
+
+async function searchBooksMerged(q, type) {
+  const [gb, ol] = await Promise.allSettled([searchGoogleBooks(q, type), searchOpenLibrary(q, type)]);
+  const listA = gb.status === "fulfilled" ? gb.value : [];
+  const listB = ol.status === "fulfilled" ? ol.value : [];
+  const merged = [...listA, ...listB].filter(item => relevantForType(item, type));
+  const seen = new Set();
+  return merged.filter(it => {
+    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (!key || seen.has(key)) return false;
+    seen.add(key); return true;
+  });
+}
+
+async function searchRAWG(q) {
   const url = `${PROXY_URL}/rawg/games?search=${encodeURIComponent(q)}&page_size=15`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error("RAWG " + res.status);
+  if (!res.ok) throw new Error("RAWG " + res.status);
   const data = await res.json();
-  return (data.results||[]).map(g=>({
-    source:"rawg", id: g.id, title: g.name, year: (g.released||"").slice(0,4),
-    poster: g.background_image, platforms: (g.platforms||[]).map(p=>p.platform.name), raw: g
+  return (data.results || []).map(g => ({
+    source: "rawg", id: g.id, title: g.name, year: (g.released || "").slice(0, 4),
+    poster: g.background_image, platforms: (g.platforms || []).map(p => p.platform.name), raw: g
   }));
 }
 
-async function fetchSteamGridCover(gameName){
-  try{
+async function fetchSteamGridCover(gameName) {
+  try {
     const searchRes = await fetch(`${PROXY_URL}/steamgrid/search/autocomplete/${encodeURIComponent(gameName)}`);
-    if(!searchRes.ok) return null;
+    if (!searchRes.ok) return null;
     const searchData = await searchRes.json();
-    if(!searchData.success || !searchData.data || !searchData.data.length) return null;
+    if (!searchData.success || !searchData.data || !searchData.data.length) return null;
     const gameId = searchData.data[0].id;
     const gridRes = await fetch(`${PROXY_URL}/steamgrid/grids/game/${gameId}?dimensions=600x900&styles=alternate`);
-    if(!gridRes.ok) return null;
+    if (!gridRes.ok) return null;
     const gridData = await gridRes.json();
-    if(!gridData.success || !gridData.data || !gridData.data.length) return null;
+    if (!gridData.success || !gridData.data || !gridData.data.length) return null;
     return gridData.data[0].url;
-  }catch(e){ return null; }
+  } catch (e) { return null; }
 }
 
-/* ============ RENDER RESULTS ============ */
-function renderResults(){
+function renderResults() {
   const container = document.getElementById("results"); container.innerHTML = "";
   currentResults.forEach(item => {
     const card = document.createElement("div"); card.className = "result-card";
@@ -628,50 +495,43 @@ function renderResults(){
     const info = document.createElement("div"); info.className = "result-info";
     const title = document.createElement("div"); title.className = "result-title"; title.textContent = item.title || '';
     info.appendChild(title);
-    if(item.original_title && item.original_title !== item.title){
+    if (item.original_title && item.original_title !== item.title) {
       const orig = document.createElement("div"); orig.className = "result-original-title"; orig.textContent = `(${item.original_title})`;
       info.appendChild(orig);
     }
     const meta = document.createElement("div"); meta.className = "result-meta";
-    const metaParts = []; if(item.year) metaParts.push(item.year); if(item.author) metaParts.push(item.author);
+    const metaParts = []; if (item.year) metaParts.push(item.year); if (item.author) metaParts.push(item.author);
     meta.textContent = metaParts.join(" • "); info.appendChild(meta);
-    // Afficher nombre de tomes pour les mangas
-    if (item.volumes) {
-      const vol = document.createElement("div"); vol.className = "result-volumes";
-      vol.textContent = `📚 ${item.volumes} tome(s)`;
-      info.appendChild(vol);
-    }
     card.appendChild(img); card.appendChild(info);
     card.addEventListener("click", () => selectResult(item, card));
     container.appendChild(card);
-    if(item.source === "rawg"){
-      fetchSteamGridCover(item.title).then(cover => { if(cover){ item.poster = cover; img.src = cover; } });
+    if (item.source === "rawg") {
+      fetchSteamGridCover(item.title).then(cover => { if (cover) { item.poster = cover; img.src = cover; } });
     }
   });
 }
 
-async function selectResult(item, cardEl){
+async function selectResult(item, cardEl) {
   document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
-  if(cardEl) cardEl.classList.add("selected");
+  if (cardEl) cardEl.classList.add("selected");
   isEditingExisting = false; editingEntryId = null; selectedItem = item; selectedSubtitle = null;
   currentNote = 5; isFavorite = false;
-  if(item.source === "tmdb_tv"){
-    setStatus("Chargement des saisons…");
-    try{
+  if (item.source === "tmdb_tv") {
+    setStatus("Chargement…");
+    try {
       const res = await fetch(`${PROXY_URL}/tmdb/tv/${item.id}?language=fr-FR`);
-      if(!res.ok) throw new Error('TMDB details ' + res.status);
+      if (!res.ok) throw new Error('TMDB ' + res.status);
       const details = await res.json();
-      item.seasons = (details.seasons||[]).filter(s => s.season_number > 0);
+      item.seasons = (details.seasons || []).filter(s => s.season_number > 0);
       setStatus("");
-    }catch(e){ setStatus("Impossible de charger les saisons", true); }
+    } catch (e) { setStatus("Erreur saisons", true); }
   }
   renderPanel(); openModal();
 }
 
-/* ============ PANEL NOTATION ============ */
-function renderPanel(existingEntry = null){
+function renderPanel(existingEntry = null) {
   const container = document.getElementById("panel-container"); container.innerHTML = "";
-  if(existingEntry){
+  if (existingEntry) {
     isEditingExisting = true; editingEntryId = existingEntry.id;
     currentNote = existingEntry.note || 5; isFavorite = !!existingEntry.isFavorite;
   } else { isEditingExisting = false; editingEntryId = null; }
@@ -679,21 +539,21 @@ function renderPanel(existingEntry = null){
   const titleVal = existingEntry ? existingEntry.titre : (selectedItem ? selectedItem.title : "");
   const subVal = existingEntry ? (existingEntry.sousTitre || "") : "";
   const posterVal = existingEntry ? (existingEntry.posterUrl || "") : (selectedItem ? (selectedItem.poster || "") : "");
-  const dateVal = existingEntry ? (existingEntry.dateFin || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
+  const dateVal = existingEntry ? (existingEntry.dateFin || new Date().toISOString().slice(0, 10)) : new Date().toISOString().slice(0, 10);
   const commentVal = existingEntry ? (existingEntry.comment || "") : "";
 
   const panel = document.createElement('div'); panel.className = 'panel';
   const h3 = document.createElement('h3'); h3.className = 'serif'; h3.style.margin = '0 0 14px'; h3.style.color = 'var(--accent)';
-  h3.textContent = isEditingExisting ? "Modifier l'œuvre" : "Fiche de notation";
+  h3.textContent = isEditingExisting ? "Modifier" : "Fiche de notation";
   panel.appendChild(h3);
 
-  const createField = (label, id, inputType, value, placeholder="") => {
+  const createField = (label, id, inputType, value, placeholder = "") => {
     const f = document.createElement('div'); f.className = 'field';
     const l = document.createElement('label'); l.textContent = label;
     const inp = document.createElement(inputType === 'textarea' ? 'textarea' : 'input');
     if (inputType !== 'textarea') inp.type = inputType;
     inp.id = id; inp.value = value;
-    if(placeholder) inp.placeholder = placeholder;
+    if (placeholder) inp.placeholder = placeholder;
     inp.style.width = '100%';
     if (inputType === 'textarea') { inp.style.minHeight = '80px'; inp.style.resize = 'vertical'; }
     f.appendChild(l); f.appendChild(inp); return f;
@@ -703,22 +563,22 @@ function renderPanel(existingEntry = null){
   panel.appendChild(createField('Saison / Tome / Plateforme', 'edit-sub', 'text', subVal));
   panel.appendChild(createField('URL Affiche', 'edit-poster', 'text', posterVal));
 
-  if(!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons){
+  if (!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons) {
     const fChips = document.createElement('div'); fChips.className = 'field';
-    const lChips = document.createElement('label'); lChips.textContent = 'Saison pré-remplie';
+    const lChips = document.createElement('label'); lChips.textContent = 'Saison';
     const chipsWrap = document.createElement('div'); chipsWrap.className = 'subtitle-select';
     selectedItem.seasons.forEach(s => {
       const chip = document.createElement('div'); chip.className = 'subtitle-chip'; chip.dataset.seasonId = s.id;
       const img = document.createElement('img'); img.src = s.poster_path ? TMDB_IMG + s.poster_path : (selectedItem.poster || NO_POSTER); img.alt = '';
-      const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Saison ' + s.season_number;
+      const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'S' + s.season_number;
       chip.appendChild(img); chip.appendChild(lbl);
       chip.addEventListener('click', () => {
-        chipsWrap.querySelectorAll('.subtitle-chip').forEach(c=>c.classList.remove('selected'));
+        chipsWrap.querySelectorAll('.subtitle-chip').forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
         selectedSubtitle = selectedItem.seasons.find(x => x.id === s.id);
-        if(selectedSubtitle){
+        if (selectedSubtitle) {
           document.getElementById('edit-sub').value = `Saison ${selectedSubtitle.season_number}`;
-          if(selectedSubtitle.poster_path) document.getElementById('edit-poster').value = TMDB_IMG + selectedSubtitle.poster_path;
+          if (selectedSubtitle.poster_path) document.getElementById('edit-poster').value = TMDB_IMG + selectedSubtitle.poster_path;
         }
       });
       chipsWrap.appendChild(chip);
@@ -726,24 +586,24 @@ function renderPanel(existingEntry = null){
     fChips.appendChild(lChips); fChips.appendChild(chipsWrap); panel.appendChild(fChips);
   }
 
-  if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
+  if (!existingEntry && selectedItem && selectedItem.source === "rawg") {
     const fPlat = document.createElement('div'); fPlat.className = 'field';
-    const lPlat = document.createElement('label'); lPlat.textContent = 'Plateforme pré-remplie';
+    const lPlat = document.createElement('label'); lPlat.textContent = 'Plateforme';
     const selPlat = document.createElement('select'); selPlat.id = 'platform-select'; selPlat.style.width = '100%';
     const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
     list.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; selPlat.appendChild(o); });
-    selPlat.addEventListener('change', ()=> { document.getElementById('edit-sub').value = selPlat.value; });
+    selPlat.addEventListener('change', () => { document.getElementById('edit-sub').value = selPlat.value; });
     fPlat.appendChild(lPlat); fPlat.appendChild(selPlat); panel.appendChild(fPlat);
   }
 
   const fNote = document.createElement('div'); fNote.className = 'field';
   const lNote = document.createElement('label'); lNote.textContent = 'Note (/10)';
   const grid = document.createElement('div'); grid.className = 'note-grid';
-  for(let n=1;n<=10;n++){
+  for (let n = 1; n <= 10; n++) {
     const btn = document.createElement('div'); btn.className = 'note-btn' + (n === currentNote ? ' selected' : '');
     btn.dataset.note = n; btn.textContent = n;
-    btn.addEventListener('click', ()=> {
-      grid.querySelectorAll('.note-btn').forEach(b=>b.classList.remove('selected'));
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.note-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected'); currentNote = parseInt(btn.dataset.note);
     });
     grid.appendChild(btn);
@@ -753,7 +613,7 @@ function renderPanel(existingEntry = null){
   const fFav = document.createElement('div'); fFav.className = 'field';
   const favBtn = document.createElement('button'); favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : ''); favBtn.id = 'fav-btn'; favBtn.type = 'button';
   favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
-  favBtn.addEventListener('click', ()=> {
+  favBtn.addEventListener('click', () => {
     isFavorite = !isFavorite;
     favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
     favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
@@ -761,7 +621,7 @@ function renderPanel(existingEntry = null){
   fFav.appendChild(favBtn); panel.appendChild(fFav);
 
   panel.appendChild(createField('Date de fin', 'date-fin', 'date', dateVal));
-  panel.appendChild(createField('Mes notes / commentaire', 'comment-input', 'textarea', commentVal, 'Ton avis...'));
+  panel.appendChild(createField('Commentaire', 'comment-input', 'textarea', commentVal, 'Ton avis...'));
 
   const actions = document.createElement('div'); actions.className = 'panel-actions';
   const saveBtn = document.createElement('button'); saveBtn.className = 'primary'; saveBtn.id = 'save-entry-btn'; saveBtn.textContent = 'Enregistrer';
@@ -770,99 +630,15 @@ function renderPanel(existingEntry = null){
   saveBtn.addEventListener('click', () => saveCurrentEntry());
 }
 
-/* ============ DETAILS MODAL (nouveau) ============ */
-function showDetailsModal(entry){
-  const container = document.getElementById("panel-container");
-  container.innerHTML = '';
-  
-  const header = document.createElement('div');
-  header.className = 'details-header';
-  
-  const img = document.createElement('img');
-  img.className = 'poster-lg';
-  img.src = entry.posterUrl || NO_POSTER;
-  img.alt = '';
-  
-  const info = document.createElement('div');
-  info.className = 'details-info';
-  
-  const title = document.createElement('h3');
-  title.className = 'details-title';
-  title.textContent = entry.titre;
-  
-  const sub = document.createElement('div');
-  sub.className = 'details-sub';
-  sub.textContent = entry.sousTitre || '';
-  
-  const meta = document.createElement('div');
-  meta.className = 'details-meta';
-  meta.innerHTML = `
-    <div><strong>Type :</strong> ${entry.type}</div>
-    <div><strong>Note :</strong> ${entry.note}/10 ${entry.isFavorite ? '💜' : ''}</div>
-    <div><strong>Date :</strong> ${formatDateFR(entry.dateFin)}</div>
-  `;
-  
-  info.appendChild(title);
-  if (entry.sousTitre) info.appendChild(sub);
-  info.appendChild(meta);
-  
-  header.appendChild(img);
-  header.appendChild(info);
-  container.appendChild(header);
-  
-  // Zone commentaire
-  const commentBox = document.createElement('div');
-  commentBox.className = 'details-comment-box';
-  const commentLabel = document.createElement('div');
-  commentLabel.className = 'details-comment-label';
-  commentLabel.textContent = '📝 Mon résumé / avis';
-  commentBox.appendChild(commentLabel);
-  
-  if (entry.comment && entry.comment.trim()) {
-    const commentText = document.createElement('div');
-    commentText.className = 'details-comment-text';
-    commentText.textContent = entry.comment;
-    commentBox.appendChild(commentText);
-  } else {
-    const empty = document.createElement('div');
-    empty.className = 'details-comment-empty';
-    empty.textContent = 'Aucun commentaire pour cette œuvre.';
-    commentBox.appendChild(empty);
-  }
-  container.appendChild(commentBox);
-  
-  // Actions
-  const actions = document.createElement('div');
-  actions.className = 'details-actions';
-  const editBtn = document.createElement('button');
-  editBtn.className = 'primary';
-  editBtn.textContent = '📝 Modifier';
-  editBtn.addEventListener('click', () => {
-    closeModal();
-    setTimeout(() => {
-      currentType = entry.type || "Film";
-      renderPanel(entry);
-      openModal();
-    }, 150);
-  });
-  actions.appendChild(editBtn);
-  container.appendChild(actions);
-  
-  openModal();
-}
-
-/* ============ SAVE & SYNC ============ */
-async function saveCurrentEntry(){
+async function saveCurrentEntry() {
   const titleVal = document.getElementById("edit-title").value.trim();
-  if(!titleVal){ alert("Le titre est obligatoire !"); return; }
+  if (!titleVal) { alert("Titre obligatoire !"); return; }
 
   let baseId = isEditingExisting ? editingEntryId : `${currentType}_${selectedItem ? (selectedItem.id || Date.now()) : Date.now()}`;
-  if(!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle){
-    baseId += `_s${selectedSubtitle.season_number}`;
-  }
+  if (!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle) baseId += `_s${selectedSubtitle.season_number}`;
   const entries = await dbAll();
   let entryId = baseId;
-  if(!isEditingExisting && entries.some(e => e.id === entryId)) entryId = baseId + '_' + Date.now();
+  if (!isEditingExisting && entries.some(e => e.id === entryId)) entryId = baseId + '_' + Date.now();
 
   const entry = {
     id: entryId, type: currentType, titre: titleVal,
@@ -879,15 +655,13 @@ async function saveCurrentEntry(){
     showToast("Enregistré !");
     closeModal();
     syncToSheet(entry, isEditingExisting ? 'update' : 'add');
-    if(document.getElementById("view-history").classList.contains("active")) renderHistory();
-  } catch(e){
-    console.error(e); alert('Erreur : ' + (e.message || ''));
-  }
+    if (document.getElementById("view-history").classList.contains("active")) renderHistory();
+  } catch (e) { console.error(e); alert('Erreur: ' + (e.message || '')); }
 }
 
-async function syncToSheet(entry, action){
+async function syncToSheet(entry, action) {
   const url = localStorage.getItem("sheet_url");
-  if(!url) return;
+  if (!url) return;
   const payload = {
     action: action,
     entry: {
@@ -898,35 +672,32 @@ async function syncToSheet(entry, action){
       id: entry.id, dateAjout: entry.dateAjout
     }
   };
-  try {
-    await fetch(url, { method: "POST", mode: "no-cors", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload) });
-  } catch(e) { console.error("Sync échouée", e); }
+  try { await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); }
+  catch (e) { console.error("Sync échouée", e); }
 }
 
-/* ============ HISTORY & CALENDAR ============ */
 document.getElementById("toggle-view-btn").addEventListener("click", () => {
   isCalendarView = !isCalendarView;
   const btn = document.getElementById("toggle-view-btn");
   document.getElementById("history-list-container").style.display = isCalendarView ? "none" : "block";
   document.getElementById("history-cal-container").style.display = isCalendarView ? "block" : "none";
   btn.textContent = isCalendarView ? "📋 Vue Liste" : "📅 Vue Calendrier";
-  if(isCalendarView) renderCalendar(); else renderHistory();
+  if (isCalendarView) renderCalendar(); else renderHistory();
 });
 
-async function renderHistory(){
+async function renderHistory() {
   const entries = await dbAll();
   document.getElementById("hist-count").textContent = `${entries.length} œuvre(s)`;
-  
   const stats = {};
   entries.forEach(e => { stats[e.type] = (stats[e.type] || 0) + 1; });
   const statsBar = document.getElementById("stats-bar");
-  statsBar.innerHTML = Object.entries(stats).map(([type, count]) => 
-    `<div class="stat-chip">${type === 'Film' ? '🎬' : type === 'Série' ? '📺' : type === 'Jeu' ? '🎮' : type === 'Manga' ? '📖' : type === 'BD' ? '📕' : '📚'} ${type}: <span>${count}</span></div>`
+  statsBar.innerHTML = Object.entries(stats).map(([type, count]) =>
+    `<div class="stat-chip">${type === 'Film' ? '🎬' : type === 'Série' ? '📺' : type === 'Jeu' ? '' : '📚'} ${type}: <span>${count}</span></div>`
   ).join('') || '<div class="stat-chip">Aucune donnée</div>';
 
   const grid = document.getElementById("hist-grid"); grid.innerHTML = "";
-  if(!entries.length){
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée.</div>`;
+  if (!entries.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note.</div>`;
     return;
   }
 
@@ -934,41 +705,36 @@ async function renderHistory(){
     const card = document.createElement("div"); card.className = "hist-card";
     const img = document.createElement('img'); img.src = e.posterUrl || NO_POSTER; img.alt = ''; img.loading = 'lazy';
     const badge = document.createElement('div'); badge.className = 'hist-badge'; badge.textContent = `${e.note}/10`;
-    const favHtml = e.isFavorite ? (()=>{ const d=document.createElement('div'); d.className='hist-fav'; d.textContent='💜'; return d; })() : null;
-    const typeTag = document.createElement('div'); typeTag.className='hist-type'; typeTag.textContent = e.type;
-    const body = document.createElement('div'); body.className='hist-body';
-    const title = document.createElement('div'); title.className='hist-title'; title.textContent = e.titre;
-    const date = document.createElement('div'); date.className='hist-date'; date.textContent = formatDateFR(e.dateFin);
-    const comment = document.createElement('div'); comment.className='hist-comment'; comment.textContent = e.comment ? `"${e.comment}"` : '';
-    const scLink = document.createElement('a'); scLink.className='sc-link'; scLink.href = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`; scLink.target='_blank'; scLink.textContent = 'SensCritique ↗';
-    const btnRow = document.createElement('div'); btnRow.className='hist-btn-row';
-    const editBtn = document.createElement('button'); editBtn.textContent='📝 Modifier';
-    const delBtn = document.createElement('button'); delBtn.textContent='🗑️';
+    const favHtml = e.isFavorite ? (() => { const d = document.createElement('div'); d.className = 'hist-fav'; d.textContent = '💜'; return d; })() : null;
+    const typeTag = document.createElement('div'); typeTag.className = 'hist-type'; typeTag.textContent = e.type;
+    const body = document.createElement('div'); body.className = 'hist-body';
+    const title = document.createElement('div'); title.className = 'hist-title'; title.textContent = e.titre;
+    const sub = document.createElement('div'); sub.style.fontSize = '10px'; sub.style.color = 'var(--accent-2)'; sub.textContent = e.sousTitre || '';
+    const date = document.createElement('div'); date.className = 'hist-date'; date.textContent = formatDate(e.dateFin) || '';
+    const comment = document.createElement('div'); comment.className = 'hist-comment'; comment.textContent = e.comment ? `"${e.comment}"` : '';
+    const scLink = document.createElement('a'); scLink.className = 'sc-link'; scLink.href = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`; scLink.target = '_blank'; scLink.textContent = 'SC ↗';
+    const btnRow = document.createElement('div'); btnRow.className = 'hist-btn-row';
+    const editBtn = document.createElement('button'); editBtn.textContent = '';
+    const delBtn = document.createElement('button'); delBtn.textContent = '🗑️';
     btnRow.appendChild(editBtn); btnRow.appendChild(delBtn);
 
-    body.appendChild(title); body.appendChild(date);
-    if(e.comment) body.appendChild(comment); body.appendChild(scLink); body.appendChild(btnRow);
-    card.appendChild(img); card.appendChild(badge); if(favHtml) card.appendChild(favHtml);
+    body.appendChild(title); if (e.sousTitre) body.appendChild(sub); body.appendChild(date);
+    if (e.comment) body.appendChild(comment); body.appendChild(scLink); body.appendChild(btnRow);
+    card.appendChild(img); card.appendChild(badge); if (favHtml) card.appendChild(favHtml);
     card.appendChild(typeTag); card.appendChild(body);
 
-    // Clic sur la carte → ouvre Détails (sauf si clic sur boutons/liens)
-    card.addEventListener("click", (ev) => {
-      if (ev.target.closest('.hist-btn-row') || ev.target.closest('.sc-link')) return;
-      showDetailsModal(e);
+    card.addEventListener("click", (evt) => {
+      if (evt.target.tagName !== 'BUTTON' && evt.target.tagName !== 'A') {
+        showDetailsModal(e);
+      }
     });
 
-    editBtn.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      currentType = e.type || "Film";
-      renderPanel(e);
-      openModal();
-    });
-    delBtn.addEventListener("click", async (ev) => {
-      ev.stopPropagation();
-      if(confirm(`Supprimer "${e.titre}" ?`)){
-        const removed = Object.assign({}, e);
+    editBtn.addEventListener("click", (evt) => { evt.stopPropagation(); currentType = e.type || "Film"; renderPanel(e); openModal(); });
+    delBtn.addEventListener("click", async (evt) => {
+      evt.stopPropagation();
+      if (confirm(`Supprimer "${e.titre}" ?`)) {
         await dbDelete(e.id);
-        syncToSheet({id: e.id}, 'delete');
+        syncToSheet({ id: e.id }, 'delete');
         renderHistory();
         showToast("Supprimé");
       }
@@ -977,29 +743,62 @@ async function renderHistory(){
   });
 }
 
-/* ============ CALENDAR LOGIC ============ */
+function showDetailsModal(entry) {
+  const container = document.getElementById("panel-container");
+  container.innerHTML = `
+    <h3 class="serif" style="color:var(--accent); margin-bottom:14px;">${entry.titre}</h3>
+    <div style="display:flex; gap:12px; margin-bottom:14px;">
+      <img src="${entry.posterUrl || NO_POSTER}" style="width:80px; height:120px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;">${entry.type} ${entry.sousTitre ? '• ' + entry.sousTitre : ''}</div>
+        <div style="font-size:14px; color:var(--accent); font-weight:600; margin-bottom:4px;">Note: ${entry.note}/10 ${entry.isFavorite ? '💜' : ''}</div>
+        <div style="font-size:11px; color:var(--text-dim);">Date: ${formatDate(entry.dateFin) || 'Non renseignée'}</div>
+      </div>
+    </div>
+    ${entry.comment ? `
+      <div class="details-comment-box">
+        <div style="font-size:11px; color:var(--text-dim); margin-bottom:6px;">Mon avis :</div>
+        <div class="details-comment-text">${entry.comment}</div>
+      </div>
+    ` : '<p style="color:var(--text-dim); font-size:12px;">Aucun commentaire.</p>'}
+    <div style="display:flex; gap:8px; margin-top:14px;">
+      <button class="primary" id="details-edit-btn" style="flex:1;"> Modifier</button>
+      <button class="outline" id="details-close-btn" style="flex:1;">Fermer</button>
+    </div>
+  `;
+  
+  document.getElementById("details-edit-btn").addEventListener("click", () => {
+    closeModal();
+    currentType = entry.type || "Film";
+    renderPanel(entry);
+    openModal();
+  });
+  document.getElementById("details-close-btn").addEventListener("click", closeModal);
+  openModal();
+}
+
 document.getElementById("cal-prev").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() - 1); renderCalendar(); });
 document.getElementById("cal-next").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() + 1); renderCalendar(); });
 
-async function renderCalendar(){
+async function renderCalendar() {
   const entries = await dbAll();
   const grid = document.getElementById("cal-grid"); const title = document.getElementById("cal-title");
   grid.innerHTML = "";
   const year = calCurrentDate.getFullYear(), month = calCurrentDate.getMonth();
-  const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   title.textContent = `${monthNames[month]} ${year}`;
-  ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(d => {
+  ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].forEach(d => {
     const el = document.createElement("div"); el.className = "cal-day-name"; el.textContent = d; grid.appendChild(el);
   });
   const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  for(let i = 0; i < firstDayIndex; i++){ const empty = document.createElement("div"); empty.className = "cal-cell empty"; grid.appendChild(empty); }
-  for(let day = 1; day <= daysInMonth; day++){
+  for (let i = 0; i < firstDayIndex; i++) { const empty = document.createElement("div"); empty.className = "cal-cell empty"; grid.appendChild(empty); }
+  for (let day = 1; day <= daysInMonth; day++) {
     const cell = document.createElement("div"); cell.className = "cal-cell";
-    const dStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const dayEntries = entries.filter(e => e.dateFin === dStr);
     const dayText = document.createElement('div'); dayText.textContent = day; cell.appendChild(dayText);
-    if(dayEntries.length > 0){
+    if (dayEntries.length > 0) {
       cell.classList.add("has-entries");
       const dot = document.createElement("div"); dot.className = "dot"; cell.appendChild(dot);
       cell.addEventListener("click", () => showDayModal(dStr, dayEntries));
@@ -1008,24 +807,23 @@ async function renderCalendar(){
   }
 }
 
-function showDayModal(dateStr, dayEntries){
+function showDayModal(dateStr, dayEntries) {
   const container = document.getElementById("panel-container");
-  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 Œuvres du ${formatDateFR(dateStr)}</h3>`;
-  if(dayEntries.length === 0) {
-    container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre ce jour-là.</p>`;
+  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 Œuvres du ${formatDate(dateStr)}</h3>`;
+  if (dayEntries.length === 0) {
+    container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre.</p>`;
   } else {
     dayEntries.forEach(e => {
-      const div = document.createElement("div"); div.className = "result-card"; div.style.marginBottom = "8px"; div.style.cursor = "pointer";
+      const div = document.createElement("div"); div.className = "result-card"; div.style.marginBottom = "8px";
       div.innerHTML = `
         <img src="${e.posterUrl || NO_POSTER}" class="poster" alt="">
         <div class="result-info">
           <div class="result-title">${e.titre}</div>
           <div class="result-meta">${e.type} • Note: ${e.note}/10 ${e.isFavorite ? '💜' : ''}</div>
-          ${e.comment ? `<div class="hist-comment">"${e.comment}"</div>` : ''}
         </div>`;
       div.addEventListener("click", () => {
         closeModal();
-        setTimeout(() => showDetailsModal(e), 150);
+        showDetailsModal(e);
       });
       container.appendChild(div);
     });
@@ -1033,41 +831,27 @@ function showDayModal(dateStr, dayEntries){
   openModal();
 }
 
-/* ============ EXPORT / IMPORT / OPTIONS ============ */
-// URL Sheet masquée
-const sheetToggleBtn = document.getElementById("sheet-toggle-btn");
-const sheetInputRow = document.getElementById("sheet-input-row");
-const sheetStatus = document.getElementById("sheet-status");
-
-sheetToggleBtn.addEventListener("click", () => {
-  sheetInputRow.classList.toggle("visible");
+document.getElementById("config-sheet-btn").addEventListener("click", () => {
+  const container = document.getElementById("sheet-url-container");
+  container.style.display = container.style.display === "none" ? "block" : "none";
 });
 
 document.getElementById("save-sheet-url").addEventListener("click", () => {
   const val = document.getElementById("sheet-url").value.trim();
   localStorage.setItem("sheet_url", val);
-  sheetInputRow.classList.remove("visible");
-  if (val) {
-    sheetToggleBtn.classList.add("connected");
-    sheetToggleBtn.textContent = "🔗 Sheet connecté";
-    sheetStatus.textContent = "✅ URL enregistrée localement";
-  } else {
-    sheetToggleBtn.classList.remove("connected");
-    sheetToggleBtn.textContent = "🔗 Configurer le lien Sheet";
-    sheetStatus.textContent = "";
-  }
-  showToast("URL Webhook enregistrée !");
+  document.getElementById("sheet-url-container").style.display = "none";
+  showToast("URL enregistrée !");
 });
 
 document.getElementById("sync-sheet-btn").addEventListener("click", async () => {
   const url = localStorage.getItem("sheet_url");
-  if(!url){ alert("Configure le lien Sheet dans l'onglet Options."); return; }
+  if (!url) { alert("Configure l'URL dans Options."); return; }
   const entries = await dbAll();
-  showToast("Synchronisation manuelle…", 2500);
+  showToast("Synchronisation…", 2500);
   try {
-    await fetch(url, { method: "POST", mode: "no-cors", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ action: 'sync_all', entries }) });
-    showToast("Envoyé au Google Sheet !");
-  } catch(err) { alert("Erreur de synchro."); }
+    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: 'sync_all', entries }) });
+    showToast("Envoyé !");
+  } catch (err) { alert("Erreur synchro."); }
 });
 
 document.getElementById("export-btn").addEventListener("click", async () => {
@@ -1078,68 +862,58 @@ document.getElementById("export-btn").addEventListener("click", async () => {
     settings: { sheet_url: localStorage.getItem("sheet_url") || "" },
     entries: entries
   };
-  const blob = new Blob([JSON.stringify(backupData, null, 2)], {type : 'application/json'});
+  const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
+  const a = document.createElement('a'); a.href = url; a.download = `catalogue_backup_${new Date().toISOString().slice(0, 10)}.json`;
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  showToast('Backup complet exporté !');
+  showToast('Backup exporté !');
 });
 
 document.getElementById("import-btn").addEventListener("click", () => { document.getElementById("import-file").click(); });
 document.getElementById("import-file").addEventListener("change", (evt) => {
-  const file = evt.target.files[0]; if(!file) return;
+  const file = evt.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
       const data = JSON.parse(e.target.result);
       const entries = data.entries || (Array.isArray(data) ? data : []);
       let imported = 0;
-      for(const entry of entries){
-        if(entry && entry.id){
-          if(!entry.titre) entry.titre = 'Sans titre';
-          if(!entry.dateAjout) entry.dateAjout = new Date().toISOString();
+      for (const entry of entries) {
+        if (entry && entry.id) {
+          if (!entry.titre) entry.titre = 'Sans titre';
+          if (!entry.dateAjout) entry.dateAjout = new Date().toISOString();
           await dbPut(entry); imported++;
         }
       }
-      if(data.settings && data.settings.sheet_url) {
+      if (data.settings && data.settings.sheet_url) {
         localStorage.setItem("sheet_url", data.settings.sheet_url);
         document.getElementById("sheet-url").value = data.settings.sheet_url;
-        if (data.settings.sheet_url) {
-          sheetToggleBtn.classList.add("connected");
-          sheetToggleBtn.textContent = "🔗 Sheet connecté";
-        }
       }
-      showToast(`Importation réussie (${imported} œuvres + réglages)`);
+      showToast(`Importé (${imported} œuvres)`);
       renderHistory();
-    } catch(err) { alert("Fichier JSON invalide."); }
+    } catch (err) { alert("JSON invalide."); }
   };
   reader.readAsText(file);
 });
 
 document.getElementById("clear-local-db").addEventListener("click", async () => {
-  if(confirm("Effacer TOUT le stockage local ?")){
+  if (confirm("Effacer TOUT ?")) {
     const entries = await dbAll();
-    for(const e of entries) await dbDelete(e.id);
-    renderHistory(); showToast("Base réinitialisée.");
+    for (const e of entries) await dbDelete(e.id);
+    renderHistory(); showToast("Réinitialisé.");
   }
 });
 
-function initAboutBuildDate(){
+function initAboutBuildDate() {
   const dateObj = new Date(LAST_UPDATE_DATE);
   const formatted = dateObj.toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
   document.getElementById("about-build-date").textContent = `Dernière mise à jour : ${formatted} (Paris)`;
 }
 
 openDB().then(() => {
-  const savedUrl = localStorage.getItem("sheet_url") || "";
-  document.getElementById("sheet-url").value = savedUrl;
-  if (savedUrl) {
-    sheetToggleBtn.classList.add("connected");
-    sheetToggleBtn.textContent = " Sheet connecté";
-    sheetStatus.textContent = "✅ URL enregistrée localement";
-  }
+  document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
   renderRecentSearches(); initAboutBuildDate();
-}).catch(err => { alert('Erreur IndexedDB : ' + err.message); });
+}).catch(err => { alert('Erreur IndexedDB: ' + err.message); });
 </script>
 </body>
 </html>
