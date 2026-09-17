@@ -9,74 +9,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#12181C;
-    --surface:#1B2329;
-    --surface-2:#222C33;
-    --border:#2E3941;
-    --text:#E9E6DD;
-    --text-dim:#8FA0A6;
-    --accent:#E1A63C;
-    --accent-dim:#8A6A2C;
-    --accent-2:#4FA98C;
-    --danger:#C1554A;
-    --radius:6px;
+    --bg:#12181C; --surface:#1B2329; --surface-2:#222C33; --border:#2E3941;
+    --text:#E9E6DD; --text-dim:#8FA0A6; --accent:#E1A63C; --accent-dim:#8A6A2C;
+    --accent-2:#4FA98C; --danger:#C1554A; --radius:6px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
-  body{
-    font-family:'IBM Plex Mono',monospace;
-    -webkit-font-smoothing:antialiased;
-    padding-bottom:76px;
-    min-height:100vh;
-  }
+  body{font-family:'IBM Plex Mono',monospace; -webkit-font-smoothing:antialiased; padding-bottom:76px; min-height:100vh;}
   h1,h2,h3,.serif{font-family:'Fraunces',serif;}
-  header.top{
-    padding:22px 18px 16px;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-  }
-  header.top h1{
-    margin:0;
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:-0.01em;
-    color:var(--accent);
-  }
-  header.top .sub{
-    font-size:11px;
-    color:var(--text-dim);
-    letter-spacing:.02em;
-  }
+  
+  header.top{padding:22px 18px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+  header.top .header-left h1{margin:0; font-size:28px; font-weight:700; letter-spacing:-0.01em; color:var(--accent);}
+  header.top .header-left .sub{font-size:11px; color:var(--text-dim); letter-spacing:.02em; margin-top:4px;}
+  
   main{padding:16px;}
-  .view{display:none;}
-  .view.active{display:block;}
+  .view{display:none;} .view.active{display:block;}
 
-  /* Search Controls */
   .search-controls{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
   .search-row{display:flex;gap:8px;}
   input[type=text], input[type=date], select, textarea{
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    color:var(--text);
-    border-radius:var(--radius);
-    padding:11px 12px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    width:100%;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    border-radius:var(--radius); padding:11px 12px; font-family:'IBM Plex Mono',monospace; font-size:14px; width:100%;
   }
-  input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus{outline:1px solid var(--accent);}
+  input:focus, select:focus, textarea:focus{outline:1px solid var(--accent);}
+  
   button{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    border-radius:var(--radius);
-    border:1px solid var(--border);
-    background:var(--surface-2);
-    color:var(--text);
-    padding:11px 14px;
-    cursor:pointer;
-    white-space:nowrap;
+    font-family:'IBM Plex Mono',monospace; font-size:13px; border-radius:var(--radius);
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text);
+    padding:11px 14px; cursor:pointer; white-space:nowrap; transition:all 0.1s;
   }
   button:active{transform:translateY(1px);}
   button.primary{background:var(--accent);border-color:var(--accent);color:#1B1400;font-weight:600;}
@@ -84,178 +44,111 @@
   button.danger-outline{border-color:var(--danger);color:var(--danger);background:transparent;}
 
   .recent-searches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-  .recent-tag{
-    font-size:11px;color:var(--text-dim);background:var(--surface);
-    border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer;
-  }
-
+  .recent-tag{font-size:11px;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer;}
   .status-line{font-size:12px;color:var(--text-dim);margin:6px 0 14px;min-height:16px;}
   .status-line.error{color:var(--danger);}
 
   .result-list{display:flex;flex-direction:column;gap:8px;}
-  .result-card{
-    display:flex;
-    gap:12px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:8px;
-    cursor:pointer;
-    align-items:center;
-  }
+  .result-card{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;}
   .result-card.selected{border-color:var(--accent);background:rgba(225,166,60,.06);}
-  .poster{
-    width:52px;height:78px;
-    object-fit:cover;
-    border-radius:4px;
-    background:var(--surface-2);
-    flex-shrink:0;
-    border:1px solid var(--border);
-  }
+  .poster{width:52px;height:78px;object-fit:cover;border-radius:4px;background:var(--surface-2);flex-shrink:0;border:1px solid var(--border);}
   .result-info{min-width:0;flex:1;}
-  .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
   .result-original-title{font-size:11px;color:var(--accent-2);margin-top:2px;font-style:italic;}
   .result-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
 
   .panel{background:transparent;padding:0;}
-  .panel-head{display:flex;gap:12px;margin-bottom:14px;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:11px;color:var(--text-dim);letter-spacing:.03em;margin-bottom:6px;}
-  
   .panel-actions{display:flex;gap:8px;margin-top:14px;}
   .panel-actions button{flex:1;}
 
   .subtitle-select{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;}
-  .subtitle-chip{
-    flex-shrink:0;width:66px;text-align:center;cursor:pointer;
-    border:1px solid var(--border);border-radius:var(--radius);padding:6px;background:var(--surface-2);
-  }
+  .subtitle-chip{flex-shrink:0;width:66px;text-align:center;cursor:pointer;border:1px solid var(--border);border-radius:var(--radius);padding:6px;background:var(--surface-2);}
   .subtitle-chip.selected{border-color:var(--accent);}
   .subtitle-chip img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px;background:var(--surface);}
   .subtitle-chip .lbl{font-size:9px;color:var(--text-dim);margin-top:4px;line-height:1.2;}
 
   .note-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
-  .note-btn{
-    padding:12px 0;text-align:center;border:1px solid var(--border);border-radius:var(--radius);
-    background:var(--surface-2);font-family:'Fraunces',serif;font-size:16px;font-weight:600;
-    cursor:pointer;color:var(--text);
-  }
+  .note-btn{padding:12px 0;text-align:center;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);font-family:'Fraunces',serif;font-size:16px;font-weight:600;cursor:pointer;color:var(--text);}
   .note-btn.selected{border-color:var(--accent);background:var(--accent);color:#1B1400;}
 
-  .favorite-btn{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);
-    background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;
-  }
+  .favorite-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;}
   .favorite-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.1);}
 
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(8,10,12,.62);
-    display:none;align-items:flex-end;justify-content:center;z-index:200;
-  }
+  .modal-overlay{position:fixed;inset:0;background:rgba(8,10,12,.75);display:none;align-items:flex-end;justify-content:center;z-index:200;}
   .modal-overlay.active{display:flex;}
-  .modal-panel{
-    width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
-    background:var(--surface);border:1px solid var(--accent-dim);
-    border-radius:16px 16px 0 0;padding:18px;position:relative;
-    animation:slideUp .18s ease-out;
-  }
+  .modal-panel{width:100%;max-width:520px;max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--accent-dim);border-radius:16px 16px 0 0;padding:18px;position:relative;animation:slideUp .18s ease-out;}
   @keyframes slideUp{from{transform:translateY(18px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
-  .modal-close{
-    position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;
-    padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);
-  }
+  .modal-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);}
 
-  /* History & Calendar */
   .hist-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
   .hist-top-row{display:flex;justify-content:space-between;align-items:center;}
   .hist-count{font-size:12px;color:var(--text-dim);}
+  
+  .stats-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
+  .stat-chip{font-size:12px; color:var(--text); background:var(--surface-2); padding:6px 10px; border-radius:4px; border:1px solid var(--border);}
+  .stat-chip span{color:var(--accent); font-weight:600;}
+
   .hist-actions{display:flex;gap:6px;flex-wrap:wrap;}
   .hist-actions button{padding:6px 10px;font-size:11px;}
   .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;}
   .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;display:flex;flex-direction:column;}
   .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);}
-  .hist-badge{
-    position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);
-    color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;
-    font-family:'Fraunces',serif;
-  }
-  .hist-fav{
-    position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);
-    color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;
-  }
-  .hist-type{
-    position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);
-    color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;
-  }
+  .hist-badge{position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;font-family:'Fraunces',serif;}
+  .hist-fav{position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;}
+  .hist-type{position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;}
   .hist-body{padding:8px;display:flex;flex-direction:column;flex:1;}
-  .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
+  .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
   .hist-date{font-size:9.5px;color:var(--text-dim);margin-top:4px;}
-  .hist-comment{
-    font-size:9.5px;color:var(--text-dim);margin-top:4px;line-height:1.3;
-    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-    font-style:italic;
-  }
-  .sc-link{
-    display:inline-block;margin-top:6px;width:100%;text-align:center;
-    padding:4px 0;background:#181818;color:#9b51e0;border:1px solid #9b51e0;
-    border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;
-  }
+  .hist-comment{font-size:9.5px;color:var(--text-dim);margin-top:4px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-style:italic;}
+  .sc-link{display:inline-block;margin-top:6px;width:100%;text-align:center;padding:4px 0;background:#181818;color:#9b51e0;border:1px solid #9b51e0;border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;}
   .hist-btn-row{display:flex;gap:4px;margin-top:auto;padding-top:6px;}
   .hist-btn-row button{flex:1;font-size:10px;padding:4px;background:transparent;border-color:var(--border);color:var(--text-dim);}
 
-  /* Calendar View */
   .cal-container{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;}
   .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
   .cal-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--accent);}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
-  .cal-day-name{font-size:10px;color:var(--text-dim);Padding:4px 0;}
-  .cal-cell{
-    aspect-ratio:1;border:1px solid var(--border);border-radius:4px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-size:11px;cursor:pointer;position:relative;background:var(--surface-2);
-  }
+  .cal-day-name{font-size:10px;color:var(--text-dim);padding:4px 0;}
+  .cal-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;cursor:pointer;position:relative;background:var(--surface-2);}
   .cal-cell.empty{background:transparent;border:none;cursor:default;}
   .cal-cell.has-entries{border-color:var(--accent);background:rgba(225,166,60,.1);}
   .cal-cell .dot{width:4px;height:4px;background:var(--accent);border-radius:50%;margin-top:2px;}
 
-  /* Options View */
   .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
   .opt-card h3{margin:0 0 8px;font-size:16px;}
   .opt-card p{font-size:12px;color:var(--text-dim);margin:0 0 12px;line-height:1.4;}
+  
+  .cinema-btn{
+    display:inline-flex; align-items:center; gap:8px; width:100%; justify-content:center;
+    padding:12px; background:linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border:1px solid #444; border-radius:8px; color:#E1A63C; font-family:'Fraunces',serif;
+    font-size:15px; font-weight:600; text-decoration:none; margin-top:8px;
+    box-shadow:0 4px 6px rgba(0,0,0,0.3); transition:transform 0.1s, box-shadow 0.1s;
+  }
+  .cinema-btn:hover{transform:translateY(-1px); box-shadow:0 6px 8px rgba(0,0,0,0.4); border-color:#E1A63C;}
 
-  nav.tabbar{
-    position:fixed;bottom:0;left:0;right:0;
-    display:flex;background:var(--surface);border-top:1px solid var(--border);
-    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
-  }
-  nav.tabbar button{
-    flex:1;background:none;border:none;color:var(--text-dim);
-    font-family:'Fraunces',serif;font-size:14px;padding:8px;border-radius:6px;
-  }
+  nav.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));}
+  nav.tabbar button{flex:1;background:none;border:none;color:var(--text-dim);font-family:'Fraunces',serif;font-size:14px;padding:8px;border-radius:6px;}
   nav.tabbar button.active{color:var(--accent);background:rgba(225,166,60,.08);}
 
   input[type=file]{display:none;}
-  .toast{
-    position:fixed;bottom:86px;left:50%;transform:translateX(-50%);
-    background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);
-    padding:10px 16px;border-radius:var(--radius);font-size:12px;
-    opacity:0;transition:opacity .25s;pointer-events:none;z-index:300;max-width:88%;text-align:center;
-  }
+  .toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);padding:10px 16px;border-radius:var(--radius);font-size:12px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:300;max-width:88%;text-align:center;}
   .toast.show{opacity:1;}
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1>Mes Notes</h1>
-  <div class="sub">Note que j'attribue des œuvres que je lis/vois/joue</div>
+  <div class="header-left">
+    <h1>Mes Notes</h1>
+    <div class="sub">Note que j'attribue des œuvres que je lis/vois/joue</div>
+  </div>
+  <button id="home-btn" class="outline">🏠 Accueil</button</button>
 </header>
 
 <main>
-
   <!-- SEARCH VIEW -->
   <section id="view-search" class="view active">
     <div class="search-controls">
@@ -271,14 +164,12 @@
           <option value="Jeu">Jeu</option>
         </select>
       </div>
-
       <div class="search-row">
         <button class="outline" id="manual-btn">➕ Manuel</button>
         <input type="text" id="search-input" placeholder="Chercher un titre…">
         <button class="primary" id="search-btn">Go</button>
       </div>
     </div>
-
     <div class="recent-searches" id="recent-searches"></div>
     <div class="status-line" id="search-status"></div>
     <div class="result-list" id="results"></div>
@@ -287,23 +178,18 @@
   <!-- HISTORY VIEW -->
   <section id="view-history" class="view">
     <div class="hist-toolbar">
+      <div class="stats-bar" id="stats-bar"></div>
       <div class="hist-top-row">
         <div class="hist-count" id="hist-count">0 œuvre(s)</div>
         <button id="toggle-view-btn" class="outline">📅 Vue Calendrier</button>
       </div>
       <div class="hist-actions">
-        <button id="sync-sheet-btn" class="primary">Sync Sheet</button>
-        <button id="export-btn">Exporter JSON</button>
-        <button id="export-csv-btn">Exporter CSV</button>
-        <button id="import-btn">Importer</button>
-        <input type="file" id="import-file" accept="application/json">
+        <button id="sync-sheet-btn" class="primary">📤 Sync Sheet</button>
       </div>
     </div>
-
     <div id="history-list-container">
       <div class="hist-grid" id="hist-grid"></div>
     </div>
-
     <div id="history-cal-container" style="display:none;">
       <div class="cal-container">
         <div class="cal-header">
@@ -319,19 +205,29 @@
   <!-- OPTIONS VIEW -->
   <section id="view-options" class="view">
     <div class="opt-card">
-      <h3>Lien Webhook / Google Sheet</h3>
-      <p>Renseigne l'URL de ton Webhook pour synchroniser tes notes.</p>
-      <div class="field">
-        <label>URL du Webhook</label>
-        <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/...">
+      <h3>🔗 Synchronisation Google Sheet</h3>
+      <p>URL du Webhook pour la synchro automatique à chaque modification.</p>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="sheet-url" placeholder="https://script.google.com/... ou SheetDB" style="flex:1;">
+        <button class="primary" id="save-sheet-url">💾 Sauver</button>
       </div>
-      <button class="primary" id="save-sheet-url" style="width:100%">Enregistrer l'URL</button>
+    </div>
+
+    <div class="opt-card">
+      <h3>💾 Sauvegarde Complète (Backup)</h3>
+      <p>Exporte ou importe TOUT (œuvres + réglages) dans un fichier .json.</p>
+      <div style="display:flex; gap:8px;">
+        <button class="outline" id="export-btn" style="flex:1;">📤 Exporter .json</button>
+        <button class="outline" id="import-btn" style="flex:1;">📥 Importer .json</button>
+        <input type="file" id="import-file" accept="application/json">
+      </div>
     </div>
 
     <div class="opt-card">
       <h3>À propos...</h3>
       <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
       <p>Application de notation personnelle d'œuvres cinématographiques, littéraires et ludiques.</p>
+      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Créé par Gooumbora</a>
     </div>
 
     <div class="opt-card">
@@ -340,7 +236,6 @@
       <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser les données locales</button>
     </div>
   </section>
-
 </main>
 
 <div class="toast" id="toast"></div>
@@ -360,15 +255,11 @@
 
 <script type="module">
 /* ============ CONFIG & STATE ============ */
-/* Proxy Cloudflare - les clés API sont stockées en sécurité côté serveur */
 const PROXY_URL = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-
-const LAST_UPDATE_DATE = "2026-09-17T15:16:00";
+const LAST_UPDATE_DATE = "2026-09-17T16:00:00";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
-const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`
-);
+const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`);
 
 let db;
 let currentType = "Film";
@@ -380,8 +271,6 @@ let isFavorite = false;
 let isEditingExisting = false;
 let editingEntryId = null;
 let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
-
-// Calendar State
 let calCurrentDate = new Date();
 let isCalendarView = false;
 
@@ -391,9 +280,7 @@ function openDB(){
     const req = indexedDB.open("catalogue-db", 1);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if(!d.objectStoreNames.contains("entries")){
-        d.createObjectStore("entries", {keyPath:"id"});
-      }
+      if(!d.objectStoreNames.contains("entries")) d.createObjectStore("entries", {keyPath:"id"});
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
     req.onerror = e => reject(e);
@@ -402,8 +289,7 @@ function openDB(){
 function dbAll(){
   return new Promise((resolve,reject)=>{
     const tx = db.transaction("entries","readonly");
-    const store = tx.objectStore("entries");
-    const req = store.getAll();
+    const req = tx.objectStore("entries").getAll();
     req.onsuccess = () => resolve((req.result||[]).sort((a,b)=> (b.dateFin||b.dateAjout||"").localeCompare(a.dateFin||a.dateAjout||"")));
     req.onerror = e => reject(e);
   });
@@ -426,6 +312,13 @@ function dbDelete(id){
 }
 
 /* ============ UI & NAVIGATION ============ */
+document.getElementById("home-btn").addEventListener("click", () => {
+  document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("active"));
+  document.querySelector('nav.tabbar button[data-view="search"]').classList.add("active");
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-search").classList.add("active");
+});
+
 document.querySelectorAll("nav.tabbar button").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.remove("active"));
@@ -436,82 +329,50 @@ document.querySelectorAll("nav.tabbar button").forEach(btn=>{
   });
 });
 
-document.getElementById("type-select").addEventListener("change", (e)=>{
-  currentType = e.target.value;
-  clearResults();
-});
+document.getElementById("type-select").addEventListener("change", (e)=>{ currentType = e.target.value; clearResults(); });
 
 function clearResults(){
-  currentResults = [];
-  selectedItem = null;
-  selectedSubtitle = null;
-  document.getElementById("results").innerHTML = "";
-  closeModal();
-  setStatus("");
+  currentResults = []; selectedItem = null; selectedSubtitle = null;
+  document.getElementById("results").innerHTML = ""; closeModal(); setStatus("");
 }
 function openModal(){ 
   const overlay = document.getElementById("modal-overlay");
-  overlay.classList.add("active");
-  overlay.setAttribute('aria-hidden','false');
+  overlay.classList.add("active"); overlay.setAttribute('aria-hidden','false');
 }
 function closeModal(){
   const overlay = document.getElementById("modal-overlay");
-  overlay.classList.remove("active");
-  overlay.setAttribute('aria-hidden','true');
+  overlay.classList.remove("active"); overlay.setAttribute('aria-hidden','true');
   document.getElementById("panel-container").innerHTML = "";
-  isEditingExisting = false;
-  editingEntryId = null;
+  isEditingExisting = false; editingEntryId = null;
 }
 document.getElementById("modal-close").addEventListener("click", closeModal);
-document.getElementById("modal-overlay").addEventListener("click", (e)=>{
-  if(e.target.id === "modal-overlay") closeModal();
-});
+document.getElementById("modal-overlay").addEventListener("click", (e)=>{ if(e.target.id === "modal-overlay") closeModal(); });
+
 function setStatus(msg, isError){
   const el = document.getElementById("search-status");
-  el.textContent = msg || "";
-  el.className = "status-line" + (isError ? " error" : "");
+  el.textContent = msg || ""; el.className = "status-line" + (isError ? " error" : "");
 }
 function showToast(msg, timeout = 1800){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
+  const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"), timeout);
 }
 
 /* ============ SEARCH ============ */
 document.getElementById("search-btn").addEventListener("click", runSearch);
-document.getElementById("search-input").addEventListener("keydown", e=>{
-  if(e.key === "Enter") runSearch();
-});
+document.getElementById("search-input").addEventListener("keydown", e=>{ if(e.key === "Enter") runSearch(); });
 
 document.getElementById("manual-btn").addEventListener("click", () => {
-  isEditingExisting = false;
-  editingEntryId = null;
-  selectedItem = {
-    source: "manual",
-    id: "manual_" + Date.now(),
-    title: "",
-    year: new Date().getFullYear().toString(),
-    poster: ""
-  };
-  selectedSubtitle = null;
-  currentNote = 5;
-  isFavorite = false;
-  renderPanel();
-  openModal();
+  isEditingExisting = false; editingEntryId = null;
+  selectedItem = { source: "manual", id: "manual_" + Date.now(), title: "", year: new Date().getFullYear().toString(), poster: "" };
+  selectedSubtitle = null; currentNote = 5; isFavorite = false;
+  renderPanel(); openModal();
 });
 
 function renderRecentSearches(){
-  const container = document.getElementById("recent-searches");
-  container.innerHTML = "";
+  const container = document.getElementById("recent-searches"); container.innerHTML = "";
   recentSearches.forEach(term => {
-    const tag = document.createElement("div");
-    tag.className = "recent-tag";
-    tag.textContent = term;
-    tag.onclick = () => {
-      document.getElementById("search-input").value = term;
-      runSearch();
-    };
+    const tag = document.createElement("div"); tag.className = "recent-tag"; tag.textContent = term;
+    tag.onclick = () => { document.getElementById("search-input").value = term; runSearch(); };
     container.appendChild(tag);
   });
 }
@@ -524,24 +385,20 @@ function addRecentSearch(term){
 async function runSearch(){
   const q = document.getElementById("search-input").value.trim();
   if(!q){ setStatus("Tape un titre à chercher.", true); return; }
-  addRecentSearch(q);
-  closeModal();
-  selectedItem = null; selectedSubtitle = null;
-  setStatus("Recherche…");
-  document.getElementById("results").innerHTML = "";
+  addRecentSearch(q); closeModal(); selectedItem = null; selectedSubtitle = null;
+  setStatus("Recherche…"); document.getElementById("results").innerHTML = "";
   try{
     let results = [];
     if(currentType === "Film"){
       results = await searchTMDB(q, "movie");
-      const filtered = results.filter(r => !(r.raw.genre_ids||[]).includes(99));
-      results = filtered.length ? filtered : results;
+      results = results.filter(r => !(r.raw.genre_ids||[]).includes(99));
     } else if(currentType === "Documentaire"){
       results = await searchTMDB(q, "movie");
       const filtered = results.filter(r => (r.raw.genre_ids||[]).includes(99));
       results = filtered.length ? filtered : results;
     } else if(currentType === "Série"){
       results = await searchTMDB(q, "tv");
-    } else if(currentType === "Manga" || currentType === "BD" || currentType === "Roman"){
+    } else if(["Manga", "BD", "Roman"].includes(currentType)){
       results = await searchBooksMerged(q, currentType);
     } else if(currentType === "Jeu"){
       results = await searchRAWG(q);
@@ -551,7 +408,7 @@ async function runSearch(){
     renderResults();
   }catch(err){
     console.error(err);
-    setStatus("Erreur pendant la recherche. " + (err && err.message ? err.message : ''), true);
+    setStatus("Erreur pendant la recherche. " + (err.message || ''), true);
   }
 }
 
@@ -561,13 +418,11 @@ async function searchTMDB(q, kind){
   if(!res.ok) throw new Error("TMDB " + res.status);
   const data = await res.json();
   return (data.results||[]).slice(0,20).map(r=>({
-    source:"tmdb_"+kind,
-    id:r.id,
+    source:"tmdb_"+kind, id:r.id,
     title: kind==="movie" ? r.title : r.name,
     original_title: kind==="movie" ? r.original_title : r.original_name,
     year: (kind==="movie" ? r.release_date : r.first_air_date || "").slice(0,4),
-    poster: r.poster_path ? TMDB_IMG + r.poster_path : null,
-    raw:r
+    poster: r.poster_path ? TMDB_IMG + r.poster_path : null, raw:r
   }));
 }
 
@@ -582,19 +437,10 @@ async function searchGoogleBooks(q, type){
   return (data.items||[]).map(it=>{
     const v = it.volumeInfo || {};
     let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
-    if(!poster && it.id){
-      poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
-    }
-    return {
-      source:"book",
-      id: it.id,
-      title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
-      year: (v.publishedDate||"").slice(0,4),
-      author: (v.authors||[]).join(", "),
-      poster: poster,
-      categories: v.categories || [],
-      raw: v
-    };
+    if(!poster && it.id) poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
+    return { source:"book", id: it.id, title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
+      year: (v.publishedDate||"").slice(0,4), author: (v.authors||[]).join(", "),
+      poster: poster, categories: v.categories || [], raw: v };
   });
 }
 
@@ -604,36 +450,22 @@ async function searchOpenLibrary(q, type){
   if(!res.ok) throw new Error("Open Library " + res.status);
   const data = await res.json();
   return (data.docs||[]).map(d=>({
-    source:"openlib",
-    id: d.key,
-    title: d.title,
+    source:"openlib", id: d.key, title: d.title,
     year: d.first_publish_year ? String(d.first_publish_year) : "",
     author: (d.author_name||[]).join(", "),
     poster: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : null,
-    categories: d.subject || [],
-    raw: d
+    categories: d.subject || [], raw: d
   }));
 }
 
 function relevantForType(item, type){
   const cats = Array.isArray(item.categories) ? item.categories.join(" ") : "";
   const text = (cats + " " + (item.title||"")).toLowerCase();
-  const hasComicSignal = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
-  const hasMangaSignal = text.includes("manga");
-  
-  if(type === "BD"){
-    if(hasMangaSignal && !hasComicSignal) return false;
-    return true;
-  }
-  if(type === "Manga"){
-    if(hasMangaSignal) return true;
-    if(hasComicSignal) return false;
-    return true;
-  }
-  if(type === "Roman"){
-    if(hasComicSignal || hasMangaSignal) return false;
-    return true;
-  }
+  const hasComic = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
+  const hasManga = text.includes("manga");
+  if(type === "BD") return !(hasManga && !hasComic);
+  if(type === "Manga") return hasManga || !hasComic;
+  if(type === "Roman") return !(hasComic || hasManga);
   return true;
 }
 
@@ -646,8 +478,7 @@ async function searchBooksMerged(q, type){
   return merged.filter(it => {
     const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g,"");
     if(!key || seen.has(key)) return false;
-    seen.add(key);
-    return true;
+    seen.add(key); return true;
   });
 }
 
@@ -657,13 +488,8 @@ async function searchRAWG(q){
   if(!res.ok) throw new Error("RAWG " + res.status);
   const data = await res.json();
   return (data.results||[]).map(g=>({
-    source:"rawg",
-    id: g.id,
-    title: g.name,
-    year: (g.released||"").slice(0,4),
-    poster: g.background_image,
-    platforms: (g.platforms||[]).map(p=>p.platform.name),
-    raw: g
+    source:"rawg", id: g.id, title: g.name, year: (g.released||"").slice(0,4),
+    poster: g.background_image, platforms: (g.platforms||[]).map(p=>p.platform.name), raw: g
   }));
 }
 
@@ -674,7 +500,6 @@ async function fetchSteamGridCover(gameName){
     const searchData = await searchRes.json();
     if(!searchData.success || !searchData.data || !searchData.data.length) return null;
     const gameId = searchData.data[0].id;
-
     const gridRes = await fetch(`${PROXY_URL}/steamgrid/grids/game/${gameId}?dimensions=600x900&styles=alternate`);
     if(!gridRes.ok) return null;
     const gridData = await gridRes.json();
@@ -683,73 +508,36 @@ async function fetchSteamGridCover(gameName){
   }catch(e){ return null; }
 }
 
-/* ============ RENDER RESULTS (DOM-safe) ============ */
+/* ============ RENDER RESULTS ============ */
 function renderResults(){
-  const container = document.getElementById("results");
-  container.innerHTML = "";
+  const container = document.getElementById("results"); container.innerHTML = "";
   currentResults.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "result-card";
-    const posterUrl = item.poster || NO_POSTER;
-
-    const img = document.createElement("img");
-    img.className = "poster";
-    img.src = posterUrl;
-    img.alt = "";
-    img.loading = "lazy";
-
-    const info = document.createElement("div");
-    info.className = "result-info";
-
-    const title = document.createElement("div");
-    title.className = "result-title";
-    title.textContent = item.title || '';
-
+    const card = document.createElement("div"); card.className = "result-card";
+    const img = document.createElement("img"); img.className = "poster"; img.src = item.poster || NO_POSTER; img.alt = ""; img.loading = "lazy";
+    const info = document.createElement("div"); info.className = "result-info";
+    const title = document.createElement("div"); title.className = "result-title"; title.textContent = item.title || '';
     info.appendChild(title);
-
     if(item.original_title && item.original_title !== item.title){
-      const orig = document.createElement("div");
-      orig.className = "result-original-title";
-      orig.textContent = `(${item.original_title})`;
+      const orig = document.createElement("div"); orig.className = "result-original-title"; orig.textContent = `(${item.original_title})`;
       info.appendChild(orig);
     }
-
-    const meta = document.createElement("div");
-    meta.className = "result-meta";
-    const metaParts = [];
-    if(item.year) metaParts.push(item.year);
-    if(item.author) metaParts.push(item.author);
-    meta.textContent = metaParts.join(" • ");
-    info.appendChild(meta);
-
-    card.appendChild(img);
-    card.appendChild(info);
-
+    const meta = document.createElement("div"); meta.className = "result-meta";
+    const metaParts = []; if(item.year) metaParts.push(item.year); if(item.author) metaParts.push(item.author);
+    meta.textContent = metaParts.join(" • "); info.appendChild(meta);
+    card.appendChild(img); card.appendChild(info);
     card.addEventListener("click", () => selectResult(item, card));
     container.appendChild(card);
-
     if(item.source === "rawg"){
-      fetchSteamGridCover(item.title).then(cover => {
-        if(cover){
-          item.poster = cover;
-          img.src = cover;
-        }
-      });
+      fetchSteamGridCover(item.title).then(cover => { if(cover){ item.poster = cover; img.src = cover; } });
     }
   });
 }
 
-/* ============ SELECT RESULT ============ */
 async function selectResult(item, cardEl){
   document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
   if(cardEl) cardEl.classList.add("selected");
-  isEditingExisting = false;
-  editingEntryId = null;
-  selectedItem = item;
-  selectedSubtitle = null;
-  currentNote = 5;
-  isFavorite = false;
-
+  isEditingExisting = false; editingEntryId = null; selectedItem = item; selectedSubtitle = null;
+  currentNote = 5; isFavorite = false;
   if(item.source === "tmdb_tv"){
     setStatus("Chargement des saisons…");
     try{
@@ -760,24 +548,16 @@ async function selectResult(item, cardEl){
       setStatus("");
     }catch(e){ setStatus("Impossible de charger les saisons", true); }
   }
-  renderPanel();
-  openModal();
+  renderPanel(); openModal();
 }
 
-/* ============ PANEL NOTATION & ÉDITION (DOM-safe) ============ */
+/* ============ PANEL NOTATION ============ */
 function renderPanel(existingEntry = null){
-  const container = document.getElementById("panel-container");
-  container.innerHTML = "";
-
+  const container = document.getElementById("panel-container"); container.innerHTML = "";
   if(existingEntry){
-    isEditingExisting = true;
-    editingEntryId = existingEntry.id;
-    currentNote = existingEntry.note || 5;
-    isFavorite = !!existingEntry.isFavorite;
-  } else {
-    isEditingExisting = false;
-    editingEntryId = null;
-  }
+    isEditingExisting = true; editingEntryId = existingEntry.id;
+    currentNote = existingEntry.note || 5; isFavorite = !!existingEntry.isFavorite;
+  } else { isEditingExisting = false; editingEntryId = null; }
 
   const titleVal = existingEntry ? existingEntry.titre : (selectedItem ? selectedItem.title : "");
   const subVal = existingEntry ? (existingEntry.sousTitre || "") : "";
@@ -785,49 +565,32 @@ function renderPanel(existingEntry = null){
   const dateVal = existingEntry ? (existingEntry.dateFin || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10);
   const commentVal = existingEntry ? (existingEntry.comment || "") : "";
 
-  const panel = document.createElement('div');
-  panel.className = 'panel';
-
-  const h3 = document.createElement('h3');
-  h3.className = 'serif';
-  h3.style.margin = '0 0 14px';
-  h3.style.color = 'var(--accent)';
+  const panel = document.createElement('div'); panel.className = 'panel';
+  const h3 = document.createElement('h3'); h3.className = 'serif'; h3.style.margin = '0 0 14px'; h3.style.color = 'var(--accent)';
   h3.textContent = isEditingExisting ? "Modifier l'œuvre" : "Fiche de notation";
   panel.appendChild(h3);
 
-  // Title
-  const fTitle = document.createElement('div'); fTitle.className = 'field';
-  const lTitle = document.createElement('label'); lTitle.textContent = 'Titre';
-  const inTitle = document.createElement('input'); inTitle.type = 'text'; inTitle.id = 'edit-title'; inTitle.value = titleVal;
-  fTitle.appendChild(lTitle); fTitle.appendChild(inTitle);
-  panel.appendChild(fTitle);
+  const createField = (label, id, type, value, placeholder="") => {
+    const f = document.createElement('div'); f.className = 'field';
+    const l = document.createElement('label'); l.textContent = label;
+    const inp = document.createElement(type === 'textarea' ? 'textarea' : 'input');
+    inp.type = type === 'textarea' ? 'text' : type; inp.id = id; inp.value = value;
+    if(placeholder) inp.placeholder = placeholder;
+    if(type !== 'textarea') inp.style.width = '100%';
+    f.appendChild(l); f.appendChild(inp); return f;
+  };
 
-  // Sub
-  const fSub = document.createElement('div'); fSub.className = 'field';
-  const lSub = document.createElement('label'); lSub.textContent = 'Saison / Tome / Plateforme / Precision';
-  const inSub = document.createElement('input'); inSub.type = 'text'; inSub.id = 'edit-sub'; inSub.value = subVal;
-  fSub.appendChild(lSub); fSub.appendChild(inSub);
-  panel.appendChild(fSub);
+  panel.appendChild(createField('Titre', 'edit-title', 'text', titleVal));
+  panel.appendChild(createField('Saison / Tome / Plateforme', 'edit-sub', 'text', subVal));
+  panel.appendChild(createField('URL Affiche', 'edit-poster', 'text', posterVal));
 
-  // Poster
-  const fPoster = document.createElement('div'); fPoster.className = 'field';
-  const lPoster = document.createElement('label'); lPoster.textContent = 'URL Affiche (Jaquette)';
-  const inPoster = document.createElement('input'); inPoster.type = 'text'; inPoster.id = 'edit-poster'; inPoster.value = posterVal;
-  fPoster.appendChild(lPoster); fPoster.appendChild(inPoster);
-  panel.appendChild(fPoster);
-
-  // Season chips (if any)
   if(!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons){
     const fChips = document.createElement('div'); fChips.className = 'field';
     const lChips = document.createElement('label'); lChips.textContent = 'Saison pré-remplie';
     const chipsWrap = document.createElement('div'); chipsWrap.className = 'subtitle-select';
     selectedItem.seasons.forEach(s => {
-      const chip = document.createElement('div');
-      chip.className = 'subtitle-chip';
-      chip.dataset.seasonId = s.id;
-      const img = document.createElement('img');
-      img.src = s.poster_path ? TMDB_IMG + s.poster_path : (selectedItem.poster || NO_POSTER);
-      img.alt = '';
+      const chip = document.createElement('div'); chip.className = 'subtitle-chip'; chip.dataset.seasonId = s.id;
+      const img = document.createElement('img'); img.src = s.poster_path ? TMDB_IMG + s.poster_path : (selectedItem.poster || NO_POSTER); img.alt = '';
       const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'Saison ' + s.season_number;
       chip.appendChild(img); chip.appendChild(lbl);
       chip.addEventListener('click', () => {
@@ -835,90 +598,60 @@ function renderPanel(existingEntry = null){
         chip.classList.add('selected');
         selectedSubtitle = selectedItem.seasons.find(x => x.id === s.id);
         if(selectedSubtitle){
-          inSub.value = `Saison ${selectedSubtitle.season_number}`;
-          if(selectedSubtitle.poster_path) inPoster.value = TMDB_IMG + selectedSubtitle.poster_path;
+          document.getElementById('edit-sub').value = `Saison ${selectedSubtitle.season_number}`;
+          if(selectedSubtitle.poster_path) document.getElementById('edit-poster').value = TMDB_IMG + selectedSubtitle.poster_path;
         }
       });
       chipsWrap.appendChild(chip);
     });
-    fChips.appendChild(lChips); fChips.appendChild(chipsWrap);
-    panel.appendChild(fChips);
+    fChips.appendChild(lChips); fChips.appendChild(chipsWrap); panel.appendChild(fChips);
   }
 
-  // Platform select for RAWG
   if(!existingEntry && selectedItem && selectedItem.source === "rawg"){
     const fPlat = document.createElement('div'); fPlat.className = 'field';
     const lPlat = document.createElement('label'); lPlat.textContent = 'Plateforme pré-remplie';
-    const selPlat = document.createElement('select'); selPlat.id = 'platform-select';
+    const selPlat = document.createElement('select'); selPlat.id = 'platform-select'; selPlat.style.width = '100%';
     const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
-    list.forEach(p => {
-      const o = document.createElement('option'); o.value = p; o.textContent = p; selPlat.appendChild(o);
-    });
-    selPlat.addEventListener('change', ()=> { inSub.value = selPlat.value; });
-    fPlat.appendChild(lPlat); fPlat.appendChild(selPlat);
-    panel.appendChild(fPlat);
+    list.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; selPlat.appendChild(o); });
+    selPlat.addEventListener('change', ()=> { document.getElementById('edit-sub').value = selPlat.value; });
+    fPlat.appendChild(lPlat); fPlat.appendChild(selPlat); panel.appendChild(fPlat);
   }
 
-  // Note grid
   const fNote = document.createElement('div'); fNote.className = 'field';
   const lNote = document.createElement('label'); lNote.textContent = 'Note (/10)';
   const grid = document.createElement('div'); grid.className = 'note-grid';
   for(let n=1;n<=10;n++){
-    const btn = document.createElement('div');
-    btn.className = 'note-btn' + (n === currentNote ? ' selected' : '');
-    btn.dataset.note = n;
-    btn.textContent = n;
+    const btn = document.createElement('div'); btn.className = 'note-btn' + (n === currentNote ? ' selected' : '');
+    btn.dataset.note = n; btn.textContent = n;
     btn.addEventListener('click', ()=> {
       grid.querySelectorAll('.note-btn').forEach(b=>b.classList.remove('selected'));
-      btn.classList.add('selected');
-      currentNote = parseInt(btn.dataset.note);
+      btn.classList.add('selected'); currentNote = parseInt(btn.dataset.note);
     });
     grid.appendChild(btn);
   }
-  fNote.appendChild(lNote); fNote.appendChild(grid);
-  panel.appendChild(fNote);
+  fNote.appendChild(lNote); fNote.appendChild(grid); panel.appendChild(fNote);
 
-  // Favorite - COEUR VIOLET 💜
   const fFav = document.createElement('div'); fFav.className = 'field';
-  const favBtn = document.createElement('button'); 
-  favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : ''); 
-  favBtn.id = 'fav-btn';
-  favBtn.type = 'button';
+  const favBtn = document.createElement('button'); favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : ''); favBtn.id = 'fav-btn'; favBtn.type = 'button';
   favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
   favBtn.addEventListener('click', ()=> {
     isFavorite = !isFavorite;
     favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
     favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
   });
-  fFav.appendChild(favBtn);
-  panel.appendChild(fFav);
+  fFav.appendChild(favBtn); panel.appendChild(fFav);
 
-  // Date
-  const fDate = document.createElement('div'); fDate.className = 'field';
-  const lDate = document.createElement('label'); lDate.textContent = 'Date de fin';
-  const inDate = document.createElement('input'); inDate.type = 'date'; inDate.id = 'date-fin'; inDate.value = dateVal;
-  fDate.appendChild(lDate); fDate.appendChild(inDate);
-  panel.appendChild(fDate);
+  panel.appendChild(createField('Date de fin', 'date-fin', 'date', dateVal));
+  panel.appendChild(createField('Mes notes / commentaire', 'comment-input', 'textarea', commentVal, 'Ton avis...'));
 
-  // Comment
-  const fComment = document.createElement('div'); fComment.className = 'field';
-  const lComment = document.createElement('label'); lComment.textContent = 'Mes notes / commentaire';
-  const taComment = document.createElement('textarea'); taComment.id = 'comment-input'; taComment.placeholder = 'Ton avis...'; taComment.value = commentVal;
-  fComment.appendChild(lComment); fComment.appendChild(taComment);
-  panel.appendChild(fComment);
-
-  // Actions
   const actions = document.createElement('div'); actions.className = 'panel-actions';
   const saveBtn = document.createElement('button'); saveBtn.className = 'primary'; saveBtn.id = 'save-entry-btn'; saveBtn.textContent = 'Enregistrer';
-  actions.appendChild(saveBtn);
-  panel.appendChild(actions);
-
+  actions.appendChild(saveBtn); panel.appendChild(actions);
   container.appendChild(panel);
-
   saveBtn.addEventListener('click', () => saveCurrentEntry());
 }
 
-/* ============ SAVE ENTRY (with validation & id normalization) ============ */
+/* ============ SAVE & SYNC ============ */
 async function saveCurrentEntry(){
   const titleVal = document.getElementById("edit-title").value.trim();
   if(!titleVal){ alert("Le titre est obligatoire !"); return; }
@@ -927,20 +660,14 @@ async function saveCurrentEntry(){
   if(!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle){
     baseId += `_s${selectedSubtitle.season_number}`;
   }
-
   const entries = await dbAll();
   let entryId = baseId;
-  if(!isEditingExisting && entries.some(e => e.id === entryId)){
-    entryId = baseId + '_' + Date.now();
-  }
+  if(!isEditingExisting && entries.some(e => e.id === entryId)) entryId = baseId + '_' + Date.now();
 
   const entry = {
-    id: entryId,
-    type: currentType,
-    titre: titleVal,
+    id: entryId, type: currentType, titre: titleVal,
     sousTitre: document.getElementById("edit-sub").value.trim(),
-    note: currentNote,
-    isFavorite: isFavorite,
+    note: currentNote, isFavorite: isFavorite,
     dateFin: document.getElementById("date-fin").value,
     comment: (document.getElementById("comment-input")?.value || "").trim(),
     posterUrl: document.getElementById("edit-poster").value.trim(),
@@ -951,50 +678,62 @@ async function saveCurrentEntry(){
     await dbPut(entry);
     showToast("Enregistré !");
     closeModal();
+    syncToSheet(entry, isEditingExisting ? 'update' : 'add'); // AUTO SYNC
     if(document.getElementById("view-history").classList.contains("active")) renderHistory();
   } catch(e){
-    console.error(e);
-    alert('Erreur lors de l\'enregistrement : ' + (e && e.message ? e.message : ''));
+    console.error(e); alert('Erreur : ' + (e.message || ''));
   }
+}
+
+async function syncToSheet(entry, action){
+  const url = localStorage.getItem("sheet_url");
+  if(!url) return;
+  const payload = {
+    action: action,
+    entry: {
+      type: entry.type, titre: entry.titre, sousTitre: entry.sousTitre || "",
+      note: entry.note, isFavorite: entry.isFavorite, dateFin: entry.dateFin,
+      comment: entry.comment || "", posterUrl: entry.posterUrl || "",
+      sensCritiqueUrl: `https://www.senscritique.com/recherche?query=${encodeURIComponent(entry.titre)}`,
+      id: entry.id, dateAjout: entry.dateAjout
+    }
+  };
+  try {
+    await fetch(url, { method: "POST", mode: "no-cors", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload) });
+  } catch(e) { console.error("Sync échouée", e); }
 }
 
 /* ============ HISTORY & CALENDAR ============ */
 document.getElementById("toggle-view-btn").addEventListener("click", () => {
   isCalendarView = !isCalendarView;
   const btn = document.getElementById("toggle-view-btn");
-  const listCont = document.getElementById("history-list-container");
-  const calCont = document.getElementById("history-cal-container");
-  
-  if(isCalendarView){
-    btn.textContent = "📋 Vue Liste";
-    listCont.style.display = "none";
-    calCont.style.display = "block";
-    renderCalendar();
-  } else {
-    btn.textContent = " Vue Calendrier";
-    listCont.style.display = "block";
-    calCont.style.display = "none";
-    renderHistory();
-  }
+  document.getElementById("history-list-container").style.display = isCalendarView ? "none" : "block";
+  document.getElementById("history-cal-container").style.display = isCalendarView ? "block" : "none";
+  btn.textContent = isCalendarView ? "📋 Vue Liste" : "📅 Vue Calendrier";
+  if(isCalendarView) renderCalendar(); else renderHistory();
 });
 
 async function renderHistory(){
   const entries = await dbAll();
-  const grid = document.getElementById("hist-grid");
   document.getElementById("hist-count").textContent = `${entries.length} œuvre(s)`;
-  grid.innerHTML = "";
+  
+  // STATS
+  const stats = {};
+  entries.forEach(e => { stats[e.type] = (stats[e.type] || 0) + 1; });
+  const statsBar = document.getElementById("stats-bar");
+  statsBar.innerHTML = Object.entries(stats).map(([type, count]) => 
+    `<div class="stat-chip">${type === 'Film' ? '🎬' : type === 'Série' ? '📺' : type === 'Jeu' ? '🎮' : '📚'} ${type}: <span>${count}</span></div>`
+  ).join('') || '<div class="stat-chip">Aucune donnée</div>';
 
+  const grid = document.getElementById("hist-grid"); grid.innerHTML = "";
   if(!entries.length){
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note enregistrée.</div>`;
     return;
   }
 
   entries.forEach(e => {
-    const card = document.createElement("div");
-    card.className = "hist-card";
-    const poster = e.posterUrl || NO_POSTER;
-
-    const img = document.createElement('img'); img.src = poster; img.alt = ''; img.loading = 'lazy';
+    const card = document.createElement("div"); card.className = "hist-card";
+    const img = document.createElement('img'); img.src = e.posterUrl || NO_POSTER; img.alt = ''; img.loading = 'lazy';
     const badge = document.createElement('div'); badge.className = 'hist-badge'; badge.textContent = `${e.note}/10`;
     const favHtml = e.isFavorite ? (()=>{ const d=document.createElement('div'); d.className='hist-fav'; d.textContent='💜'; return d; })() : null;
     const typeTag = document.createElement('div'); typeTag.className='hist-type'; typeTag.textContent = e.type;
@@ -1005,285 +744,159 @@ async function renderHistory(){
     const comment = document.createElement('div'); comment.className='hist-comment'; comment.textContent = e.comment ? `"${e.comment}"` : '';
     const scLink = document.createElement('a'); scLink.className='sc-link'; scLink.href = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`; scLink.target='_blank'; scLink.textContent = 'SensCritique ↗';
     const btnRow = document.createElement('div'); btnRow.className='hist-btn-row';
-    const editBtn = document.createElement('button'); editBtn.className='hist-edit'; editBtn.textContent='📝 Modifier';
-    const delBtn = document.createElement('button'); delBtn.className='hist-del'; delBtn.textContent='🗑️';
-
+    const editBtn = document.createElement('button'); editBtn.textContent='📝 Modifier';
+    const delBtn = document.createElement('button'); delBtn.textContent='🗑️';
     btnRow.appendChild(editBtn); btnRow.appendChild(delBtn);
 
-    body.appendChild(title);
-    if(e.sousTitre) body.appendChild(sub);
-    body.appendChild(date);
-    if(e.comment) body.appendChild(comment);
-    body.appendChild(scLink);
-    body.appendChild(btnRow);
+    body.appendChild(title); if(e.sousTitre) body.appendChild(sub); body.appendChild(date);
+    if(e.comment) body.appendChild(comment); body.appendChild(scLink); body.appendChild(btnRow);
+    card.appendChild(img); card.appendChild(badge); if(favHtml) card.appendChild(favHtml);
+    card.appendChild(typeTag); card.appendChild(body);
 
-    card.appendChild(img);
-    card.appendChild(badge);
-    if(favHtml) card.appendChild(favHtml);
-    card.appendChild(typeTag);
-    card.appendChild(body);
-
-    editBtn.addEventListener("click", () => {
-      currentType = e.type || "Film";
-      renderPanel(e);
-      openModal();
-    });
-
+    editBtn.addEventListener("click", () => { currentType = e.type || "Film"; renderPanel(e); openModal(); });
     delBtn.addEventListener("click", async () => {
       if(confirm(`Supprimer "${e.titre}" ?`)){
         const removed = Object.assign({}, e);
         await dbDelete(e.id);
+        syncToSheet({id: e.id}, 'delete'); // AUTO SYNC DELETE
         renderHistory();
-        showUndoToast(`"${e.titre}" supprimé`, async () => {
-          try { await dbPut(removed); renderHistory(); showToast('Restauration effectuée'); }
-          catch(err){ console.error(err); alert('Impossible de restaurer : ' + (err && err.message ? err.message : '')); }
-        });
+        showToast("Supprimé");
       }
     });
-
     grid.appendChild(card);
   });
-
-  if(isCalendarView) renderCalendar();
 }
 
 /* ============ CALENDAR LOGIC ============ */
-document.getElementById("cal-prev").addEventListener("click", () => {
-  calCurrentDate.setMonth(calCurrentDate.getMonth() - 1);
-  renderCalendar();
-});
-document.getElementById("cal-next").addEventListener("click", () => {
-  calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
-  renderCalendar();
-});
+document.getElementById("cal-prev").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() - 1); renderCalendar(); });
+document.getElementById("cal-next").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() + 1); renderCalendar(); });
 
 async function renderCalendar(){
   const entries = await dbAll();
-  const grid = document.getElementById("cal-grid");
-  const title = document.getElementById("cal-title");
+  const grid = document.getElementById("cal-grid"); const title = document.getElementById("cal-title");
   grid.innerHTML = "";
-
-  const year = calCurrentDate.getFullYear();
-  const month = calCurrentDate.getMonth();
-  
+  const year = calCurrentDate.getFullYear(), month = calCurrentDate.getMonth();
   const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
   title.textContent = `${monthNames[month]} ${year}`;
-
-  const dayNames = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-  dayNames.forEach(d => {
-    const el = document.createElement("div");
-    el.className = "cal-day-name";
-    el.textContent = d;
-    grid.appendChild(el);
+  ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(d => {
+    const el = document.createElement("div"); el.className = "cal-day-name"; el.textContent = d; grid.appendChild(el);
   });
-
   const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  for(let i = 0; i < firstDayIndex; i++){
-    const empty = document.createElement("div");
-    empty.className = "cal-cell empty";
-    grid.appendChild(empty);
-  }
-
+  for(let i = 0; i < firstDayIndex; i++){ const empty = document.createElement("div"); empty.className = "cal-cell empty"; grid.appendChild(empty); }
   for(let day = 1; day <= daysInMonth; day++){
-    const cell = document.createElement("div");
-    cell.className = "cal-cell";
-    
+    const cell = document.createElement("div"); cell.className = "cal-cell";
     const dStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const dayEntries = entries.filter(e => e.dateFin === dStr);
-
-    const dayText = document.createElement('div'); dayText.textContent = day;
-    cell.appendChild(dayText);
-
+    const dayText = document.createElement('div'); dayText.textContent = day; cell.appendChild(dayText);
     if(dayEntries.length > 0){
       cell.classList.add("has-entries");
-      const dot = document.createElement("div");
-      dot.className = "dot";
-      cell.appendChild(dot);
-      
-      cell.addEventListener("click", () => {
-        let msg = `Œuvres du ${dStr} :\n`;
-        dayEntries.forEach(e => {
-          msg += `• ${e.titre} (${e.note}/10)\n`;
-        });
-        alert(msg);
-      });
+      const dot = document.createElement("div"); dot.className = "dot"; cell.appendChild(dot);
+      cell.addEventListener("click", () => showDayModal(dStr, dayEntries));
     }
-
     grid.appendChild(cell);
   }
 }
 
-/* ============ EXPORT / IMPORT / SYNC ============ */
+function showDayModal(dateStr, dayEntries){
+  const container = document.getElementById("panel-container");
+  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;">📅 Œuvres du ${dateStr}</h3>`;
+  if(dayEntries.length === 0) {
+    container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre ce jour-là.</p>`;
+  } else {
+    dayEntries.forEach(e => {
+      const div = document.createElement("div"); div.className = "result-card"; div.style.marginBottom = "8px";
+      div.innerHTML = `
+        <img src="${e.posterUrl || NO_POSTER}" class="poster" alt="">
+        <div class="result-info">
+          <div class="result-title">${e.titre}</div>
+          <div class="result-meta">${e.type} • Note: ${e.note}/10 ${e.isFavorite ? '💜' : ''}</div>
+          ${e.comment ? `<div class="hist-comment">"${e.comment}"</div>` : ''}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+  openModal();
+}
+
+/* ============ EXPORT / IMPORT / OPTIONS ============ */
+document.getElementById("save-sheet-url").addEventListener("click", () => {
+  const val = document.getElementById("sheet-url").value.trim();
+  localStorage.setItem("sheet_url", val);
+  showToast("URL Webhook enregistrée !");
+});
+
 document.getElementById("sync-sheet-btn").addEventListener("click", async () => {
   const url = localStorage.getItem("sheet_url");
-  if(!url){
-    alert("Ajoute l'URL de ton Webhook dans l'onglet Options.");
-    return;
-  }
+  if(!url){ alert("Ajoute l'URL de ton Webhook dans l'onglet Options."); return; }
   const entries = await dbAll();
-  const enrichedEntries = entries.map(e => ({
-    ...e,
-    sensCritiqueUrl: `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`
-  }));
-
-  showToast("Synchronisation…", 2500);
+  showToast("Synchronisation manuelle…", 2500);
   try {
-    let ok = false;
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(enrichedEntries)
-      });
-      if(res.ok) ok = true;
-    } catch(e){
-      await fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(enrichedEntries)
-      });
-      ok = true;
-    }
-    if(ok) showToast("Envoyé au Google Sheet !");
-    else alert("La synchronisation a échoué.");
-  } catch(err) {
-    alert("Erreur lors de la synchronisation : " + (err && err.message ? err.message : ''));
-  }
+    await fetch(url, { method: "POST", mode: "no-cors", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ action: 'sync_all', entries }) });
+    showToast("Envoyé au Google Sheet !");
+  } catch(err) { alert("Erreur de synchro."); }
 });
 
 document.getElementById("export-btn").addEventListener("click", async () => {
   const entries = await dbAll();
-  const blob = new Blob([JSON.stringify(entries, null, 2)], {type : 'application/json'});
+  const backupData = {
+    version: "V4",
+    exportDate: new Date().toISOString(),
+    settings: { sheet_url: localStorage.getItem("sheet_url") || "" },
+    entries: entries
+  };
+  const blob = new Blob([JSON.stringify(backupData, null, 2)], {type : 'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  showToast('Export JSON prêt');
+  const a = document.createElement('a'); a.href = url; a.download = `catalogue_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  showToast('Backup complet exporté !');
 });
 
-document.getElementById("export-csv-btn").addEventListener("click", async () => {
-  const entries = await dbAll();
-  if(!entries.length){ alert('Aucun item à exporter'); return; }
-  const keys = ['id','type','titre','sousTitre','note','isFavorite','dateFin','comment','posterUrl','dateAjout'];
-  const rows = entries.map(it => keys.map(k => {
-    let v = it[k];
-    if(Array.isArray(v)) v = v.join(';');
-    if(v === undefined || v === null) v = '';
-    v = String(v).replace(/"/g, '""');
-    return `"${v}"`;
-  }).join(','));
-  const csv = [keys.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `catalogue_export_${new Date().toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  showToast('Export CSV prêt');
-});
-
-document.getElementById("import-btn").addEventListener("click", () => {
-  document.getElementById("import-file").value = '';
-  document.getElementById("import-file").click();
-});
-
+document.getElementById("import-btn").addEventListener("click", () => { document.getElementById("import-file").click(); });
 document.getElementById("import-file").addEventListener("change", (evt) => {
-  const file = evt.target.files[0];
-  if(!file) return;
+  const file = evt.target.files[0]; if(!file) return;
   const reader = new FileReader();
   reader.onload = async (e) => {
     try {
-      const entries = JSON.parse(e.target.result);
-      if(Array.isArray(entries)){
-        let imported = 0;
-        for(const entry of entries){
-          if(entry && entry.id){
-            if(!entry.titre) entry.titre = 'Sans titre';
-            if(!entry.dateAjout) entry.dateAjout = new Date().toISOString();
-            await dbPut(entry);
-            imported++;
-          }
+      const data = JSON.parse(e.target.result);
+      const entries = data.entries || (Array.isArray(data) ? data : []);
+      let imported = 0;
+      for(const entry of entries){
+        if(entry && entry.id){
+          if(!entry.titre) entry.titre = 'Sans titre';
+          if(!entry.dateAjout) entry.dateAjout = new Date().toISOString();
+          await dbPut(entry); imported++;
         }
-        showToast(`Importation réussie (${imported})`);
-        renderHistory();
-      } else {
-        alert('Fichier JSON invalide : attendu un tableau d\'entrées.');
       }
-    } catch(err) {
-      alert("Fichier JSON invalide.");
-    }
+      if(data.settings && data.settings.sheet_url) {
+        localStorage.setItem("sheet_url", data.settings.sheet_url);
+        document.getElementById("sheet-url").value = data.settings.sheet_url;
+      }
+      showToast(`Importation réussie (${imported} œuvres + réglages)`);
+      renderHistory();
+    } catch(err) { alert("Fichier JSON invalide."); }
   };
   reader.readAsText(file);
 });
 
-// Options
-document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
-document.getElementById("save-sheet-url").addEventListener("click", () => {
-  const val = document.getElementById("sheet-url").value.trim();
-  localStorage.setItem("sheet_url", val);
-  showToast("URL enregistrée !");
-});
-
 document.getElementById("clear-local-db").addEventListener("click", async () => {
-  if(confirm("Effacer tout le stockage local ?")){
+  if(confirm("Effacer TOUT le stockage local ?")){
     const entries = await dbAll();
     for(const e of entries) await dbDelete(e.id);
-    renderHistory();
-    showToast("Base réinitialisée.");
+    renderHistory(); showToast("Base réinitialisée.");
   }
 });
 
-/* ============ Helpers ============ */
 function initAboutBuildDate(){
   const dateObj = new Date(LAST_UPDATE_DATE);
-  const formatted = dateObj.toLocaleString("fr-FR", {
-    timeZone: "Europe/Paris",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  const formatted = dateObj.toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
   document.getElementById("about-build-date").textContent = `Dernière mise à jour : ${formatted} (Paris)`;
 }
 
-function showUndoToast(message, undoFn, timeout = 8000){
-  const t = document.getElementById('toast');
-  t.textContent = message;
-  const btn = document.createElement('button');
-  btn.textContent = 'Annuler';
-  btn.style.marginLeft = '10px';
-  btn.className = 'outline';
-  btn.addEventListener('click', () => {
-    try { undoFn(); } catch(e){ console.error(e); }
-    t.classList.remove('show');
-  });
-  t.appendChild(btn);
-  t.classList.add('show');
-  setTimeout(()=> {
-    if(t.contains(btn)) t.removeChild(btn);
-    t.classList.remove('show');
-  }, timeout);
-}
-
-/* ============ INIT ============ */
 openDB().then(() => {
-  renderRecentSearches();
-  initAboutBuildDate();
-}).catch(err => {
-  console.error('IndexedDB error', err);
-  alert('Impossible d\'ouvrir la base locale : ' + (err && err.message ? err.message : ''));
-});
+  document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
+  renderRecentSearches(); initAboutBuildDate();
+}).catch(err => { alert('Erreur IndexedDB : ' + err.message); });
 </script>
 </body>
 </html>
