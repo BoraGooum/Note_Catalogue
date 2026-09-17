@@ -1,4 +1,4 @@
-name: Build site
+name: Build and Deploy
 
 on:
   push:
@@ -10,17 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create config file
+      - name: Create config.js
         run: |
-          echo "export const TMDB_KEY='${{ secrets.TMDB_KEY }}';" >> config.js
+          echo "export const TMDB_KEY='${{ secrets.TMDB_KEY }}';" > config.js
           echo "export const RAWG_KEY='${{ secrets.RAWG_KEY }}';" >> config.js
           echo "export const GOOGLE_BOOKS_KEY='${{ secrets.GOOGLE_BOOKS_KEY }}';" >> config.js
           echo "export const STEAMGRID_KEY='${{ secrets.STEAMGRID_KEY }}';" >> config.js
 
+      - name: Prepare site folder
+        run: |
+          mkdir site
+          cp -r * site/
+          rm -rf site/.github
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
 
   deploy:
     needs: build
