@@ -1,152 +1,236 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Showroom Couvertures</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Showroom V3 — 105 couvertures</title>
 <style>
 :root{--bg:#0D0A1F;--surface:#17112E;--border:#2A1F4A;--accent:#B24BF3;--text:#EFECE6;--dim:#8B83A8;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;padding:16px;}
-h1{font-size:24px;background:linear-gradient(135deg,var(--accent),#FF5DA2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
-.sub{color:var(--dim);font-size:12px;margin-bottom:14px;}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);z-index:10;}
-.tab{flex-shrink:0;padding:7px 14px;border-radius:18px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;padding:14px;}
+h1{font-size:22px;background:linear-gradient(135deg,var(--accent),#FF5DA2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.sub{color:var(--dim);font-size:11px;margin-bottom:12px;}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.tab{flex-shrink:0;padding:7px 13px;border-radius:18px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;}
 .tab.active{background:linear-gradient(135deg,var(--accent),#7F5AF0);color:#fff;border-color:transparent;}
-h2{font-size:14px;color:var(--accent);margin:22px 0 12px;letter-spacing:1px;}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 14px;}
+h2{font-size:13px;color:var(--accent);margin:20px 0 10px;letter-spacing:1px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 13px;}
 .cell{position:relative;text-align:center;}
-.num{position:absolute;top:-9px;left:-7px;z-index:9;min-width:28px;height:28px;padding:0 6px;border-radius:14px;background:var(--accent);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+.num{position:absolute;top:-9px;left:-7px;z-index:9;min-width:27px;height:27px;padding:0 5px;border-radius:14px;background:var(--accent);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.5);}
 .box{position:relative;aspect-ratio:2/3;}
-.art{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:14px;color:rgba(255,255,255,.85);text-shadow:0 2px 6px rgba(0,0,0,.6);text-align:center;padding:16px;}
-.box svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));}
-.lbl{font-size:11px;color:var(--dim);margin-top:8px;}
+.art{position:absolute;inset:0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:13px;color:rgba(255,255,255,.85);text-shadow:0 2px 6px rgba(0,0,0,.6);text-align:center;padding:14px;}
+.box svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 7px 12px rgba(0,0,0,.55));}
+.lbl{font-size:10px;color:var(--dim);margin-top:7px;}
 .glow svg{animation:gl 2.6s ease-in-out infinite;}
-@keyframes gl{0%,100%{filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}50%{filter:drop-shadow(0 0 14px rgba(178,75,243,.6))}}
-.nue .art{box-shadow:0 16px 34px rgba(0,0,0,.75);border-radius:6px;}
-.perso-note{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:14px;font-size:12px;color:var(--dim);line-height:1.6;}
+@keyframes gl{0%,100%{filter:drop-shadow(0 7px 12px rgba(0,0,0,.55))}50%{filter:drop-shadow(0 0 13px var(--gc,#B24BF3))}}
+.nue .art{box-shadow:0 15px 30px rgba(0,0,0,.7);border-radius:6px;}
+.long .art{box-shadow:14px 18px 0 rgba(0,0,0,.45);border-radius:4px;}
+.perso{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:12px;font-size:11px;color:var(--dim);line-height:1.6;}
 </style>
 </head>
 <body>
-<h1>Showroom des couvertures</h1>
-<p class="sub">Chaque numéro est unique et utilisable dans catalogue.html, quel que soit le type de l'œuvre.</p>
-
-<div class="tabs">
-<div class="tab active" data-f="all">Tous</div>
-<div class="tab" data-f="film"> Film</div>
-<div class="tab" data-f="serie">📺 Série</div>
-<div class="tab" data-f="jeu">🎮 Jeu</div>
-<div class="tab" data-f="manga">📖 Manga</div>
-<div class="tab" data-f="bd">📕 BD</div>
-<div class="tab" data-f="roman">📚 Roman</div>
-<div class="tab" data-f="libre">🏷️ Libre</div>
-<div class="tab" data-f="perso">📂 Perso</div>
-</div>
-
-<h2 data-t="film">🎬 FILM (1-5)</h2>
-<div class="grid">
-<div class="cell" data-type="film"><div class="num">1</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#7a2f1f,#241436)">DUNE</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="f1g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f62c4"/><stop offset="1" stop-color="#122a66"/></linearGradient><mask id="f1m"><rect width="200" height="300" rx="9" fill="#fff"/><rect x="11" y="7" width="182" height="286" rx="3" fill="#000"/></mask></defs><g mask="url(#f1m)"><rect width="200" height="300" rx="9" fill="url(#f1g)"/><rect width="11" height="300" fill="#0d2050"/><path d="M0 0L90 0L20 300L0 300Z" fill="#fff" opacity=".07"/></g></svg></div><div class="lbl">Blu-ray épuré</div></div>
-<div class="cell" data-type="film"><div class="num">2</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#333,#111)">ALIEN</div>
-<svg viewBox="0 0 200 300"><defs><mask id="f2m"><rect width="200" height="300" rx="6" fill="#fff"/><rect x="9" y="6" width="184" height="288" rx="2" fill="#000"/></mask></defs><g mask="url(#f2m)"><rect width="200" height="300" rx="6" fill="#1c1c1e"/><rect width="9" height="300" fill="#000"/><path d="M0 0L60 0L15 300L0 300Z" fill="#fff" opacity=".05"/></g><rect x="9" y="6" width="184" height="288" rx="2" fill="none" stroke="#3a3a3e"/></svg></div><div class="lbl">DVD noir sobre</div></div>
-<div class="cell" data-type="film"><div class="num">3</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#3a2a10,#160e04)">LE PARRAIN</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="f3g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a6a2a"/><stop offset="1" stop-color="#4a3413"/></linearGradient><mask id="f3m"><rect width="200" height="300" rx="6" fill="#fff"/><rect x="14" y="12" width="172" height="276" fill="#000"/></mask></defs><g mask="url(#f3m)"><rect width="200" height="300" rx="6" fill="url(#f3g)"/><rect x="17" y="15" width="166" height="270" fill="none" stroke="#d9b45b"/><path d="M14 12l12 0-12 12zM186 12l-12 0 12 12zM14 288l12 0-12-12zM186 288l-12 0 12-12z" fill="#d9b45b"/></g></svg></div><div class="lbl">Coffret collector</div></div>
-<div class="cell" data-type="film"><div class="num">4</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#20208a,#0a0a30)">RETOUR VERS LE FUTUR</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="f4g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5da2"/><stop offset=".5" stop-color="#7F5AF0"/><stop offset="1" stop-color="#00c3e3"/></linearGradient><mask id="f4m"><rect width="200" height="300" rx="3" fill="#fff"/><rect x="8" y="40" width="184" height="206" fill="#000"/></mask></defs><g mask="url(#f4m)"><rect width="200" height="300" rx="3" fill="#101010"/><rect width="200" height="34" fill="url(#f4g)"/><rect y="252" width="200" height="48" fill="#efe9dc"/><g stroke="#b9b2a4"><line x1="16" y1="266" x2="184" y2="266"/><line x1="16" y1="278" x2="150" y2="278"/><line x1="16" y1="290" x2="170" y2="290"/></g></g></svg></div><div class="lbl">VHS rétro</div></div>
-<div class="cell" data-type="film"><div class="num">5</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#5a4010,#201404)">BLADE RUNNER</div>
-<svg viewBox="0 0 200 300"><defs><mask id="f5m"><rect width="200" height="300" fill="#fff"/><rect x="24" y="0" width="152" height="300" fill="#000"/></mask></defs><g mask="url(#f5m)"><rect width="200" height="300" fill="#0a0a0a"/><g fill="#e8e8e8"><rect x="6" y="8" width="12" height="16" rx="2"/><rect x="6" y="40" width="12" height="16" rx="2"/><rect x="6" y="72" width="12" height="16" rx="2"/><rect x="6" y="104" width="12" height="16" rx="2"/><rect x="6" y="136" width="12" height="16" rx="2"/><rect x="6" y="168" width="12" height="16" rx="2"/><rect x="6" y="200" width="12" height="16" rx="2"/><rect x="6" y="232" width="12" height="16" rx="2"/><rect x="6" y="264" width="12" height="16" rx="2"/><rect x="182" y="8" width="12" height="16" rx="2"/><rect x="182" y="40" width="12" height="16" rx="2"/><rect x="182" y="72" width="12" height="16" rx="2"/><rect x="182" y="104" width="12" height="16" rx="2"/><rect x="182" y="136" width="12" height="16" rx="2"/><rect x="182" y="168" width="12" height="16" rx="2"/><rect x="182" y="200" width="12" height="16" rx="2"/><rect x="182" y="232" width="12" height="16" rx="2"/><rect x="182" y="264" width="12" height="16" rx="2"/></g></g></svg></div><div class="lbl">Pellicule 35mm</div></div>
-</div>
-
-<h2 data-t="serie">📺 SÉRIE (6-9)</h2>
-<div class="grid">
-<div class="cell" data-type="serie"><div class="num">6</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#123c52,#0a1e2e)">SEVERANCE</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="s1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26262c"/><stop offset="1" stop-color="#0b0b0e"/></linearGradient><mask id="s1m"><rect width="200" height="300" rx="10" fill="#fff"/><rect x="13" y="12" width="174" height="248" rx="4" fill="#000"/></mask></defs><g mask="url(#s1m)"><rect width="200" height="300" rx="10" fill="url(#s1g)"/><path d="M0 0L70 0L10 260L0 260Z" fill="#fff" opacity=".05"/></g><rect x="13" y="12" width="174" height="248" rx="4" fill="none" stroke="#000" stroke-width="2"/><circle cx="100" cy="268" r="2.5" fill="#B24BF3"/><path d="M86 274h28l7 18h-42z" fill="#17171c"/><rect x="62" y="292" width="76" height="5" rx="2.5" fill="#1e1e24"/></svg></div><div class="lbl">TV moderne + LED</div></div>
-<div class="cell" data-type="serie"><div class="num">7</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#4a3a20,#201608)">CHAPEAU MELON</div>
-<svg viewBox="0 0 200 300"><defs><mask id="s2m"><rect width="200" height="300" rx="16" fill="#fff"/><rect x="16" y="26" width="130" height="118" rx="10" fill="#000"/></mask></defs><g mask="url(#s2m)"><rect width="200" height="300" rx="16" fill="#d8cdb4"/><rect x="152" y="30" width="40" height="110" rx="6" fill="#b7a988"/><circle cx="172" cy="52" r="11" fill="#6b5f4a"/><circle cx="172" cy="82" r="11" fill="#6b5f4a"/><g stroke="#6b5f4a" stroke-width="2"><line x1="158" y1="108" x2="186" y2="108"/><line x1="158" y1="116" x2="186" y2="116"/><line x1="158" y1="124" x2="186" y2="124"/></g><rect y="150" width="200" height="150" fill="#c4b795"/><path d="M60 26L30 0M100 26L130 0" stroke="#6b5f4a" stroke-width="4"/></g><rect x="16" y="26" width="130" height="118" rx="10" fill="none" stroke="#8f8266" stroke-width="3"/></svg></div><div class="lbl">TV cathodique rétro</div></div>
-<div class="cell" data-type="serie"><div class="num">8</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#2a2a3a,#0e0e16)">WESTWORLD</div>
-<svg viewBox="0 0 200 300"><defs><mask id="s3m"><rect width="200" height="300" fill="#fff"/><rect x="5" y="44" width="190" height="212" fill="#000"/></mask></defs><g mask="url(#s3m)"><rect width="200" height="300" fill="#050505"/><rect y="40" width="200" height="4" fill="#222"/><rect y="256" width="200" height="4" fill="#222"/></g></svg></div><div class="lbl">Cinémascope</div></div>
-<div class="cell" data-type="serie"><div class="num">9</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#301a4a,#140a24)">STRANGER THINGS</div>
-<svg viewBox="0 0 200 300"><defs><mask id="s4m"><rect width="200" height="300" rx="12" fill="#fff"/><rect x="6" y="6" width="188" height="272" rx="8" fill="#000"/></mask></defs><g mask="url(#s4m)"><rect width="200" height="300" rx="12" fill="#17112E"/><rect width="200" height="300" rx="12" fill="none" stroke="#7F5AF0" stroke-width="6"/><rect y="278" width="200" height="22" fill="#17112E"/><rect x="14" y="288" width="172" height="3" rx="1.5" fill="#2A1F4A"/><rect x="14" y="288" width="120" height="3" rx="1.5" fill="#FF5DA2"/><circle cx="134" cy="289.5" r="5" fill="#FF5DA2"/></g></svg></div><div class="lbl">Écran streaming</div></div>
-</div>
-
-<h2 data-t="jeu">🎮 JEU (10-15)</h2>
-<div class="grid">
-<div class="cell" data-type="jeu"><div class="num">10</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#0e2f52,#0a1026);padding-top:26px">CONTROL</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="j1g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#006FCD"/><stop offset="1" stop-color="#003087"/></linearGradient><mask id="j1m"><rect width="200" height="300" rx="7" fill="#fff"/><rect x="7" y="27" width="186" height="266" rx="3" fill="#000"/></mask></defs><g mask="url(#j1m)"><rect width="200" height="300" rx="7" fill="#101014"/><rect width="200" height="27" fill="url(#j1g)"/><path d="M0 27Q100 18 200 27" stroke="#fff" fill="none" opacity=".5"/></g><rect x="166" y="270" width="24" height="24" rx="3" fill="#111" stroke="#444"/><text x="178" y="287" fill="#eee" font-size="12" font-weight="800" font-family="Arial" text-anchor="middle">18</text></svg></div><div class="lbl">Boîte PS5</div></div>
-<div class="cell" data-type="jeu"><div class="num">11</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#1a2a4a,#0a1020);padding-top:26px">GOW</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="j2g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#003791"/><stop offset="1" stop-color="#001a4d"/></linearGradient><mask id="j2m"><rect width="200" height="300" rx="7" fill="#fff"/><rect x="7" y="27" width="186" height="266" rx="3" fill="#000"/></mask></defs><g mask="url(#j2m)"><rect width="200" height="300" rx="7" fill="#0d0d12"/><rect width="200" height="27" fill="url(#j2g)"/><path d="M120 6l20 0-8 15-20 0z" fill="#fff" opacity=".7"/></g><rect x="166" y="270" width="24" height="24" rx="3" fill="#111" stroke="#444"/><text x="178" y="287" fill="#eee" font-size="12" font-weight="800" font-family="Arial" text-anchor="middle">18</text></svg></div><div class="lbl">Boîte PS4</div></div>
-<div class="cell" data-type="jeu"><div class="num">12</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#3a5210,#141c04);padding-top:26px">ZELDA</div>
-<svg viewBox="0 0 200 300"><defs><mask id="j3m"><rect width="200" height="300" rx="7" fill="#fff"/><rect x="7" y="27" width="186" height="266" rx="3" fill="#000"/></mask></defs><g mask="url(#j3m)"><rect width="200" height="300" rx="7" fill="#141414"/><rect width="200" height="27" fill="#3a3a3e"/><circle cx="16" cy="13" r="9" fill="#00c3e3"/><circle cx="184" cy="13" r="9" fill="#ff4554"/></g><rect x="166" y="270" width="24" height="24" rx="3" fill="#111" stroke="#444"/><text x="178" y="287" fill="#eee" font-size="12" font-weight="800" font-family="Arial" text-anchor="middle">12</text></svg></div><div class="lbl">Boîte Switch</div></div>
-<div class="cell" data-type="jeu"><div class="num">13</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#1a3a1a,#081408);padding-top:26px">HALO</div>
-<svg viewBox="0 0 200 300"><defs><mask id="j4m"><rect width="200" height="300" rx="7" fill="#fff"/><rect x="7" y="27" width="186" height="266" rx="3" fill="#000"/></mask></defs><g mask="url(#j4m)"><rect width="200" height="300" rx="7" fill="#0e0e0e"/><rect width="200" height="27" fill="#111"/><circle cx="184" cy="13" r="9" fill="#107C10"/><rect y="25" width="200" height="2" fill="#107C10"/></g><rect x="166" y="270" width="24" height="24" rx="3" fill="#111" stroke="#444"/><text x="178" y="287" fill="#eee" font-size="12" font-weight="800" font-family="Arial" text-anchor="middle">16</text></svg></div><div class="lbl">Boîte Xbox</div></div>
-<div class="cell" data-type="jeu"><div class="num">14</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#5a1010,#200404);padding-top:52px">MARIO</div>
-<svg viewBox="0 0 200 300"><defs><mask id="j5m"><rect width="200" height="300" rx="6" fill="#fff"/><rect x="10" y="52" width="180" height="238" rx="2" fill="#000"/></mask></defs><g mask="url(#j5m)"><rect width="200" height="300" rx="6" fill="#b8bcc2"/><rect width="200" height="46" fill="#8f949a"/><rect x="20" y="8" width="160" height="32" rx="2" fill="#efe9dc"/><g stroke="#b9b2a4"><line x1="28" y1="18" x2="172" y2="18"/><line x1="28" y1="28" x2="140" y2="28"/></g><circle cx="14" cy="286" r="4" fill="#6b7076"/><circle cx="186" cy="286" r="4" fill="#6b7076"/></g></svg></div><div class="lbl">Cartouche rétro</div></div>
-<div class="cell" data-type="jeu"><div class="num">15</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#2a2a2a,#101010);padding-top:20px">BALDUR'S GATE</div>
-<svg viewBox="0 0 200 300"><defs><mask id="j6m"><rect width="200" height="300" rx="5" fill="#fff"/><rect x="6" y="21" width="188" height="273" rx="2" fill="#000"/></mask></defs><g mask="url(#j6m)"><rect width="200" height="300" rx="5" fill="#23262b"/><rect width="200" height="20" fill="#2b2f36"/><text x="10" y="15" fill="#4fa98c" font-size="12" font-weight="800" font-family="Arial">PC</text></g></svg></div><div class="lbl">Boîte PC</div></div>
-</div>
-
-<h2 data-t="manga">📖 MANGA (16-19)</h2>
-<div class="grid">
-<div class="cell" data-type="manga"><div class="num">16</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#d8c39a,#6d4f2a)">BERSERK</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="m1g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a1f1f"/><stop offset="1" stop-color="#2e0d0d"/></linearGradient><mask id="m1m"><rect width="200" height="300" rx="4" fill="#fff"/><rect x="5" y="5" width="166" height="258" rx="2" fill="#000"/></mask></defs><g mask="url(#m1m)"><rect width="200" height="300" rx="4" fill="#e9e2d0"/><rect x="171" width="29" height="300" fill="url(#m1g)"/><text x="186" y="40" fill="#f3e9d2" font-size="15" font-family="serif" transform="rotate(90 186 40)" letter-spacing="4">ベルセルク</text><rect y="263" width="200" height="37" fill="#c8352f"/><text x="12" y="286" fill="#ffe9a8" font-size="11" font-weight="700" font-family="serif">ÉDITION COLLECTOR ✦</text></g></svg></div><div class="lbl">Reliure + obi</div></div>
-<div class="cell" data-type="manga"><div class="num">17</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#c9b98a,#6a5630)">VAGABOND</div>
-<svg viewBox="0 0 200 300"><defs><mask id="m2m"><rect width="200" height="300" rx="3" fill="#fff"/><rect x="4" y="4" width="170" height="292" fill="#000"/></mask></defs><g mask="url(#m2m)"><rect width="200" height="300" rx="3" fill="#e9e2d0"/><rect x="176" width="24" height="300" fill="#5a3a22"/></g><rect x="4" y="4" width="170" height="292" fill="none" stroke="#b7ad93"/></svg></div><div class="lbl">Reliure sobre</div></div>
-<div class="cell" data-type="manga"><div class="num">18</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#e8e8e8,#9a9a9a)">ONE PIECE</div>
-<svg viewBox="0 0 200 300"><defs><mask id="m3m"><rect width="200" height="300" rx="3" fill="#fff"/><rect x="4" y="4" width="172" height="292" fill="#000"/></mask></defs><g mask="url(#m3m)"><rect width="200" height="300" rx="3" fill="#f2efe6"/><rect x="178" width="22" height="300" fill="#f2efe6"/><g stroke="#111" stroke-width="2"><line x1="184" y1="20" x2="184" y2="280"/><line x1="192" y1="20" x2="192" y2="280"/></g></g><rect x="4" y="4" width="172" height="292" fill="none" stroke="#c9c2b2"/></svg></div><div class="lbl">Tankōbon blanc</div></div>
-<div class="cell" data-type="manga"><div class="num">19</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#2a2a2a,#0a0a0a)">AKIRA</div>
-<svg viewBox="0 0 200 300"><defs><mask id="m4m"><rect width="200" height="300" rx="3" fill="#fff"/><rect x="4" y="4" width="170" height="292" fill="#000"/></mask></defs><g mask="url(#m4m)"><rect width="200" height="300" rx="3" fill="#141416"/><rect x="176" width="24" height="300" fill="#0d0d0f"/><line x1="180" y1="0" x2="180" y2="300" stroke="#c0c0c0" stroke-width="1.5"/></g></svg></div><div class="lbl">Grand format noir</div></div>
-</div>
-
-<h2 data-t="bd">📕 BD (20-23)</h2>
-<div class="grid">
-<div class="cell" data-type="bd"><div class="num">20</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#274067,#101a30)">CITY HUNTER</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="b1g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a1e2b"/><stop offset="1" stop-color="#3d0d15"/></linearGradient><mask id="b1m"><rect width="200" height="300" rx="5" fill="#fff"/><rect x="12" y="9" width="179" height="282" rx="2" fill="#000"/></mask></defs><g mask="url(#b1m)"><rect width="200" height="300" rx="5" fill="url(#b1g)"/><rect width="12" height="300" fill="#2a080d"/><g fill="#d9b45b"><rect x="2" y="30" width="8" height="3"/><rect x="2" y="60" width="8" height="3"/><rect x="2" y="240" width="8" height="3"/><path d="M16 13l10 0-10 10zM187 13l-10 0 10 10zM16 287l10 0-10-10zM187 287l-10 0 10-10z"/></g><rect x="16" y="13" width="171" height="274" fill="none" stroke="#d9b45b" opacity=".8"/></g></svg></div><div class="lbl">Cartonné + fers dorés</div></div>
-<div class="cell" data-type="bd"><div class="num">21</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#6a8a5a,#2a3a20)">TINTIN</div>
-<svg viewBox="0 0 200 300"><defs><mask id="b2m"><rect width="200" height="300" rx="4" fill="#fff"/><rect x="10" y="8" width="182" height="284" fill="#000"/></mask></defs><g mask="url(#b2m)"><rect width="200" height="300" rx="4" fill="#8B6F47"/><rect width="10" height="300" fill="#6d5636"/></g></svg></div><div class="lbl">Kraft sobre</div></div>
-<div class="cell" data-type="bd"><div class="num">22</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#4a2a6a,#1a0a2a)">WATCHMEN</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="b3g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B24BF3"/><stop offset="1" stop-color="#7F5AF0"/></linearGradient><mask id="b3m"><rect width="200" height="300" rx="4" fill="#fff"/><rect x="28" y="6" width="166" height="288" fill="#000"/></mask></defs><g mask="url(#b3m)"><rect width="200" height="300" rx="4" fill="#17112E"/><rect width="26" height="300" fill="url(#b3g)"/><rect x="26" width="2" height="300" fill="#7F5AF0"/></g></svg></div><div class="lbl">Dos carré coloré</div></div>
-<div class="cell" data-type="bd"><div class="num">23</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#c8352f,#5a0a08)">SPIDER-MAN</div>
-<svg viewBox="0 0 200 300"><defs><mask id="b4m"><rect width="200" height="300" fill="#fff"/><rect x="11" y="11" width="178" height="278" fill="#000"/></mask></defs><g mask="url(#b4m)"><rect width="200" height="300" fill="#f2c40e"/><rect x="9" y="9" width="182" height="282" fill="none" stroke="#d33" stroke-width="4"/><path d="M170 20l6 12 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z" fill="#d33"/></g></svg></div><div class="lbl">Comic US</div></div>
-</div>
-
-<h2 data-t="roman">📚 ROMAN (24-27)</h2>
-<div class="grid">
-<div class="cell" data-type="roman"><div class="num">24</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#2c4a33,#12211a)">L'ÉTRANGER</div>
-<svg viewBox="0 0 200 300"><defs><linearGradient id="r1g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1d3a2a"/><stop offset="1" stop-color="#0d1f15"/></linearGradient><mask id="r1m"><rect width="200" height="300" rx="3" fill="#fff"/><rect x="14" y="5" width="178" height="288" fill="#000"/></mask></defs><g mask="url(#r1m)"><rect width="200" height="300" rx="3" fill="url(#r1g)"/><rect width="14" height="300" fill="#0a1810"/><rect x="192" y="6" width="8" height="288" fill="#efe9dc"/><g stroke="#c9c2b2"><line x1="194" y1="10" x2="194" y2="290"/><line x1="196" y1="10" x2="196" y2="290"/><line x1="198" y1="10" x2="198" y2="290"/></g></g></svg></div><div class="lbl">Tranche + pages</div></div>
-<div class="cell" data-type="roman"><div class="num">25</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#8a8a7a,#4a4a3a)">LA PESTE</div>
-<svg viewBox="0 0 200 300"><rect x="3" y="3" width="194" height="294" rx="2" fill="none" stroke="#c9c2b2" stroke-width="3"/></svg></div><div class="lbl">Poche sobre</div></div>
-<div class="cell" data-type="roman"><div class="num">26</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#5a3a1a,#241408)">LE NOM DE LA ROSE</div>
-<svg viewBox="0 0 200 300"><defs><mask id="r3m"><rect width="200" height="300" rx="4" fill="#fff"/><rect x="14" y="8" width="174" height="262" fill="#000"/></mask></defs><g mask="url(#r3m)"><rect width="200" height="300" rx="4" fill="#4a2c17"/><g fill="#b08d3e"><rect width="12" height="12"/><rect x="188" width="12" height="12"/><rect y="288" width="12" height="12"/><rect x="188" y="288" width="12" height="12"/></g><path d="M94 270h12v30l-6-6-6 6z" fill="#a32020"/></g><rect x="14" y="8" width="174" height="262" fill="none" stroke="#6a4a2a" stroke-width="2"/></svg></div><div class="lbl">Livre ancien + signet</div></div>
-<div class="cell" data-type="roman"><div class="num">27</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#d8d8d0,#8a8a82)">KAFKA</div>
-<svg viewBox="0 0 200 300"><defs><mask id="r4m"><rect width="200" height="300" rx="2" fill="#fff"/><rect x="8" y="6" width="186" height="288" fill="#000"/></mask></defs><g mask="url(#r4m)"><rect width="200" height="300" rx="2" fill="#f5f2ea"/><rect x="10" y="8" width="182" height="284" fill="none" stroke="#b9b2a4"/></g></svg></div><div class="lbl">Grand format blanc</div></div>
-</div>
-
-<h2 data-t="libre">🏷️ LIBRE (28-30)</h2>
-<div class="grid">
-<div class="cell" data-type="libre"><div class="num">28</div><div class="box"><div class="art" style="background:linear-gradient(160deg,#3a2352,#1a1030)">CONFÉRENCE</div>
-<svg viewBox="0 0 200 300"><defs><mask id="l1m"><rect width="200" height="300" rx="10" fill="#fff"/><rect x="7" y="7" width="186" height="286" rx="7" fill="#000"/></mask></defs><g mask="url(#l1m)"><rect width="200" height="300" rx="10" fill="#17112E"/><rect width="200" height="300" rx="10" fill="none" stroke="#B24BF3" stroke-width="4"/></g><g fill="#B24BF3"><circle cx="14" cy="14" r="2"/><circle cx="186" cy="14" r="2"/><circle cx="14" cy="286" r="2"/><circle cx="186" cy="286" r="2"/></g></svg></div><div class="lbl">Cadre violet</div></div>
-<div class="cell" data-type="libre"><div class="num">29</div><div class="box glow"><div class="art" style="background:linear-gradient(160deg,#3a2352,#1a1030)">SPECTACLE</div>
-<svg viewBox="0 0 200 300"><rect x="3" y="3" width="194" height="294" rx="10" fill="none" stroke="#B24BF3" stroke-width="3"/></svg></div><div class="lbl">Néon glow</div></div>
-<div class="cell" data-type="libre"><div class="num">30</div><div class="box nue"><div class="art" style="background:linear-gradient(160deg,#3a2352,#1a1030)">AFFICHE NUE</div></div><div class="lbl">Affiche nue</div></div>
-</div>
-
-<h2 data-t="perso">📂 MES IMAGES PERSO (31+)</h2>
-<div class="perso-note">
-Tes images uploadées dans <b>catalogue.html → Options → Apparence</b> apparaîtront ici automatiquement avec leur numéro (31, 32, 33…).<br>
-Elles seront normalisées à la bonne taille, quel que soit le fichier d'origine (PNG, JPG, SVG).
-</div>
-
+<h1>Showroom V3</h1>
+<p class="sub">105 couvertures numérotées. Tape le numéro dans catalogue.html, quel que soit le type.</p>
+<div class="tabs" id="tabs"></div>
+<div id="wrap"></div>
 <script>
-document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    const f = t.dataset.f;
-    document.querySelectorAll('.cell').forEach(c => { c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none'; });
-    document.querySelectorAll('h2').forEach(h => { h.style.display = (f === 'all' || h.dataset.t === f) ? '' : 'none'; });
-    document.querySelector('.perso-note').style.display = (f === 'all' || f === 'perso') ? '' : 'none';
+/* ===== MOTEUR DE SKINS ===== */
+const X={
+legs:`<path d="M86 274h28l7 18h-42z" fill="#17171c"/><rect x="62" y="292" width="76" height="5" rx="2.5" fill="#1e1e24"/>`,
+led:c=>`<circle cx="100" cy="268" r="2.5" fill="${c||'#B24BF3'}"/>`,
+antenna:`<path d="M60 26L30 0M100 26L130 0" stroke="#6b5f4a" stroke-width="4"/>`,
+knobs:`<circle cx="172" cy="52" r="11" fill="#6b5f4a"/><circle cx="172" cy="82" r="11" fill="#6b5f4a"/><g stroke="#6b5f4a" stroke-width="2"><line x1="158" y1="108" x2="186" y2="108"/><line x1="158" y1="118" x2="186" y2="118"/></g>`,
+reels:`<circle cx="60" cy="20" r="14" fill="none" stroke="#d8c9a0" stroke-width="3"/><circle cx="140" cy="20" r="14" fill="none" stroke="#d8c9a0" stroke-width="3"/>`,
+reelC:`<circle cx="100" cy="150" r="40" fill="none" stroke="#d8c9a0" stroke-width="4" opacity=".5"/><circle cx="100" cy="150" r="10" fill="#d8c9a0" opacity=".5"/>`,
+perf:`<g fill="#e8e8e8">${[8,40,72,104,136,168,200,232,264].map(y=>`<rect x="6" y="${y}" width="12" height="16" rx="2"/><rect x="182" y="${y}" width="12" height="16" rx="2"/>`).join('')}</g>`,
+signet:`<path d="M94 268h12v32l-6-6-6 6z" fill="#a32020"/>`,
+spiral:`<g stroke="#c0c0c0" stroke-width="2" fill="none">${[20,50,80,110,140,170,200,230,260].map(y=>`<path d="M4 ${y}q8 6 0 12"/>`).join('')}</g>`,
+scotch:`<g fill="#e8e4d8" opacity=".8"><rect x="20" y="6" width="34" height="12" transform="rotate(-20 37 12)"/><rect x="146" y="6" width="34" height="12" transform="rotate(20 163 12)"/><rect x="20" y="282" width="34" height="12" transform="rotate(20 37 288)"/><rect x="146" y="282" width="34" height="12" transform="rotate(-20 163 288)"/></g>`,
+joystick:`<circle cx="70" cy="282" r="9" fill="#d33"/><rect x="67" y="282" width="6" height="12" fill="#333"/><rect x="120" y="280" width="14" height="6" rx="3" fill="#333"/><rect x="140" y="280" width="14" height="6" rx="3" fill="#333"/>`,
+notch:`<rect x="80" y="6" width="40" height="8" rx="4" fill="#000"/>`,
+home:`<circle cx="100" cy="288" r="6" fill="none" stroke="#888" stroke-width="2"/>`,
+playbar:`<rect x="14" y="288" width="172" height="3" rx="1.5" fill="#2A1F4A"/><rect x="14" y="288" width="110" height="3" rx="1.5" fill="#FF5DA2"/><circle cx="124" cy="289.5" r="5" fill="#FF5DA2"/>`,
+play:`<path d="M88 130l34 20-34 20z" fill="#fff" opacity=".85"/>`,
+clap:`<g fill="#111"><rect y="0" width="200" height="16"/><rect y="20" width="200" height="14"/></g><g fill="#fff">${[0,40,80,120,160].map(x=>`<path d="M${x} 0l16 0-8 16-16 0z"/>`).join('')}</g>`,
+screws:`<circle cx="14" cy="286" r="4" fill="#6b7076"/><circle cx="186" cy="286" r="4" fill="#6b7076"/>`,
+string:`<path d="M20 40q80 20 160 0M20 60q80 20 160 0" stroke="#c9a86a" stroke-width="2" fill="none"/>`,
+clasp:`<rect x="186" y="140" width="14" height="24" rx="3" fill="#b08d3e"/>`,
+elastic:`<rect x="150" y="0" width="6" height="300" fill="#222"/>`,
+beam:`<path d="M100 0L40 300L160 300Z" fill="#fff" opacity=".08"/>`,
+disc:`<circle cx="160" cy="250" r="26" fill="none" stroke="#c0c0c0" stroke-width="3" opacity=".7"/><circle cx="160" cy="250" r="6" fill="#c0c0c0" opacity=".7"/>`,
+gamepad:`<path d="M60 280q40 -14 80 0q10 4 8 12h-96q-2 -8 8 -12z" fill="#333"/><circle cx="80" cy="284" r="4" fill="#d33"/><circle cx="120" cy="284" r="4" fill="#3a3"/>`,
+headphone:`<path d="M70 280a30 30 0 0 1 60 0" stroke="#B24BF3" stroke-width="4" fill="none"/><rect x="64" y="278" width="10" height="16" rx="4" fill="#B24BF3"/><rect x="126" y="278" width="10" height="16" rx="4" fill="#B24BF3"/>`,
+fold:`<g stroke="#000" opacity=".25"><line x1="0" y1="100" x2="200" y2="100"/><line x1="0" y1="200" x2="200" y2="200"/><line x1="100" y1="0" x2="100" y2="300"/></g>`,
+scan:`<g stroke="#0f0" opacity=".15">${[40,80,120,160,200,240].map(y=>`<line x1="0" y1="${y}" x2="200" y2="${y}"/>`).join('')}</g>`,
+wave:`<path d="M176 240q6 -8 12 0q6 8 12 0" stroke="#f3e9d2" stroke-width="2" fill="none"/>`,
+flowers:`<g fill="#ffd0e0">${[60,120,200,250].map(y=>`<circle cx="186" cy="${y}" r="3"/>`).join('')}</g>`,
+};
+function svg(s){
+  if(!s.frame) return '';
+  const W=200,H=300,win=s.win||[10,7,180,286],id='k'+s.id;
+  let defs=`<mask id="${id}"><rect width="${W}" height="${H}" rx="${s.rx||6}" fill="#fff"/><rect x="${win[0]}" y="${win[1]}" width="${win[2]}" height="${win[3]}" rx="${s.wrx||2}" fill="#000"/></mask>`;
+  let fill=s.frame;
+  if(Array.isArray(s.frame)){defs+=`<linearGradient id="g${id}" x1="0" y1="0" x2="${s.gd?1:0}" y2="${s.gd?0:1}"><stop offset="0" stop-color="${s.frame[0]}"/><stop offset="1" stop-color="${s.frame[1]}"/></linearGradient>`;fill=`url(#g${id})`;}
+  let b=`<g mask="url(#${id})"><rect width="${W}" height="${H}" rx="${s.rx||6}" fill="${fill}"/>`;
+  if(s.spine){const[side,w,c]=s.spine,x=side==='left'?0:W-w;b+=`<rect x="${x}" width="${w}" height="${H}" fill="${c}"/>`;
+    if(s.spineTxt)b+=`<text x="${x+w/2}" y="40" fill="${s.spineTxt[1]}" font-size="${s.spineTxt[2]||13}" font-family="serif" transform="rotate(90 ${x+w/2} 40)" letter-spacing="3">${s.spineTxt[0]}</text>`;}
+  if(s.band){const[p,h,c]=s.band,y=p==='top'?0:H-h;b+=`<rect y="${y}" width="${W}" height="${h}" fill="${c}"/>`;
+    if(s.bandTxt)b+=`<text x="10" y="${y+h*.72}" fill="${s.bandTxt[1]||'#fff'}" font-size="${s.bandTxt[2]||12}" font-weight="800" font-family="Arial">${s.bandTxt[0]}</text>`;
+    if(s.bandDots)b+=s.bandDots.map(d=>`<circle cx="${d[0]}" cy="${y+h/2}" r="${d[1]}" fill="${d[2]}"/>`).join('');}
+  if(s.corners){const[x,y,w,h]=win;b+=`<path d="M${x} ${y}l10 0-10 10zM${x+w} ${y}l-10 0 10 10zM${x} ${y+h}l10 0-10-10zM${x+w} ${y+h}l-10 0 10-10z" fill="${s.corners}"/>`;}
+  if(s.refl!==0)b+=`<path d="M0 0L${s.refl||70} 0L20 ${H}L0 ${H}Z" fill="#fff" opacity="${s.reflOp||.06}"/>`;
+  b+='</g>';
+  let o='';
+  (s.x||[]).forEach(k=>{o+=typeof X[k]==='function'?X[k](s.xc):X[k];});
+  if(s.wstroke)o+=`<rect x="${win[0]}" y="${win[1]}" width="${win[2]}" height="${win[3]}" rx="${s.wrx||2}" fill="none" stroke="${s.wstroke}" stroke-width="${s.wsw||1.5}"/>`;
+  if(s.badge)o+=`<rect x="166" y="270" width="24" height="24" rx="3" fill="#111" stroke="#444"/><text x="178" y="287" fill="#eee" font-size="12" font-weight="800" font-family="Arial" text-anchor="middle">${s.badge}</text>`;
+  return `<svg viewBox="0 0 200 300"><defs>${defs}</defs>${b}${o}</svg>`;
+}
+/* ===== 105 SKINS ===== */
+const S=[
+{id:1,t:'film',n:'Blu-ray épuré',frame:['#2f62c4','#122a66'],spine:['left',11,'#0d2050'],win:[11,7,182,286],rx:9},
+{id:2,t:'film',n:'DVD noir sobre',frame:'#1c1c1e',spine:['left',9,'#000'],win:[9,6,184,288],wstroke:'#3a3a3e'},
+{id:3,t:'film',n:'Coffret collector',frame:['#8a6a2a','#4a3413'],win:[14,12,172,276],corners:'#d9b45b',wstroke:'#d9b45b'},
+{id:4,t:'film',n:'VHS rétro',frame:'#101010',band:['top',34,['#ff5da2','#00c3e3']],band:['top',34,'#7F5AF0'],win:[8,40,184,206],rx:3},
+{id:5,t:'film',n:'Pellicule 35mm',frame:'#0a0a0a',win:[24,0,152,300],x:['perf'],refl:0},
+{id:6,t:'film',n:'Steelbook métal',frame:['#8a8f96','#4a4f56'],gd:1,win:[8,6,184,288],wstroke:'#aab0b8',reflOp:.14},
+{id:7,t:'film',n:'Super 8',frame:['#5a4020','#2a1c0c'],win:[10,44,180,246],x:['reels']},
+{id:8,t:'film',n:'Art déco argent',frame:'#141414',win:[16,14,168,272],corners:'#c0c0c0',wstroke:'#c0c0c0',wsw:2},
+{id:9,t:'film',n:'Grand format rouge',frame:'#111',band:['top',30,'#c8352f'],win:[7,34,186,259],badge:'12'},
+{id:10,t:'film',n:'Drive-in',frame:'#141414',win:[20,10,160,280],x:['perf'],refl:0},
+{id:11,t:'film',n:'DVD rouge',frame:['#a02020','#500c0c'],spine:['left',10,'#300'],win:[10,7,183,286]},
+{id:12,t:'film',n:'4K UHD',frame:'#0d0d0d',band:['top',26,'#000'],win:[7,30,186,263],wstroke:'#d9b45b',badge:'16'},
+{id:13,t:'film',n:'Jaquette clap',frame:'#111',win:[8,40,184,252],x:['clap']},
+{id:14,t:'film',n:'Bobine',frame:['#3a2a10','#160e04'],win:[12,12,176,276],x:['reelC']},
+{id:15,t:'film',n:'Écran cinéma',frame:['#7a1e2b','#3d0d15'],gd:0,spine:['left',26,'#5a0f18'],spine2:1,win:[30,16,150,268],wstroke:'#d9b45b'},
+{id:16,t:'serie',n:'TV moderne + LED',frame:['#26262c','#0b0b0e'],win:[13,12,174,248],rx:10,x:['legs','led']},
+{id:17,t:'serie',n:'TV cathodique',frame:'#d8cdb4',win:[16,26,130,118],rx:16,wrx:10,x:['knobs','antenna'],wstroke:'#8f8266',wsw:3},
+{id:18,t:'serie',n:'Cinémascope',frame:'#050505',band:['top',44,'#050505'],win:[5,44,190,212],refl:0},
+{id:19,t:'serie',n:'Streaming',frame:'#17112E',win:[6,6,188,272],rx:12,wstroke:'#7F5AF0',wsw:6,x:['playbar']},
+{id:20,t:'serie',n:'Écran incurvé',frame:'#0b0b0e',win:[10,10,180,250],rx:24,wrx:18,wstroke:'#333',x:['legs']},
+{id:21,t:'serie',n:'Fenêtre navigateur',frame:'#111',band:['top',18,'#2a2a33'],bandDots:[[14,4,'#ff5f57'],[28,4,'#febc2e'],[42,4,'#28c840']],win:[6,22,188,272]},
+{id:22,t:'serie',n:'Tablette',frame:'#c0c0c6',win:[10,10,180,268],rx:14,x:['home']},
+{id:23,t:'serie',n:'Smartphone',frame:'#111',win:[14,16,172,262],rx:18,wrx:12,x:['notch']},
+{id:24,t:'serie',n:'Caméscope',frame:'#8f949a',win:[12,40,150,200],spine:['right',26,'#6b7076'],x:['reels']},
+{id:25,t:'serie',n:'Rétro-projecteur',frame:'#1a1a1a',win:[14,20,172,240],x:['beam','legs']},
+{id:26,t:'serie',n:'TV bois',frame:['#8a6a3a','#4a3418'],win:[14,16,172,240],rx:12,x:['legs','knobs']},
+{id:27,t:'serie',n:'CRT vert',frame:'#1a2a1a',win:[14,14,172,244],rx:14,wrx:10,wstroke:'#2CB67D',x:['scan']},
+{id:28,t:'serie',n:'Clap ardoise',frame:'#222',win:[8,44,184,248],x:['clap']},
+{id:29,t:'serie',n:'Fenêtre plateforme',frame:'#0d0d12',win:[6,6,188,272],rx:10,wstroke:'#B24BF3',wsw:3,x:['play']},
+{id:30,t:'serie',n:'Box TV',frame:'#111',win:[10,60,180,200],rx:10,x:['led','#107C10'],xc:'#107C10'},
+{id:31,t:'jeu',n:'Boîte PS5',frame:'#101014',band:['top',27,['#006FCD','#003087']],gd:1,win:[7,27,186,266],badge:'18'},
+{id:32,t:'jeu',n:'Boîte PS4',frame:'#0d0d12',band:['top',27,['#003791','#001a4d']],gd:1,win:[7,27,186,266],badge:'18'},
+{id:33,t:'jeu',n:'Boîte Switch',frame:'#141414',band:['top',27,'#3a3a3e'],bandDots:[[16,9,'#00c3e3'],[184,9,'#ff4554']],win:[7,27,186,266],badge:'12'},
+{id:34,t:'jeu',n:'Boîte Xbox',frame:'#0e0e0e',band:['top',27,'#111'],bandDots:[[184,9,'#107C10']],win:[7,27,186,266],badge:'16'},
+{id:35,t:'jeu',n:'Cartouche rétro',frame:'#b8bcc2',band:['top',46,'#8f949a'],win:[10,52,180,238],x:['screws'],rx:6},
+{id:36,t:'jeu',n:'Boîte PC',frame:'#23262b',band:['top',20,'#2b2f36'],bandTxt:['PC','#4fa98c'],win:[6,21,188,273],rx:5},
+{id:37,t:'jeu',n:'Cartouche GameBoy',frame:'#b8bcc2',band:['top',40,'#9aa0a6'],win:[16,48,168,220],x:['screws'],rx:6},
+{id:38,t:'jeu',n:'Borne arcade',frame:'#3d0d15',band:['top',30,['#ff5da2','#7F5AF0']],gd:1,win:[12,34,176,230],x:['joystick']},
+{id:39,t:'jeu',n:'Console portable',frame:'#222',win:[24,20,152,240],rx:16,wrx:8,x:['gamepad']},
+{id:40,t:'jeu',n:'Coffret métal',frame:['#8a8f96','#3a3f46'],gd:1,win:[12,12,176,276],corners:'#c0c0c0',wstroke:'#aab0b8'},
+{id:41,t:'jeu',n:'Boîte Sega',frame:'#0d0d12',band:['top',26,['#0060a8','#003060']],gd:1,bandTxt:['SEGA','#ffd700'],win:[7,27,186,266],badge:'12'},
+{id:42,t:'jeu',n:'Boîte Atari',frame:'#1a1a1a',band:['top',26,['#d33','#f80']],gd:1,win:[7,27,186,266],badge:'10'},
+{id:43,t:'jeu',n:'Disque jeu',frame:'#111',win:[8,8,184,284],x:['disc']},
+{id:44,t:'jeu',n:'Manette',frame:'#17112E',win:[8,8,184,250],x:['gamepad']},
+{id:45,t:'jeu',n:'Mini-borne',frame:'#c8352f',band:['top',24,'#ffd700'],win:[16,28,168,230],x:['joystick']},
+{id:46,t:'manga',n:'Reliure + obi',frame:'#e9e2d0',spine:['right',29,'#5a1f1f'],spineTxt:['ベルセルク','#f3e9d2'],band:['bottom',37,'#c8352f'],win:[5,5,166,258],rx:4},
+{id:47,t:'manga',n:'Reliure sobre',frame:'#e9e2d0',spine:['right',24,'#5a3a22'],win:[4,4,170,292],rx:3,wstroke:'#b7ad93'},
+{id:48,t:'manga',n:'Tankōbon blanc',frame:'#f2efe6',spine:['right',22,'#f2efe6'],win:[4,4,172,292],rx:3,wstroke:'#c9c2b2'},
+{id:49,t:'manga',n:'Grand format noir',frame:'#141416',spine:['right',24,'#0d0d0f'],win:[4,4,170,292],rx:3,wstroke:'#c0c0c0'},
+{id:50,t:'manga',n:'Shonen vif',frame:'#f5f5f5',spine:['right',24,'#0060c0'],win:[4,4,170,292],rx:3,wstroke:'#ffd700',wsw:2},
+{id:51,t:'manga',n:'Shojo',frame:'#fdf5f8',spine:['right',24,'#e06090'],win:[4,4,170,292],rx:3,x:['flowers'],wstroke:'#ffd0e0'},
+{id:52,t:'manga',n:'Deluxe brillant',frame:'#0d0d0f',spine:['right',22,'#111'],win:[4,4,170,292],rx:3,wstroke:'#c0c0c0',reflOp:.16},
+{id:53,t:'manga',n:'Kraft ficelle',frame:'#c9b98a',spine:['right',22,'#8a7440'],win:[4,4,170,292],rx:3,x:['string']},
+{id:54,t:'manga',n:'Noir + obi argent',frame:'#101012',spine:['right',22,'#0a0a0a'],band:['bottom',30,'#c0c0c0'],win:[4,4,170,262],rx:3},
+{id:55,t:'manga',n:'Vermillon torii',frame:'#e9e2d0',spine:['right',26,'#e04020'],win:[4,4,168,292],rx:3,x:['wave']},
+{id:56,t:'manga',n:'Seinen vert',frame:'#f0f0ec',spine:['right',24,'#1a5a3a'],win:[4,4,170,292],rx:3,wstroke:'#1a5a3a'},
+{id:57,t:'manga',n:'Grand format jaune',frame:'#f2c40e',spine:['right',24,'#111'],win:[4,4,170,292],rx:3},
+{id:58,t:'manga',n:'Boîte limitée',frame:['#3a2352','#1a1030'],gd:1,win:[12,12,176,276],corners:'#d9b45b',wstroke:'#d9b45b'},
+{id:59,t:'manga',n:'Blanc minimal',frame:'#fafafa',win:[6,6,188,288],rx:3,wstroke:'#ddd',refl:0},
+{id:60,t:'manga',n:'Double-vol',frame:'#e9e2d0',spine:['right',34,'#5a3a22'],win:[4,4,160,292],rx:3,wstroke:'#b7ad93'},
+{id:61,t:'bd',n:'Cartonné fers dorés',frame:['#7a1e2b','#3d0d15'],gd:1,spine:['left',12,'#2a080d'],win:[12,9,179,282],corners:'#d9b45b',wstroke:'#d9b45b'},
+{id:62,t:'bd',n:'Kraft sobre',frame:'#8B6F47',spine:['left',10,'#6d5636'],win:[10,8,182,284],rx:4},
+{id:63,t:'bd',n:'Dos carré coloré',frame:'#17112E',spine:['left',26,['#B24BF3','#7F5AF0']],win:[28,6,166,288],rx:4},
+{id:64,t:'bd',n:'Comic US',frame:'#f2c40e',win:[11,11,178,278],wstroke:'#d33',wsw:4,refl:0},
+{id:65,t:'bd',n:'Intégrale or',frame:'#0d0d0d',win:[12,12,176,252],wstroke:'#d9b45b',band:['bottom',24,'#d9b45b'],bandTxt:['INTÉGRALE','#0d0d0d',11]},
+{id:66,t:'bd',n:'Vintage jauni',frame:'#d8c9a0',win:[10,8,182,284],rx:3,wstroke:'#a89868'},
+{id:67,t:'bd',n:'Spirale',frame:'#274067',win:[20,8,172,284],rx:4,x:['spiral']},
+{id:68,t:'bd',n:'Manfra violet',frame:'#17112E',spine:['left',24,'#7F5AF0'],win:[26,6,168,288],rx:4},
+{id:69,t:'bd',n:'Album enfant',frame:'#2CB67D',win:[14,12,172,276],rx:16,wrx:10,bandDots:[[20,5,'#ffd700'],[180,5,'#ff5da2']]},
+{id:70,t:'bd',n:'Édition nuit',frame:'#0a0a0a',win:[10,8,182,284],rx:4,wstroke:'#00c3e3',wsw:2},
+{id:71,t:'bd',n:'Bleu nuit',frame:['#1a2a4a','#0a1226'],gd:1,win:[10,8,182,284],rx:4,wstroke:'#c0c0c0'},
+{id:72,t:'bd',n:'Rouge éditeur',frame:['#c03028','#600c08'],gd:1,win:[10,8,182,284],rx:4,wstroke:'#fff'},
+{id:73,t:'bd',n:'Cuir gaufré',frame:'#4a2c17',win:[14,10,174,280],rx:4,corners:'#b08d3e',wstroke:'#6a4a2a',wsw:2},
+{id:74,t:'bd',n:'Tirage de tête',frame:['#6a4a2a','#3a2410'],gd:1,win:[16,14,168,272],corners:'#d9b45b',wstroke:'#d9b45b',wsw:2},
+{id:75,t:'bd',n:'Comic argent',frame:['#c0c0c0','#707078'],gd:1,win:[10,8,182,284],rx:3,wstroke:'#111',wsw:2},
+{id:76,t:'roman',n:'Tranche + pages',frame:['#1d3a2a','#0d1f15'],gd:1,spine:['left',14,'#0a1810'],win:[14,5,178,288],rx:3},
+{id:77,t:'roman',n:'Poche sobre',frame:'#17112E',win:[4,4,192,292],rx:2,wstroke:'#c9c2b2',wsw:3,refl:0},
+{id:78,t:'roman',n:'Livre ancien',frame:'#4a2c17',win:[14,8,174,262],rx:4,corners:'#b08d3e',x:['signet'],wstroke:'#6a4a2a',wsw:2},
+{id:79,t:'roman',n:'Grand format blanc',frame:'#f5f2ea',win:[8,6,186,288],rx:2,wstroke:'#b9b2a4',refl:0},
+{id:80,t:'roman',n:'Poche vintage',frame:'#d8cf9a',win:[6,6,188,288],rx:2,wstroke:'#8a7440',wsw:2},
+{id:81,t:'roman',n:'Grimoire',frame:'#2a1a0c',win:[16,12,168,276],rx:6,corners:'#b08d3e',x:['clasp'],wstroke:'#6a4a2a',wsw:2},
+{id:82,t:'roman',n:'Poche moderne',frame:'#e0483a',band:['bottom',40,'#fafafa'],win:[6,6,188,250],rx:2},
+{id:83,t:'roman',n:'Luxe tranche dorée',frame:'#0d0d0d',spine:['left',16,'#d9b45b'],win:[16,6,178,288],rx:2,x:['signet']},
+{id:84,t:'roman',n:'Carnet / journal',frame:'#c9b98a',win:[8,6,186,288],rx:6,x:['elastic']},
+{id:85,t:'roman',n:'Liseuse e-ink',frame:'#8f949a',win:[14,14,172,252],rx:10,wrx:4,x:['home'],refl:0},
+{id:86,t:'roman',n:'Livre audio',frame:'#17112E',win:[8,8,184,240],rx:4,x:['headphone']},
+{id:87,t:'roman',n:'Poche noir',frame:'#111',win:[5,5,190,290],rx:2,wstroke:'#fafafa',wsw:2,refl:0},
+{id:88,t:'roman',n:'Beau livre photo',frame:'#fafafa',win:[16,16,168,268],rx:2,wstroke:'#ddd',refl:0},
+{id:89,t:'roman',n:'Reliure toile',frame:'#3a4a5a',win:[12,8,178,284],rx:3,wstroke:'#c9c2b2'},
+{id:90,t:'roman',n:'Novella fine',frame:'#e9e2d0',spine:['left',8,'#b7ad93'],win:[8,5,186,290],rx:2},
+{id:91,t:'libre',n:'Cadre violet',frame:'#17112E',win:[7,7,186,286],rx:10,wstroke:'#B24BF3',wsw:4},
+{id:92,t:'libre',n:'Néon glow',frame:null,glow:'#B24BF3'},
+{id:93,t:'libre',n:'Affiche nue',frame:null,nue:1},
+{id:94,t:'libre',n:'Polaroïd',frame:'#fafafa',band:['bottom',58,'#fafafa'],win:[12,12,176,222],rx:2,refl:0},
+{id:95,t:'libre',n:'Affiche scotchée',frame:null,scotch:1},
+{id:96,t:'libre',n:'Cadre argent',frame:['#c0c0c0','#707078'],gd:1,win:[12,12,176,276],rx:3,wstroke:'#eee'},
+{id:97,t:'libre',n:'Cadre bois',frame:['#8a6a3a','#4a3418'],gd:1,win:[14,14,172,272],rx:4,wstroke:'#2a1c0c'},
+{id:98,t:'libre',n:'Néon rose',frame:null,glow:'#FF5DA2'},
+{id:99,t:'libre',n:'Hologramme',frame:'#17112E',win:[6,6,188,288],rx:8,wstroke:['#00c3e3','#ff5da2'],reflOp:.14},
+{id:100,t:'libre',n:'Blanc minimal',frame:'#fafafa',win:[6,6,188,288],rx:2,wstroke:'#fff',wsw:2,refl:0},
+{id:101,t:'libre',n:'Galerie noire',frame:'#0a0a0a',win:[18,18,164,264],rx:2,wstroke:'#fafafa'},
+{id:102,t:'libre',n:'Affiche pliée',frame:null,fold:1},
+{id:103,t:'libre',n:'Sous verre',frame:'#c0c0c6',win:[10,10,180,280],rx:2,wstroke:'#eee',reflOp:.18},
+{id:104,t:'libre',n:'Néon cyan',frame:null,glow:'#00c3e3'},
+{id:105,t:'libre',n:'Ombre longue',frame:null,long:1},
+];
+/* ===== RENDU ===== */
+const ART=['linear-gradient(160deg,#7a2f1f,#241436)','linear-gradient(160deg,#123c52,#0a1e2e)','linear-gradient(160deg,#0e2f52,#0a1026)','linear-gradient(160deg,#d8c39a,#6d4f2a)','linear-gradient(160deg,#274067,#101a30)','linear-gradient(160deg,#2c4a33,#12211a)','linear-gradient(160deg,#3a2352,#1a1030)'];
+const NAMES=['DUNE','SEVERANCE','CONTROL','BERSERK','CITY HUNTER',"L'ÉTRANGER','CONFÉRENCE'];
+const TYPES={film:'🎬 Film',serie:'📺 Série',jeu:'🎮 Jeu',manga:'📖 Manga',bd:'📕 BD',roman:'📚 Roman',libre:'🏷️ Libre',perso:'📂 Perso'};
+const tabs=document.getElementById('tabs');
+Object.entries(TYPES).forEach(([k,v],i)=>{const b=document.createElement('div');b.className='tab'+(i===0?' active':'');b.dataset.f=k;b.textContent=v;tabs.appendChild(b);});
+const all=document.createElement('div');all.className='tab';all.dataset.f='all';all.textContent='Tous';tabs.prepend(all);all.classList.add('active');tabs.children[1].classList.remove('active');
+const wrap=document.getElementById('wrap');
+function build(filter){
+  wrap.innerHTML='';
+  Object.keys(TYPES).forEach(t=>{
+    if(filter!=='all'&&filter!==t)return;
+    const list=S.filter(s=>s.t===t);
+    if(t==='perso'||!list.length){
+      if(t==='perso'){const h=document.createElement('h2');h.textContent='📂 MES IMAGES PERSO (106+)';wrap.appendChild(h);
+        const p=document.createElement('div');p.className='perso';p.innerHTML='Tes images uploadées dans <b>catalogue.html → Options → Apparence</b> prendront les numéros 106, 107, 108…<br>Normalisées automatiquement à la bonne taille (PNG, JPG, SVG).';wrap.appendChild(p);}
+      return;
+    }
+    const h=document.createElement('h2');h.textContent=TYPES[t]+' ('+list[0].id+'-'+list[list.length-1].id+')';wrap.appendChild(h);
+    const g=document.createElement('div');g.className='grid';
+    list.forEach(s=>{
+      const c=document.createElement('div');c.className='cell';
+      if(s.glow){c.classList.add('glow');c.style.setProperty('--gc',s.glow);}
+      if(s.nue)c.classList.add('nue'); if(s.long)c.classList.add('long');
+      let inner='<div class="num">'+s.id+'</div><div class="box"><div class="art" style="background:'+ART[s.id%7]+'">'+NAMES[s.id%7]+'</div>';
+      if(s.frame)inner+=svg(s);
+      if(s.scotch)inner+='<svg viewBox="0 0 200 300">'+X.scotch+'</svg>';
+      if(s.fold)inner+='<svg viewBox="0 0 200 300">'+X.fold+'</svg>';
+      if(s.glow)inner+='<svg viewBox="0 0 200 300"><rect x="3" y="3" width="194" height="294" rx="10" fill="none" stroke="'+s.glow+'" stroke-width="3"/></svg>';
+      inner+='</div><div class="lbl">'+s.n+'</div>';
+      c.innerHTML=inner;g.appendChild(c);
+    });
+    wrap.appendChild(g);
   });
-});
+}
+tabs.addEventListener('click',e=>{const t=e.target.closest('.tab');if(!t)return;
+  tabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');build(t.dataset.f);});
+build('all');
 </script>
 </body>
 </html>
