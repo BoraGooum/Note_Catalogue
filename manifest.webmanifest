@@ -1,11 +1,11 @@
 {
-  "name": "Mes Notes - Ma Collection",
-  "short_name": "Mes Notes",
-  "start_url": "./catalogue.html",
+  "name": "Ma Collection",
+  "short_name": "Ma Collection",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#12181C",
-  "theme_color": "#12181C",
+  "background_color": "#0D0A1F",
+  "theme_color": "#0D0A1F",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
