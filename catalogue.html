@@ -4,182 +4,167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Mes Notes</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#12181C">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#12181C; --surface:#1B2329; --surface-2:#222C33; --border:#2E3941;
-    --text:#E9E6DD; --text-dim:#8FA0A6; --accent:#E1A63C; --accent-dim:#8A6A2C;
-    --accent-2:#4FA98C; --danger:#C1554A; --radius:6px;
-  }
+  :root{--bg:#12181C;--surface:#1B2329;--surface-2:#222C33;--border:#2E3941;--text:#E9E6DD;--text-dim:#8FA0A6;--accent:#E1A63C;--accent-dim:#8A6A2C;--accent-2:#4FA98C;--danger:#C1554A;--radius:6px;}
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
-  body{font-family:'IBM Plex Mono',monospace; -webkit-font-smoothing:antialiased; padding-bottom:76px; min-height:100vh;}
+  body{font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased;padding-bottom:76px;min-height:100vh;}
   h1,h2,h3,.serif{font-family:'Fraunces',serif;}
-  
-  header.top{padding:22px 18px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
-  header.top .header-left h1{margin:0; font-size:28px; font-weight:700; letter-spacing:-0.01em; color:var(--accent);}
-  header.top .header-left .sub{font-size:11px; color:var(--text-dim); letter-spacing:.02em; margin-top:4px;}
-  
+  header.top{padding:20px 18px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  header.top h1{margin:0;font-size:26px;font-weight:700;color:var(--accent);}
+  header.top .sub{font-size:11px;color:var(--text-dim);margin-top:4px;}
   main{padding:16px;}
-  .view{display:none;} .view.active{display:block;}
-
+  .view{display:none;}.view.active{display:block;}
   .search-controls{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
   .search-row{display:flex;gap:8px;}
-  input[type=text], input[type=date], select, textarea{
-    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
-    border-radius:var(--radius); padding:11px 12px; font-family:'IBM Plex Mono',monospace; font-size:14px; width:100%;
-  }
-  input:focus, select:focus, textarea:focus{outline:1px solid var(--accent);}
-  
-  button{
-    font-family:'IBM Plex Mono',monospace; font-size:13px; border-radius:var(--radius);
-    border:1px solid var(--border); background:var(--surface-2); color:var(--text);
-    padding:11px 14px; cursor:pointer; white-space:nowrap; transition:all 0.1s;
-  }
+  input[type=text],input[type=date],input[type=number],select,textarea{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:11px 12px;font-family:'IBM Plex Mono',monospace;font-size:14px;width:100%;}
+  input:focus,select:focus,textarea:focus{outline:1px solid var(--accent);}
+  button{font-family:'IBM Plex Mono',monospace;font-size:13px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-2);color:var(--text);padding:11px 14px;cursor:pointer;white-space:nowrap;}
   button:active{transform:translateY(1px);}
   button.primary{background:var(--accent);border-color:var(--accent);color:#1B1400;font-weight:600;}
   button.outline{border-color:var(--accent);color:var(--accent);background:transparent;}
   button.danger-outline{border-color:var(--danger);color:var(--danger);background:transparent;}
-
   .recent-searches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
   .recent-tag{font-size:11px;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer;}
   .status-line{font-size:12px;color:var(--text-dim);margin:6px 0 14px;min-height:16px;}
   .status-line.error{color:var(--danger);}
-
   .result-list{display:flex;flex-direction:column;gap:8px;}
   .result-card{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;}
   .result-card.selected{border-color:var(--accent);background:rgba(225,166,60,.06);}
   .poster{width:52px;height:78px;object-fit:cover;border-radius:4px;background:var(--surface-2);flex-shrink:0;border:1px solid var(--border);}
-  .poster-lg{width:140px;height:210px;object-fit:cover;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);flex-shrink:0;}
   .result-info{min-width:0;flex:1;}
   .result-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-  .result-original-title{font-size:11px;color:var(--accent-2);margin-top:2px;font-style:italic;}
   .result-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
-
-  .panel{background:transparent;padding:0;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:11px;color:var(--text-dim);letter-spacing:.03em;margin-bottom:6px;}
-  .panel-actions{display:flex;gap:8px;margin-top:14px;}
-  .panel-actions button{flex:1;}
-
   .subtitle-select{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;}
   .subtitle-chip{flex-shrink:0;width:66px;text-align:center;cursor:pointer;border:1px solid var(--border);border-radius:var(--radius);padding:6px;background:var(--surface-2);}
   .subtitle-chip.selected{border-color:var(--accent);}
   .subtitle-chip img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px;background:var(--surface);}
-  .subtitle-chip .lbl{font-size:9px;color:var(--text-dim);margin-top:4px;line-height:1.2;}
-
+  .subtitle-chip .lbl{font-size:9px;color:var(--text-dim);margin-top:4px;}
   .note-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
   .note-btn{padding:12px 0;text-align:center;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);font-family:'Fraunces',serif;font-size:16px;font-weight:600;cursor:pointer;color:var(--text);}
   .note-btn.selected{border-color:var(--accent);background:var(--accent);color:#1B1400;}
-
-  .favorite-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;margin-bottom:8px;}
-  .favorite-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.1);}
-
+  .toggle-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);color:var(--text-dim);cursor:pointer;font-size:13px;margin-bottom:8px;}
+  .toggle-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(225,166,60,.1);}
+  /* Modale : tête & pied fixes */
   .modal-overlay{position:fixed;inset:0;background:rgba(8,10,12,.75);display:none;align-items:flex-end;justify-content:center;z-index:200;}
   .modal-overlay.active{display:flex;}
-  .modal-panel{width:100%;max-width:520px;max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--accent-dim);border-radius:16px 16px 0 0;padding:18px;position:relative;animation:slideUp .18s ease-out;}
+  .modal-panel{width:100%;max-width:520px;max-height:88vh;background:var(--surface);border:1px solid var(--accent-dim);border-radius:16px 16px 0 0;padding:14px 18px 16px;position:relative;animation:slideUp .18s ease-out;display:flex;flex-direction:column;}
   @keyframes slideUp{from{transform:translateY(18px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
-  .modal-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;padding:0;font-size:13px;line-height:1;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);}
-
-  .details-header{display:flex;gap:14px;margin-bottom:16px;}
-  .details-info{flex:1;min-width:0;}
-  .details-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--accent);margin:0 0 6px;line-height:1.2;}
-  .details-sub{font-size:12px;color:var(--accent-2);margin-bottom:8px;}
-  .details-meta{font-size:12px;color:var(--text-dim);line-height:1.6;}
-  .details-meta strong{color:var(--text);}
-  .details-comment-box{
-    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px; margin-top:14px; min-height:80px;
-  }
-  .details-comment-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-  .details-comment-text{font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap;font-style:italic;}
-  .details-comment-empty{font-size:12px;color:var(--text-dim);font-style:italic;}
-  .details-actions{display:flex;gap:8px;margin-top:16px;}
-  .details-actions button{flex:1;}
-
+  .m-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .m-head .m-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .m-head button{padding:4px 10px;font-size:14px;}
+  .m-body{overflow-y:auto;flex:1;padding-top:12px;-webkit-overflow-scrolling:touch;}
+  .m-foot{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);margin-top:10px;flex-shrink:0;}
+  .m-foot button{flex:1;}
+  /* Affiche plein écran */
+  .poster-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);display:none;flex-direction:column;z-index:400;padding:14px;}
+  .poster-overlay.active{display:flex;}
+  .poster-overlay img{flex:1;min-height:0;object-fit:contain;width:100%;border-radius:6px;}
+  .poster-bar{display:flex;gap:8px;padding-top:12px;}
+  .poster-bar button{flex:1;}
+  .poster-url-row{display:none;gap:8px;padding-top:8px;}
+  .poster-url-row.visible{display:flex;}
+  /* Journal */
+  .j-btns{display:flex;gap:8px;margin-bottom:8px;}
+  .j-btns button{flex:1;font-size:16px;padding:8px;}
+  .j-draft{background:var(--surface-2);border:1px solid var(--accent-dim);border-radius:var(--radius);padding:10px;margin-bottom:10px;}
+  .j-draft textarea{min-height:60px;resize:vertical;margin-top:6px;}
+  .j-ep-row{display:flex;gap:6px;align-items:center;margin-bottom:4px;}
+  .j-ep-row input{width:60px;padding:6px;}
+  .j-ep-row .j-note-in{width:50px;}
+  .j-draft-actions{display:flex;gap:8px;margin-top:8px;}
+  .j-draft-actions button{flex:1;padding:7px;font-size:12px;}
+  .j-item{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;margin-bottom:6px;font-size:12px;line-height:1.5;}
+  .j-item .j-tag{color:var(--accent);font-weight:600;}
+  .j-item .j-del{float:right;background:none;border:none;color:var(--danger);font-size:12px;padding:0 2px;cursor:pointer;}
+  /* Historique horizontal (ton schéma) */
   .hist-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
-  .hist-top-row{display:flex;justify-content:space-between;align-items:center;}
+  .hist-filter-row{display:flex;gap:8px;}
+  .hist-filter-row input{flex:1;}
+  .hist-filter-row select{width:auto;max-width:45%;}
+  .stats-bar{display:flex;gap:8px;flex-wrap:wrap;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+  .stat-chip{font-size:11px;color:var(--text);background:var(--surface-2);padding:5px 9px;border-radius:4px;border:1px solid var(--border);}
+  .stat-chip span{color:var(--accent);font-weight:600;}
+  .hist-top-row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
   .hist-count{font-size:12px;color:var(--text-dim);}
-  
-  .stats-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);}
-  .stat-chip{font-size:12px; color:var(--text); background:var(--surface-2); padding:6px 10px; border-radius:4px; border:1px solid var(--border);}
-  .stat-chip span{color:var(--accent); font-weight:600;}
-
   .hist-actions{display:flex;gap:6px;flex-wrap:wrap;}
-  .hist-actions button{padding:6px 10px;font-size:11px;}
-  .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px;}
-  .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;display:flex;flex-direction:column;cursor:pointer;transition:border-color 0.15s, box-shadow 0.15s;}
-  .hist-card:hover{border-color:var(--accent-dim);}
-  .hist-card.en-cours{border-color:var(--accent); box-shadow:0 0 0 2px rgba(225,166,60,0.3);}
-  .hist-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface-2);pointer-events:none;}
-  .hist-badge{position:absolute;top:6px;left:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;font-family:'Fraunces',serif;pointer-events:none;}
-  .hist-fav{position:absolute;top:6px;right:6px;background:rgba(18,24,28,.85);color:var(--accent);font-size:12px;padding:2px 4px;border-radius:4px;pointer-events:none;}
-  .hist-type{position:absolute;top:30px;left:6px;background:rgba(18,24,28,.85);color:var(--text-dim);font-size:8px;letter-spacing:.03em;padding:2px 5px;border-radius:4px;pointer-events:none;}
-  .hist-en-cours-badge{position:absolute;top:30px;right:6px;background:rgba(225,166,60,.9);color:#1B1400;font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;pointer-events:none;}
-  .hist-body{padding:8px;display:flex;flex-direction:column;flex:1;}
-  .hist-title{font-family:'Fraunces',serif;font-size:12.5px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:29px;}
-  .hist-date{font-size:9.5px;color:var(--text-dim);margin-top:4px;}
-  .hist-comment{font-size:9.5px;color:var(--text-dim);margin-top:4px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-style:italic;}
-  .sc-link{display:inline-block;margin-top:6px;width:100%;text-align:center;padding:4px 0;background:#181818;color:#9b51e0;border:1px solid #9b51e0;border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;}
-  .hist-btn-row{display:flex;gap:4px;margin-top:auto;padding-top:6px;}
-  .hist-btn-row button{flex:1;font-size:10px;padding:4px;background:transparent;border-color:var(--border);color:var(--text-dim);}
-
+  .hist-actions button{padding:8px 10px;font-size:12px;}
+  .hcard{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px;margin-bottom:10px;cursor:pointer;}
+  .hcard.encours{border-color:var(--accent);box-shadow:0 0 0 2px rgba(225,166,60,.25);}
+  .hcard .ph{width:104px;height:156px;object-fit:cover;border-radius:4px;background:var(--surface-2);flex-shrink:0;border:1px solid var(--border);}
+  .hcard .col{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .hcard .t{font-family:'Fraunces',serif;font-size:15px;font-weight:700;line-height:1.2;}
+  .hcard .meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
+  .hcard .sum{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:6px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+  .hcard .row{margin-top:auto;display:flex;gap:6px;padding-top:8px;}
+  .hcard .row button{flex:1;font-size:10px;padding:5px;background:transparent;}
+  .hcard .row .sc{border-color:#9b51e0;color:#9b51e0;}
+  /* Calendrier */
   .cal-container{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;}
   .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
   .cal-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--accent);}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
   .cal-day-name{font-size:10px;color:var(--text-dim);padding:4px 0;}
-  .cal-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;cursor:pointer;position:relative;background:var(--surface-2);}
+  .cal-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;cursor:pointer;background:var(--surface-2);}
   .cal-cell.empty{background:transparent;border:none;cursor:default;}
   .cal-cell.has-entries{border-color:var(--accent);background:rgba(225,166,60,.1);}
   .cal-cell .dot{width:4px;height:4px;background:var(--accent);border-radius:50%;margin-top:2px;}
-
+  /* Détail */
+  .d-poster{width:110px;height:165px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in;background:var(--surface-2);}
+  .d-head{display:flex;gap:12px;margin-bottom:12px;}
+  .d-info{flex:1;min-width:0;}
+  .d-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--accent);line-height:1.2;margin-bottom:4px;}
+  .d-meta{font-size:12px;color:var(--text-dim);line-height:1.7;}
+  .d-meta strong{color:var(--text);}
+  /* Stats */
+  .stats-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+  .stats-card h3{margin:0 0 10px;font-size:15px;color:var(--accent);}
+  .stats-line{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px dashed var(--border);}
+  .stats-line:last-child{border-bottom:none;}
+  .stats-line b{color:var(--accent);}
   .opt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
   .opt-card h3{margin:0 0 8px;font-size:16px;}
   .opt-card p{font-size:12px;color:var(--text-dim);margin:0 0 12px;line-height:1.4;}
-  
-  .cinema-btn{
-    display:inline-flex; align-items:center; gap:8px; width:100%; justify-content:center;
-    padding:12px; background:linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    border:1px solid #444; border-radius:8px; color:#E1A63C; font-family:'Fraunces',serif;
-    font-size:15px; font-weight:600; text-decoration:none; margin-top:8px;
-    box-shadow:0 4px 6px rgba(0,0,0,0.3); transition:transform 0.1s, box-shadow 0.1s;
-  }
-  .cinema-btn:hover{transform:translateY(-1px); box-shadow:0 6px 8px rgba(0,0,0,0.4); border-color:#E1A63C;}
-
+  .cinema-btn{display:inline-flex;align-items:center;gap:8px;width:100%;justify-content:center;padding:12px;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);border:1px solid #444;border-radius:8px;color:#E1A63C;font-family:'Fraunces',serif;font-size:15px;font-weight:600;text-decoration:none;margin-top:8px;}
   .smart-fallback{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
   .smart-fallback button{font-size:11px;padding:6px 10px;}
-
-  nav.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));}
-  nav.tabbar button{flex:1;background:none;border:none;color:var(--text-dim);font-family:'Fraunces',serif;font-size:14px;padding:8px;border-radius:6px;}
+  nav.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:8px 8px calc(8px + env(safe-area-inset-bottom));}
+  nav.tabbar button{flex:1;background:none;border:none;color:var(--text-dim);font-family:'Fraunces',serif;font-size:13px;padding:8px 2px;border-radius:6px;}
   nav.tabbar button.active{color:var(--accent);background:rgba(225,166,60,.08);}
-
   input[type=file]{display:none;}
-  .toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);padding:10px 16px;border-radius:var(--radius);font-size:12px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:300;max-width:88%;text-align:center;}
+  .toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--text);padding:10px 16px;border-radius:var(--radius);font-size:12px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:500;max-width:88%;text-align:center;}
   .toast.show{opacity:1;}
 </style>
 </head>
 <body>
 
 <header class="top">
-  <div class="header-left">
+  <div>
     <h1>Mes Notes</h1>
-    <div class="sub">Note que j'attribue des œuvres que je lis/vois/joue</div>
+    <div class="sub">Note que j'attribue des &oelig;uvres que je lis/vois/joue</div>
   </div>
-  <button id="home-btn" class="outline"> Accueil</button>
+  <button id="home-btn" class="outline">🏠</button>
 </header>
 
 <main>
+  <!-- RECHERCHE -->
   <section id="view-search" class="view active">
     <div class="search-controls">
       <div class="field" style="margin:0;">
-        <label>Type d'œuvre</label>
+        <label>Type d'&oelig;uvre</label>
         <select id="type-select">
           <option value="Film">Film</option>
           <option value="Documentaire">Documentaire</option>
-          <option value="Série">Série</option>
+          <option value="S&eacute;rie">S&eacute;rie</option>
           <option value="Manga">Manga</option>
           <option value="BD">BD</option>
           <option value="Roman">Roman</option>
@@ -187,8 +172,8 @@
         </select>
       </div>
       <div class="search-row">
-        <button class="outline" id="manual-btn">➕ Manuel</button>
-        <input type="text" id="search-input" placeholder="Chercher un titre…">
+        <button class="outline" id="manual-btn">➕</button>
+        <input type="text" id="search-input" placeholder="Chercher un titre&hellip;">
         <button class="primary" id="search-btn">Go</button>
       </div>
     </div>
@@ -198,65 +183,93 @@
     <div class="result-list" id="results"></div>
   </section>
 
+  <!-- HISTORIQUE -->
   <section id="view-history" class="view">
     <div class="hist-toolbar">
       <div class="stats-bar" id="stats-bar"></div>
+      <div class="hist-filter-row">
+        <input type="text" id="hist-search" placeholder="Filtrer ma collect'&hellip;">
+        <select id="hist-sort">
+          <option value="date-desc">Date ↓</option>
+          <option value="date-asc">Date ↑</option>
+          <option value="note-desc">Note ↓</option>
+          <option value="titre-asc">Titre A-Z</option>
+          <option value="type">Type</option>
+        </select>
+      </div>
       <div class="hist-top-row">
-        <div class="hist-count" id="hist-count">0 œuvre(s)</div>
-        <button id="toggle-view-btn" class="outline">📅 Vue Calendrier</button>
+        <div class="hist-count" id="hist-count"></div>
+        <button id="toggle-view-btn" class="outline">📅 Calendrier</button>
       </div>
       <div class="hist-actions">
-        <button id="sync-sheet-btn" class="primary">📤 Sync Sheet</button>
+        <button id="copy-sheet-btn" class="outline">📋 Copier</button>
+        <button id="sync-sheet-btn" class="primary">📤 Sync</button>
       </div>
     </div>
-    <div id="history-list-container">
-      <div class="hist-grid" id="hist-grid"></div>
-    </div>
+    <div id="history-list-container"><div id="hist-grid"></div></div>
     <div id="history-cal-container" style="display:none;">
       <div class="cal-container">
         <div class="cal-header">
-          <button id="cal-prev">◄</button>
+          <button id="cal-prev">◀</button>
           <div class="cal-title" id="cal-title"></div>
-          <button id="cal-next">►</button>
+          <button id="cal-next">▶</button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
       </div>
     </div>
   </section>
 
+  <!-- STATS -->
+  <section id="view-stats" class="view">
+    <div class="stats-card">
+      <h3>📊 Ma collection</h3>
+      <div id="stats-global"></div>
+    </div>
+    <div class="stats-card">
+      <h3>🏆 Mon top 5</h3>
+      <div id="stats-top"></div>
+    </div>
+    <div class="stats-card">
+      <div class="cal-header" style="margin-bottom:8px;">
+        <button id="recap-prev">◀</button>
+        <h3 style="margin:0;" id="recap-title">🎁 Bilan</h3>
+        <button id="recap-next">▶</button>
+      </div>
+      <div id="stats-recap"></div>
+    </div>
+  </section>
+
+  <!-- OPTIONS -->
   <section id="view-options" class="view">
     <div class="opt-card">
-      <h3>🔗 Synchronisation Google Sheet</h3>
-      <p>Configure l'URL du Webhook pour la synchro manuelle.</p>
-      <button class="outline" id="config-sheet-btn" style="width:100%">🔗 Configurer le lien Sheet</button>
-      <div id="sheet-url-container" style="display:none; margin-top:12px;">
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="sheet-url" placeholder="https://script.google.com/..." style="flex:1;">
+      <h3>🔗 Google Sheet</h3>
+      <p>URL du webhook (Apps Script). Le bouton 📋 Copier marche m&ecirc;me sans webhook.</p>
+      <button class="outline" id="config-sheet-btn" style="width:100%">🔗 Configurer le lien</button>
+      <div id="sheet-url-container" style="display:none;margin-top:12px;">
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="sheet-url" placeholder="https://script.google.com/&hellip;" style="flex:1;">
           <button class="primary" id="save-sheet-url">💾</button>
         </div>
       </div>
     </div>
-
     <div class="opt-card">
-      <h3>💾 Sauvegarde Complète</h3>
-      <p>Exporte ou importe TOUT (œuvres + réglages).</p>
-      <div style="display:flex; gap:8px;">
+      <h3>💾 Sauvegarde</h3>
+      <p>Export complet (&oelig;uvres + r&eacute;glages) ou import fusionn&eacute; (sans &eacute;craser).</p>
+      <div style="display:flex;gap:8px;">
         <button class="outline" id="export-btn" style="flex:1;">📤 Exporter</button>
-        <button class="outline" id="import-btn" style="flex:1;"> Importer</button>
+        <button class="outline" id="import-btn" style="flex:1;">📥 Importer</button>
         <input type="file" id="import-file" accept="application/json">
       </div>
     </div>
-
     <div class="opt-card">
-      <h3>À propos...</h3>
+      <h3>&Agrave; propos&hellip;</h3>
       <p id="about-build-date" style="font-weight:600;color:var(--accent);margin-bottom:6px;"></p>
-      <p>Application de notation personnelle.</p>
-      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Créé par Gooumbora</a>
+      <p>Application personnelle de collection.</p>
+      <a href="https://www.senscritique.com/Gooumbora" target="_blank" class="cinema-btn">🎬 Cr&eacute;&eacute; par Gooumbora</a>
     </div>
-
     <div class="opt-card">
-      <h3>Stockage Local</h3>
-      <button class="danger-outline" id="clear-local-db" style="width:100%">Réinitialiser</button>
+      <h3>Stockage local</h3>
+      <button class="danger-outline" id="clear-local-db" style="width:100%">R&eacute;initialiser</button>
     </div>
   </section>
 </main>
@@ -264,712 +277,728 @@
 <div class="toast" id="toast"></div>
 
 <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
-  <div class="modal-panel" role="dialog" aria-modal="true">
-    <button class="modal-close" id="modal-close" aria-label="Fermer">✕</button>
-    <div id="panel-container"></div>
+  <div class="modal-panel">
+    <div class="m-head">
+      <div class="m-title" id="m-title"></div>
+      <button id="modal-close" aria-label="Fermer">✕</button>
+    </div>
+    <div class="m-body" id="panel-container"></div>
+    <div class="m-foot" id="m-foot"></div>
+  </div>
+</div>
+
+<div class="poster-overlay" id="poster-overlay">
+  <img id="poster-img" alt="">
+  <div class="poster-url-row" id="poster-url-row">
+    <input type="text" id="poster-url-input" placeholder="URL de l'image&hellip;" style="flex:1;">
+    <button class="primary" id="poster-url-save">OK</button>
+  </div>
+  <div class="poster-bar">
+    <button class="outline" id="poster-link-btn">🔗 URL</button>
+    <button class="outline" id="poster-import-btn">📂 Importer</button>
+    <button id="poster-close">✕ Fermer</button>
+    <input type="file" id="poster-file" accept="image/*">
   </div>
 </div>
 
 <nav class="tabbar">
   <button class="active" data-view="search">Recherche</button>
   <button data-view="history">Historique</button>
+  <button data-view="stats">Stats</button>
   <button data-view="options">Options</button>
 </nav>
 
 <script type="module">
+/* ===== CONFIG ===== */
 const PROXY_URL = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-const LAST_UPDATE_DATE = "2026-09-27T23:01:00+02:00";
+const LAST_UPDATE_DATE = "2026-09-28T00:45:00+02:00";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
 const DEFAULT_PLATFORMS = ["PC","PlayStation","Xbox","Nintendo Switch","Android","iOS","Autre"];
-const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300' viewBox='0 0 200 300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>`);
+const OE = "\u0153", OEC = "\u0152";
+const NO_POSTER = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#222C33'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>");
 
 let db, currentType = "Film", currentResults = [], selectedItem = null, selectedSubtitle = null;
-let currentNote = 5, isFavorite = false, isEnCours = false, isEditingExisting = false, editingEntryId = null;
+let currentNote = null, isFavorite = false, isEnCours = false, isAVoir = false;
+let isEditingExisting = false, editingEntryId = null, draftJournal = [];
 let recentSearches = JSON.parse(localStorage.getItem("recent_searches") || "[]");
-let calCurrentDate = new Date(), isCalendarView = false;
+let calCurrentDate = new Date(), recapDate = new Date(), isCalendarView = false;
+let detailEntry = null;
 
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  const [year, month, day] = dateStr.split('-');
-  return `${day}/${month}/${year}`;
+/* ===== UTILS ===== */
+const $ = id => document.getElementById(id);
+const norm = s => (s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const pad2 = n => String(n).padStart(2,"0");
+function nowStamp(){ const d = new Date(); return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+" \u00e0 "+pad2(d.getHours())+"h"+pad2(d.getMinutes()); }
+function formatDate(s){
+  if(!s) return "";
+  if(s.includes("/")) return s;
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[3]+"/"+m[2]+"/"+m[1] : s;
 }
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open("catalogue-db", 1);
-    req.onupgradeneeded = e => { const d = e.target.result; if (!d.objectStoreNames.contains("entries")) d.createObjectStore("entries", { keyPath: "id" }); };
-    req.onsuccess = e => { db = e.target.result; resolve(db); };
-    req.onerror = e => reject(e);
+function parseDateFR(s){
+  if(!s) return null;
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return {y:+m[1], mo:+m[2], d:+m[3]};
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m) return {y:+m[3], mo:+m[2], d:+m[1]};
+  return null;
+}
+function statutStr(e){ return (e.isFavorite?"\u{1F49C}":"")+(e.enCours?"\u23F3":"")+(e.aVoir?"\u{1F440}":""); }
+function journalLines(e){
+  const j = e.journal || (e.comment ? [{kind:"free", text:e.comment}] : []);
+  return j.map(x => {
+    if(x.kind === "time") return x.ts+" : "+x.text;
+    if(x.kind === "ep") return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null ? " \u2022 "+x.note+"/10" : "")+(x.text ? " : "+x.text : "");
+    return x.text;
   });
 }
-function dbAll() {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction("entries", "readonly");
-    const req = tx.objectStore("entries").getAll();
-    req.onsuccess = () => resolve((req.result || []).sort((a, b) => (b.dateFin || b.dateAjout || "").localeCompare(a.dateFin || a.dateAjout || "")));
-    req.onerror = e => reject(e);
+function descriptionOf(e){ return journalLines(e).join(" | "); }
+function copyText(t){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+  const ta = document.createElement("textarea");
+  ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  ta.remove(); return Promise.resolve();
+}
+function fileToResizedDataUrl(file, maxW){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const sc = Math.min(1, maxW / img.width);
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        res(c.toDataURL("image/jpeg",0.82));
+      };
+      img.onerror = rej; img.src = r.result;
+    };
+    r.onerror = rej; r.readAsDataURL(file);
   });
 }
-function dbPut(entry) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction("entries", "readwrite");
-    tx.objectStore("entries").put(entry);
-    tx.oncomplete = () => resolve();
-    tx.onerror = e => reject(e);
-  });
+
+/* ===== DB ===== */
+function openDB(){ return new Promise((res,rej)=>{ const r = indexedDB.open("catalogue-db",1);
+  r.onupgradeneeded = e => { const d = e.target.result; if(!d.objectStoreNames.contains("entries")) d.createObjectStore("entries",{keyPath:"id"}); };
+  r.onsuccess = e => { db = e.target.result; res(db); }; r.onerror = e => rej(e); }); }
+function dbAll(){ return new Promise((res,rej)=>{ const tx = db.transaction("entries","readonly"); const q = tx.objectStore("entries").getAll();
+  q.onsuccess = () => res(q.result||[]); q.onerror = e => rej(e); }); }
+function dbPut(en){ return new Promise((res,rej)=>{ const tx = db.transaction("entries","readwrite"); tx.objectStore("entries").put(en); tx.oncomplete = () => res(); tx.onerror = e => rej(e); }); }
+function dbDelete(id){ return new Promise((res,rej)=>{ const tx = db.transaction("entries","readwrite"); tx.objectStore("entries").delete(id); tx.oncomplete = () => res(); tx.onerror = e => rej(e); }); }
+
+/* ===== UI BASE ===== */
+function switchView(v){
+  document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.toggle("active", b.dataset.view===v));
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+  $("view-"+v).classList.add("active");
+  if(v==="history") renderHistory();
+  if(v==="stats") renderStats();
 }
-function dbDelete(id) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction("entries", "readwrite");
-    tx.objectStore("entries").delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = e => reject(e);
-  });
-}
+document.querySelectorAll("nav.tabbar button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+$("home-btn").addEventListener("click",()=>switchView("search"));
+function openModal(){ $("modal-overlay").classList.add("active"); }
+function closeModal(){ $("modal-overlay").classList.remove("active"); $("panel-container").innerHTML=""; $("m-foot").innerHTML=""; $("m-title").textContent=""; isEditingExisting=false; editingEntryId=null; }
+$("modal-close").addEventListener("click", closeModal);
+$("modal-overlay").addEventListener("click", e=>{ if(e.target.id==="modal-overlay") closeModal(); });
+function setStatus(m,err){ const el=$("search-status"); el.textContent=m||""; el.className="status-line"+(err?" error":""); }
+function showToast(m,t=1800){ const el=$("toast"); el.textContent=m; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),t); }
+function setFoot(buttons){ const f=$("m-foot"); f.innerHTML=""; buttons.forEach(([label,cls,fn])=>{ const b=document.createElement("button"); b.textContent=label; if(cls) b.className=cls; b.addEventListener("click",fn); f.appendChild(b); }); }
 
-document.getElementById("home-btn").addEventListener("click", () => {
-  document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("active"));
-  document.querySelector('nav.tabbar button[data-view="search"]').classList.add("active");
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById("view-search").classList.add("active");
-});
-
-document.querySelectorAll("nav.tabbar button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll("nav.tabbar button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById("view-" + btn.dataset.view).classList.add("active");
-    if (btn.dataset.view === "history") renderHistory();
-  });
-});
-
-document.getElementById("type-select").addEventListener("change", (e) => { currentType = e.target.value; clearResults(); });
-
-function clearResults() {
-  currentResults = []; selectedItem = null; selectedSubtitle = null;
-  document.getElementById("results").innerHTML = "";
-  document.getElementById("smart-fallback-container").innerHTML = "";
-  closeModal(); setStatus("");
-}
-function openModal() { const o = document.getElementById("modal-overlay"); o.classList.add("active"); o.setAttribute('aria-hidden', 'false'); }
-function closeModal() { const o = document.getElementById("modal-overlay"); o.classList.remove("active"); o.setAttribute('aria-hidden', 'true'); document.getElementById("panel-container").innerHTML = ""; isEditingExisting = false; editingEntryId = null; }
-document.getElementById("modal-close").addEventListener("click", closeModal);
-document.getElementById("modal-overlay").addEventListener("click", (e) => { if (e.target.id === "modal-overlay") closeModal(); });
-
-function setStatus(msg, isError) { const el = document.getElementById("search-status"); el.textContent = msg || ""; el.className = "status-line" + (isError ? " error" : ""); }
-function showToast(msg, timeout = 1800) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), timeout); }
-
-document.getElementById("search-btn").addEventListener("click", runSearch);
-document.getElementById("search-input").addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
-
-document.getElementById("manual-btn").addEventListener("click", () => {
-  isEditingExisting = false; editingEntryId = null;
-  selectedItem = { source: "manual", id: "manual_" + Date.now(), title: "", year: new Date().getFullYear().toString(), poster: "" };
-  selectedSubtitle = null; currentNote = 5; isFavorite = false; isEnCours = false;
+/* ===== RECHERCHE ===== */
+$("type-select").addEventListener("change", e=>{ currentType=e.target.value; clearResults(); });
+$("search-btn").addEventListener("click", runSearch);
+$("search-input").addEventListener("keydown", e=>{ if(e.key==="Enter") runSearch(); });
+$("manual-btn").addEventListener("click", ()=>{
+  isEditingExisting=false; editingEntryId=null;
+  selectedItem={source:"manual", id:"manual_"+Date.now(), title:"", poster:""};
+  selectedSubtitle=null; currentNote=null; isFavorite=false; isEnCours=false; isAVoir=false;
   renderPanel(); openModal();
 });
+function clearResults(){ currentResults=[]; selectedItem=null; selectedSubtitle=null; $("results").innerHTML=""; $("smart-fallback-container").innerHTML=""; closeModal(); setStatus(""); }
+function renderRecentSearches(){ const c=$("recent-searches"); c.innerHTML=""; recentSearches.forEach(t=>{ const d=document.createElement("div"); d.className="recent-tag"; d.textContent=t; d.onclick=()=>{ $("search-input").value=t; runSearch(); }; c.appendChild(d); }); }
+function addRecentSearch(t){ recentSearches=[t,...recentSearches.filter(x=>x!==t)].slice(0,5); localStorage.setItem("recent_searches",JSON.stringify(recentSearches)); renderRecentSearches(); }
 
-function renderRecentSearches() {
-  const c = document.getElementById("recent-searches"); c.innerHTML = "";
-  recentSearches.forEach(term => {
-    const tag = document.createElement("div"); tag.className = "recent-tag"; tag.textContent = term;
-    tag.onclick = () => { document.getElementById("search-input").value = term; runSearch(); };
-    c.appendChild(tag);
-  });
+async function runSearch(){
+  const q = $("search-input").value.trim();
+  if(!q){ setStatus("Tape un titre.",true); return; }
+  addRecentSearch(q); closeModal(); selectedItem=null; selectedSubtitle=null;
+  $("smart-fallback-container").innerHTML=""; setStatus("Recherche\u2026"); $("results").innerHTML="";
+  try{
+    let results=[];
+    if(currentType==="Film"){ results=(await searchTMDB(q,"movie")).filter(r=>!(r.raw.genre_ids||[]).includes(99)); }
+    else if(currentType==="Documentaire"){ const r=await searchTMDB(q,"movie"); const f=r.filter(x=>(x.raw.genre_ids||[]).includes(99)); results=f.length?f:r; }
+    else if(currentType==="S\u00e9rie"){ results=await searchTMDB(q,"tv"); }
+    else if(["Manga","BD","Roman"].includes(currentType)){ results=await searchBooksMerged(q,currentType); }
+    else if(currentType==="Jeu"){ results=await searchRAWG(q); }
+    currentResults=results;
+    if(!results.length){ setStatus("Aucun r\u00e9sultat en "+currentType+"."); showSmartFallback(); }
+    else { setStatus(results.length+" r\u00e9sultat(s)"); renderResults(); }
+  }catch(err){ console.error(err); setStatus("Erreur: "+(err.message||""),true); }
 }
-function addRecentSearch(term) {
-  recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 5);
-  localStorage.setItem("recent_searches", JSON.stringify(recentSearches));
-  renderRecentSearches();
+function showSmartFallback(){
+  const c=$("smart-fallback-container");
+  const others=["Film","S\u00e9rie","Jeu","Manga","BD","Roman","Documentaire"].filter(t=>t!==currentType);
+  c.innerHTML='<div style="font-size:11px;color:var(--text-dim);margin-top:8px;">Essayer plut\u00f4t dans :</div><div class="smart-fallback"></div>';
+  const wrap=c.querySelector(".smart-fallback");
+  others.forEach(t=>{ const b=document.createElement("button"); b.className="outline"; b.textContent=t;
+    b.addEventListener("click",()=>{ $("type-select").value=t; currentType=t; runSearch(); }); wrap.appendChild(b); });
 }
-
-async function runSearch() {
-  const q = document.getElementById("search-input").value.trim();
-  if (!q) { setStatus("Tape un titre.", true); return; }
-  addRecentSearch(q); closeModal(); selectedItem = null; selectedSubtitle = null;
-  document.getElementById("smart-fallback-container").innerHTML = "";
-  setStatus("Recherche…"); document.getElementById("results").innerHTML = "";
-  try {
-    let results = [];
-    if (currentType === "Film") { results = await searchTMDB(q, "movie"); results = results.filter(r => !(r.raw.genre_ids || []).includes(99)); }
-    else if (currentType === "Documentaire") { results = await searchTMDB(q, "movie"); const f = results.filter(r => (r.raw.genre_ids || []).includes(99)); results = f.length ? f : results; }
-    else if (currentType === "Série") { results = await searchTMDB(q, "tv"); }
-    else if (["Manga", "BD", "Roman"].includes(currentType)) { results = await searchBooksMerged(q, currentType); }
-    else if (currentType === "Jeu") { results = await searchRAWG(q); }
-    currentResults = results;
-    if (results.length === 0) {
-      setStatus("Aucun résultat en " + currentType + ".");
-      showSmartFallback(q);
-    } else {
-      setStatus(results.length + " résultat(s)");
-      renderResults();
-    }
-  } catch (err) { console.error(err); setStatus("Erreur: " + (err.message || ''), true); }
+async function searchTMDB(q,kind){
+  const res=await fetch(PROXY_URL+"/tmdb/search/"+kind+"?language=fr-FR&query="+encodeURIComponent(q));
+  if(!res.ok) throw new Error("TMDB "+res.status);
+  const d=await res.json();
+  return (d.results||[]).slice(0,20).map(r=>({source:"tmdb_"+kind,id:r.id,title:kind==="movie"?r.title:r.name,year:(kind==="movie"?r.release_date:r.first_air_date||"").slice(0,4),poster:r.poster_path?TMDB_IMG+r.poster_path:null,raw:r}));
 }
-
-function showSmartFallback(q) {
-  const container = document.getElementById("smart-fallback-container");
-  const allTypes = ["Film", "Série", "Jeu", "Manga", "BD", "Roman", "Documentaire"];
-  const otherTypes = allTypes.filter(t => t !== currentType);
-  
-  let html = `<div style="font-size:11px;color:var(--text-dim);margin-top:8px;">Rien trouvé en <strong>${currentType}</strong>. Essayer dans :</div><div class="smart-fallback">`;
-  otherTypes.forEach(t => {
-    html += `<button class="outline" data-type="${t}">${t}</button>`;
-  });
-  html += `</div>`;
-  container.innerHTML = html;
-  
-  container.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.getElementById("type-select").value = btn.dataset.type;
-      currentType = btn.dataset.type;
-      runSearch();
-    });
-  });
+async function searchGoogleBooks(q,type){
+  let query=q;
+  if(type==="BD") query+=" bande dessin\u00e9e comics";
+  if(type==="Manga") query+=" manga";
+  if(type==="Roman") query+=" roman fiction";
+  const res=await fetch(PROXY_URL+"/books/v1/volumes?maxResults=20&q="+encodeURIComponent(query)+"&filter=full");
+  if(!res.ok) throw new Error("Google Books "+res.status);
+  const d=await res.json();
+  return (d.items||[]).map(it=>{ const v=it.volumeInfo||{};
+    let poster=v.imageLinks?(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail):null;
+    if(!poster&&it.id) poster="https://books.google.com/books/content?id="+it.id+"&printsec=frontcover&img=1&zoom=1";
+    return {source:"book",id:it.id,title:v.title+(v.subtitle?" \u2014 "+v.subtitle:""),year:(v.publishedDate||"").slice(0,4),author:(v.authors||[]).join(", "),poster,categories:v.categories||[],raw:v}; });
 }
-
-async function searchTMDB(q, kind) {
-  const url = `${PROXY_URL}/tmdb/search/${kind}?language=fr-FR&query=${encodeURIComponent(q)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("TMDB " + res.status);
-  const data = await res.json();
-  return (data.results || []).slice(0, 20).map(r => ({
-    source: "tmdb_" + kind, id: r.id,
-    title: kind === "movie" ? r.title : r.name,
-    original_title: kind === "movie" ? r.original_title : r.original_name,
-    year: (kind === "movie" ? r.release_date : r.first_air_date || "").slice(0, 4),
-    poster: r.poster_path ? TMDB_IMG + r.poster_path : null, raw: r
-  }));
+async function searchOpenLibrary(q,type){
+  let query=q;
+  if(type==="BD") query+=" graphic novel";
+  if(type==="Manga") query+=" manga";
+  const res=await fetch("https://openlibrary.org/search.json?q="+encodeURIComponent(query)+"&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject");
+  if(!res.ok) throw new Error("Open Library "+res.status);
+  const d=await res.json();
+  return (d.docs||[]).map(x=>({source:"openlib",id:x.key,title:x.title,year:x.first_publish_year?String(x.first_publish_year):"",author:(x.author_name||[]).join(", "),poster:x.cover_i?("https://covers.openlibrary.org/b/id/"+x.cover_i+"-M.jpg"):null,categories:x.subject||[],raw:x}));
 }
-
-async function searchGoogleBooks(q, type) {
-  let query = q;
-  if (type === "BD") query += " bande dessinée comics";
-  if (type === "Manga") query += " manga";
-  if (type === "Roman") query += " roman fiction";
-  const url = `${PROXY_URL}/books/v1/volumes?maxResults=20&q=${encodeURIComponent(query)}&filter=full`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Google Books " + res.status);
-  const data = await res.json();
-  return (data.items || []).map(it => {
-    const v = it.volumeInfo || {};
-    let poster = v.imageLinks ? (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail) : null;
-    if (!poster && it.id) poster = `https://books.google.com/books/content?id=${it.id}&printsec=frontcover&img=1&zoom=1`;
-    return { source: "book", id: it.id, title: v.title + (v.subtitle ? " — " + v.subtitle : ""),
-      year: (v.publishedDate || "").slice(0, 4), author: (v.authors || []).join(", "),
-      poster: poster, categories: v.categories || [], raw: v };
-  });
-}
-
-async function searchOpenLibrary(q, type) {
-  let query = q;
-  if (type === "BD") query += " graphic novel";
-  if (type === "Manga") query += " manga";
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=title,author_name,first_publish_year,cover_i,key,subject`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Open Library " + res.status);
-  const data = await res.json();
-  return (data.docs || []).map(d => ({
-    source: "openlib", id: d.key, title: d.title,
-    year: d.first_publish_year ? String(d.first_publish_year) : "",
-    author: (d.author_name || []).join(", "),
-    poster: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : null,
-    categories: d.subject || [], raw: d
-  }));
-}
-
-function relevantForType(item, type) {
-  const cats = Array.isArray(item.categories) ? item.categories.join(" ") : "";
-  const text = (cats + " " + (item.title || "")).toLowerCase();
-  const hasComic = text.includes("comic") || text.includes("graphic novel") || text.includes("bande dessin") || text.includes(" bd ");
-  const hasManga = text.includes("manga");
-  if (type === "BD") return !(hasManga && !hasComic);
-  if (type === "Manga") return hasManga || !hasComic;
-  if (type === "Roman") return !(hasComic || hasManga);
+function relevantForType(item,type){
+  const cats=Array.isArray(item.categories)?item.categories.join(" "):"";
+  const text=(cats+" "+(item.title||"")).toLowerCase();
+  const comic=text.includes("comic")||text.includes("graphic novel")||text.includes("bande dessin")||text.includes(" bd ");
+  const manga=text.includes("manga");
+  if(type==="BD") return !(manga&&!comic);
+  if(type==="Manga") return manga||!comic;
+  if(type==="Roman") return !(comic||manga);
   return true;
 }
-
-async function searchBooksMerged(q, type) {
-  const [gb, ol] = await Promise.allSettled([searchGoogleBooks(q, type), searchOpenLibrary(q, type)]);
-  const listA = gb.status === "fulfilled" ? gb.value : [];
-  const listB = ol.status === "fulfilled" ? ol.value : [];
-  const merged = [...listA, ...listB].filter(item => relevantForType(item, type));
-  const seen = new Set();
-  return merged.filter(it => {
-    const key = (it.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-    if (!key || seen.has(key)) return false;
-    seen.add(key); return true;
-  });
+async function searchBooksMerged(q,type){
+  const [gb,ol]=await Promise.allSettled([searchGoogleBooks(q,type),searchOpenLibrary(q,type)]);
+  const a=gb.status==="fulfilled"?gb.value:[];
+  const b=ol.status==="fulfilled"?ol.value:[];
+  const merged=[...a,...b].filter(i=>relevantForType(i,type));
+  const seen=new Set();
+  return merged.filter(i=>{ const k=norm(i.title).slice(0,30); if(!k||seen.has(k)) return false; seen.add(k); return true; });
 }
-
-async function searchRAWG(q) {
-  const url = `${PROXY_URL}/rawg/games?search=${encodeURIComponent(q)}&page_size=15`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("RAWG " + res.status);
-  const data = await res.json();
-  return (data.results || []).map(g => ({
-    source: "rawg", id: g.id, title: g.name, year: (g.released || "").slice(0, 4),
-    poster: g.background_image, platforms: (g.platforms || []).map(p => p.platform.name), raw: g
-  }));
+async function searchRAWG(q){
+  const res=await fetch(PROXY_URL+"/rawg/games?search="+encodeURIComponent(q)+"&page_size=15");
+  if(!res.ok) throw new Error("RAWG "+res.status);
+  const d=await res.json();
+  return (d.results||[]).map(g=>({source:"rawg",id:g.id,title:g.name,year:(g.released||"").slice(0,4),poster:g.background_image,platforms:(g.platforms||[]).map(p=>p.platform.name),raw:g}));
 }
-
-async function fetchSteamGridCover(gameName) {
-  try {
-    const searchRes = await fetch(`${PROXY_URL}/steamgrid/search/autocomplete/${encodeURIComponent(gameName)}`);
-    if (!searchRes.ok) return null;
-    const searchData = await searchRes.json();
-    if (!searchData.success || !searchData.data || !searchData.data.length) return null;
-    const gameId = searchData.data[0].id;
-    const gridRes = await fetch(`${PROXY_URL}/steamgrid/grids/game/${gameId}?dimensions=600x900&styles=alternate`);
-    if (!gridRes.ok) return null;
-    const gridData = await gridRes.json();
-    if (!gridData.success || !gridData.data || !gridData.data.length) return null;
-    return gridData.data[0].url;
-  } catch (e) { return null; }
+async function fetchSteamGridCover(name){
+  try{
+    const s=await fetch(PROXY_URL+"/steamgrid/search/autocomplete/"+encodeURIComponent(name));
+    if(!s.ok) return null;
+    const sd=await s.json();
+    if(!sd.success||!sd.data||!sd.data.length) return null;
+    const g=await fetch(PROXY_URL+"/steamgrid/grids/game/"+sd.data[0].id+"?dimensions=600x900&styles=alternate");
+    if(!g.ok) return null;
+    const gd=await g.json();
+    if(!gd.success||!gd.data||!gd.data.length) return null;
+    return gd.data[0].url;
+  }catch(e){ return null; }
 }
-
-function renderResults() {
-  const container = document.getElementById("results"); container.innerHTML = "";
-  currentResults.forEach(item => {
-    const card = document.createElement("div"); card.className = "result-card";
-    const img = document.createElement("img"); img.className = "poster"; img.src = item.poster || NO_POSTER; img.alt = ""; img.loading = "lazy";
-    const info = document.createElement("div"); info.className = "result-info";
-    const title = document.createElement("div"); title.className = "result-title"; title.textContent = item.title || '';
-    info.appendChild(title);
-    if (item.original_title && item.original_title !== item.title) {
-      const orig = document.createElement("div"); orig.className = "result-original-title"; orig.textContent = `(${item.original_title})`;
-      info.appendChild(orig);
-    }
-    const meta = document.createElement("div"); meta.className = "result-meta";
-    const metaParts = []; if (item.year) metaParts.push(item.year); if (item.author) metaParts.push(item.author);
-    meta.textContent = metaParts.join(" • "); info.appendChild(meta);
+function renderResults(){
+  const c=$("results"); c.innerHTML="";
+  currentResults.forEach(item=>{
+    const card=document.createElement("div"); card.className="result-card";
+    const img=document.createElement("img"); img.className="poster"; img.src=item.poster||NO_POSTER; img.alt=""; img.loading="lazy";
+    const info=document.createElement("div"); info.className="result-info";
+    const t=document.createElement("div"); t.className="result-title"; t.textContent=item.title||"";
+    info.appendChild(t);
+    const m=document.createElement("div"); m.className="result-meta";
+    const parts=[]; if(item.year) parts.push(item.year); if(item.author) parts.push(item.author);
+    m.textContent=parts.join(" \u2022 "); info.appendChild(m);
     card.appendChild(img); card.appendChild(info);
-    card.addEventListener("click", () => selectResult(item, card));
-    container.appendChild(card);
-    if (item.source === "rawg") {
-      fetchSteamGridCover(item.title).then(cover => { if (cover) { item.poster = cover; img.src = cover; } });
-    }
+    card.addEventListener("click",()=>selectResult(item,card));
+    c.appendChild(card);
+    if(item.source==="rawg") fetchSteamGridCover(item.title).then(cv=>{ if(cv){ item.poster=cv; img.src=cv; } });
   });
 }
-
-async function selectResult(item, cardEl) {
-  document.querySelectorAll(".result-card").forEach(c => c.classList.remove("selected"));
-  if (cardEl) cardEl.classList.add("selected");
-  isEditingExisting = false; editingEntryId = null; selectedItem = item; selectedSubtitle = null;
-  currentNote = 5; isFavorite = false; isEnCours = false;
-  if (item.source === "tmdb_tv") {
-    setStatus("Chargement…");
-    try {
-      const res = await fetch(`${PROXY_URL}/tmdb/tv/${item.id}?language=fr-FR`);
-      if (!res.ok) throw new Error('TMDB ' + res.status);
-      const details = await res.json();
-      item.seasons = (details.seasons || []).filter(s => s.season_number > 0);
+async function selectResult(item,cardEl){
+  document.querySelectorAll(".result-card").forEach(c=>c.classList.remove("selected"));
+  if(cardEl) cardEl.classList.add("selected");
+  isEditingExisting=false; editingEntryId=null; selectedItem=item; selectedSubtitle=null;
+  currentNote=null; isFavorite=false; isEnCours=false; isAVoir=false;
+  if(item.source==="tmdb_tv"){
+    setStatus("Chargement\u2026");
+    try{
+      const res=await fetch(PROXY_URL+"/tmdb/tv/"+item.id+"?language=fr-FR");
+      if(!res.ok) throw new Error("TMDB "+res.status);
+      const d=await res.json();
+      item.seasons=(d.seasons||[]).filter(s=>s.season_number>0);
       setStatus("");
-    } catch (e) { setStatus("Erreur saisons", true); }
+    }catch(e){ setStatus("Erreur saisons",true); }
   }
   renderPanel(); openModal();
 }
 
-function renderPanel(existingEntry = null) {
-  const container = document.getElementById("panel-container"); container.innerHTML = "";
-  if (existingEntry) {
-    isEditingExisting = true; editingEntryId = existingEntry.id;
-    currentNote = existingEntry.note || 5; isFavorite = !!existingEntry.isFavorite;
-    isEnCours = !!existingEntry.enCours;
-  } else { isEditingExisting = false; editingEntryId = null; isEnCours = false; }
+/* ===== PANNEAU ÉDITION ===== */
+function renderPanel(existing=null){
+  const body=$("panel-container"); body.innerHTML="";
+  if(existing){ isEditingExisting=true; editingEntryId=existing.id; currentNote=existing.note!=null?existing.note:null;
+    isFavorite=!!existing.isFavorite; isEnCours=!!existing.enCours; isAVoir=!!existing.aVoir;
+    draftJournal=JSON.parse(JSON.stringify(existing.journal||(existing.comment?[{kind:"free",text:existing.comment}]:[])));
+  } else { isEditingExisting=false; editingEntryId=null; draftJournal=[]; }
+  $("m-title").textContent=isEditingExisting?"Modifier":"Nouvelle fiche";
 
-  const titleVal = existingEntry ? existingEntry.titre : (selectedItem ? selectedItem.title : "");
-  const subVal = existingEntry ? (existingEntry.sousTitre || "") : "";
-  const posterVal = existingEntry ? (existingEntry.posterUrl || "") : (selectedItem ? (selectedItem.poster || "") : "");
-  const dateVal = existingEntry ? (existingEntry.dateFin || "") : "";
-  const commentVal = existingEntry ? (existingEntry.comment || "") : "";
+  const titleVal=existing?existing.titre:(selectedItem?selectedItem.title:"");
+  const subVal=existing?(existing.sousTitre||""):"";
+  const posterVal=existing?(existing.posterUrl||""):(selectedItem?(selectedItem.poster||""):"");
+  const dateVal=existing?(existing.dateFin||""):"";
 
-  const panel = document.createElement('div'); panel.className = 'panel';
-  const h3 = document.createElement('h3'); h3.className = 'serif'; h3.style.margin = '0 0 14px'; h3.style.color = 'var(--accent)';
-  h3.textContent = isEditingExisting ? "Modifier" : "Fiche de notation";
-  panel.appendChild(h3);
-
-  const createField = (label, id, inputType, value, placeholder = "") => {
-    const f = document.createElement('div'); f.className = 'field';
-    const l = document.createElement('label'); l.textContent = label;
-    const inp = document.createElement(inputType === 'textarea' ? 'textarea' : 'input');
-    if (inputType !== 'textarea') inp.type = inputType;
-    inp.id = id; inp.value = value;
-    if (placeholder) inp.placeholder = placeholder;
-    inp.style.width = '100%';
-    if (inputType === 'textarea') { inp.style.minHeight = '80px'; inp.style.resize = 'vertical'; }
-    f.appendChild(l); f.appendChild(inp); return f;
+  const field=(label,id,type,value,ph="")=>{
+    const f=document.createElement("div"); f.className="field";
+    const l=document.createElement("label"); l.textContent=label;
+    const i=document.createElement(type==="textarea"?"textarea":"input");
+    if(type!=="textarea") i.type=type;
+    i.id=id; i.value=value; if(ph) i.placeholder=ph;
+    f.appendChild(l); f.appendChild(i); body.appendChild(f); return i;
   };
 
-  panel.appendChild(createField('Titre', 'edit-title', 'text', titleVal));
-  panel.appendChild(createField('Saison / Tome / Plateforme', 'edit-sub', 'text', subVal));
-  panel.appendChild(createField('URL Affiche', 'edit-poster', 'text', posterVal));
+  field("Titre","edit-title","text",titleVal);
+  field("Saison / Tome / Plateforme","edit-sub","text",subVal);
+  const pf=document.createElement("div"); pf.className="field";
+  const pl=document.createElement("label"); pl.textContent="URL Affiche";
+  const pRow=document.createElement("div"); pRow.style.display="flex"; pRow.style.gap="8px";
+  const pIn=document.createElement("input"); pIn.type="text"; pIn.id="edit-poster"; pIn.value=posterVal; pIn.style.flex="1";
+  const pBtn=document.createElement("button"); pBtn.type="button"; pBtn.textContent="📂";
+  const pFile=document.createElement("input"); pFile.type="file"; pFile.accept="image/*"; pFile.id="edit-poster-file";
+  pBtn.addEventListener("click",()=>pFile.click());
+  pFile.addEventListener("change",async ev=>{
+    const f=ev.target.files[0]; if(!f) return;
+    try{ pIn.value=await fileToResizedDataUrl(f,400); showToast("Image import\u00e9e !"); }catch(e){ alert("Image invalide."); }
+  });
+  pRow.appendChild(pIn); pRow.appendChild(pBtn); pf.appendChild(pl); pf.appendChild(pRow); pf.appendChild(pFile); body.appendChild(pf);
 
-  if (!existingEntry && selectedItem && selectedItem.source === "tmdb_tv" && selectedItem.seasons) {
-    const fChips = document.createElement('div'); fChips.className = 'field';
-    const lChips = document.createElement('label'); lChips.textContent = 'Saison';
-    const chipsWrap = document.createElement('div'); chipsWrap.className = 'subtitle-select';
-    selectedItem.seasons.forEach(s => {
-      const chip = document.createElement('div'); chip.className = 'subtitle-chip'; chip.dataset.seasonId = s.id;
-      const img = document.createElement('img'); img.src = s.poster_path ? TMDB_IMG + s.poster_path : (selectedItem.poster || NO_POSTER); img.alt = '';
-      const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = 'S' + s.season_number;
-      chip.appendChild(img); chip.appendChild(lbl);
-      chip.addEventListener('click', () => {
-        chipsWrap.querySelectorAll('.subtitle-chip').forEach(c => c.classList.remove('selected'));
-        chip.classList.add('selected');
-        selectedSubtitle = selectedItem.seasons.find(x => x.id === s.id);
-        if (selectedSubtitle) {
-          document.getElementById('edit-sub').value = `Saison ${selectedSubtitle.season_number}`;
-          if (selectedSubtitle.poster_path) document.getElementById('edit-poster').value = TMDB_IMG + selectedSubtitle.poster_path;
-        }
+  if(!existing&&selectedItem&&selectedItem.source==="tmdb_tv"&&selectedItem.seasons){
+    const f=document.createElement("div"); f.className="field";
+    const l=document.createElement("label"); l.textContent="Saison";
+    const w=document.createElement("div"); w.className="subtitle-select";
+    selectedItem.seasons.forEach(s=>{
+      const chip=document.createElement("div"); chip.className="subtitle-chip";
+      const img=document.createElement("img"); img.src=s.poster_path?TMDB_IMG+s.poster_path:(selectedItem.poster||NO_POSTER);
+      const lb=document.createElement("div"); lb.className="lbl"; lb.textContent="S"+s.season_number;
+      chip.appendChild(img); chip.appendChild(lb);
+      chip.addEventListener("click",()=>{
+        w.querySelectorAll(".subtitle-chip").forEach(c=>c.classList.remove("selected"));
+        chip.classList.add("selected"); selectedSubtitle=s;
+        $("edit-sub").value="Saison "+s.season_number;
+        if(s.poster_path) $("edit-poster").value=TMDB_IMG+s.poster_path;
       });
-      chipsWrap.appendChild(chip);
+      w.appendChild(chip);
     });
-    fChips.appendChild(lChips); fChips.appendChild(chipsWrap); panel.appendChild(fChips);
+    f.appendChild(l); f.appendChild(w); body.appendChild(f);
+  }
+  if(!existing&&selectedItem&&selectedItem.source==="rawg"){
+    const f=document.createElement("div"); f.className="field";
+    const l=document.createElement("label"); l.textContent="Plateforme";
+    const sel=document.createElement("select"); sel.id="platform-select";
+    const list=(selectedItem.platforms&&selectedItem.platforms.length)?selectedItem.platforms:DEFAULT_PLATFORMS;
+    list.forEach(p=>{ const o=document.createElement("option"); o.value=p; o.textContent=p; sel.appendChild(o); });
+    sel.addEventListener("change",()=>{ $("edit-sub").value=sel.value; });
+    f.appendChild(l); f.appendChild(sel); body.appendChild(f);
   }
 
-  if (!existingEntry && selectedItem && selectedItem.source === "rawg") {
-    const fPlat = document.createElement('div'); fPlat.className = 'field';
-    const lPlat = document.createElement('label'); lPlat.textContent = 'Plateforme';
-    const selPlat = document.createElement('select'); selPlat.id = 'platform-select'; selPlat.style.width = '100%';
-    const list = (selectedItem.platforms && selectedItem.platforms.length) ? selectedItem.platforms : DEFAULT_PLATFORMS;
-    list.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; selPlat.appendChild(o); });
-    selPlat.addEventListener('change', () => { document.getElementById('edit-sub').value = selPlat.value; });
-    fPlat.appendChild(lPlat); fPlat.appendChild(selPlat); panel.appendChild(fPlat);
+  /* Note optionnelle */
+  const fn=document.createElement("div"); fn.className="field";
+  const ln=document.createElement("label"); ln.textContent="Note (/10) \u2014 optionnel, re-cliquer pour enlever";
+  const grid=document.createElement("div"); grid.className="note-grid";
+  for(let n=1;n<=10;n++){
+    const b=document.createElement("div"); b.className="note-btn"+(currentNote===n?" selected":""); b.textContent=n;
+    b.addEventListener("click",()=>{ currentNote=(currentNote===n?null:n);
+      grid.querySelectorAll(".note-btn").forEach(x=>x.classList.remove("selected"));
+      if(currentNote===n) b.classList.add("selected"); });
+    grid.appendChild(b);
   }
+  fn.appendChild(ln); fn.appendChild(grid); body.appendChild(fn);
 
-  const fNote = document.createElement('div'); fNote.className = 'field';
-  const lNote = document.createElement('label'); lNote.textContent = 'Note (/10)';
-  const grid = document.createElement('div'); grid.className = 'note-grid';
-  for (let n = 1; n <= 10; n++) {
-    const btn = document.createElement('div'); btn.className = 'note-btn' + (n === currentNote ? ' selected' : '');
-    btn.dataset.note = n; btn.textContent = n;
-    btn.addEventListener('click', () => {
-      grid.querySelectorAll('.note-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected'); currentNote = parseInt(btn.dataset.note);
-    });
-    grid.appendChild(btn);
-  }
-  fNote.appendChild(lNote); fNote.appendChild(grid); panel.appendChild(fNote);
-
-  // Bouton En cours
-  const fEnCours = document.createElement('div'); fEnCours.className = 'field';
-  const enCoursBtn = document.createElement('button'); enCoursBtn.className = 'favorite-btn' + (isEnCours ? ' active' : ''); enCoursBtn.id = 'en-cours-btn'; enCoursBtn.type = 'button';
-  enCoursBtn.textContent = isEnCours ? ' En cours !' : '⏳ Marquer en cours';
-  enCoursBtn.addEventListener('click', () => {
-    isEnCours = !isEnCours;
-    enCoursBtn.className = 'favorite-btn' + (isEnCours ? ' active' : '');
-    enCoursBtn.textContent = isEnCours ? '⏳ En cours !' : '⏳ Marquer en cours';
-  });
-  fEnCours.appendChild(enCoursBtn); panel.appendChild(fEnCours);
-
-  const fFav = document.createElement('div'); fFav.className = 'field';
-  const favBtn = document.createElement('button'); favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : ''); favBtn.id = 'fav-btn'; favBtn.type = 'button';
-  favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
-  favBtn.addEventListener('click', () => {
-    isFavorite = !isFavorite;
-    favBtn.className = 'favorite-btn' + (isFavorite ? ' active' : '');
-    favBtn.textContent = isFavorite ? '💜 Coup de cœur !' : '🤍 Ajouter en coup de cœur';
-  });
-  fFav.appendChild(favBtn); panel.appendChild(fFav);
-
-  panel.appendChild(createField('Date de fin / Avancement', 'date-fin', 'text', dateVal, 'ex: 27/09/2026 ou S01E04 ou Chapitre 12'));
-  panel.appendChild(createField('Commentaire', 'comment-input', 'textarea', commentVal, 'Ton avis...'));
-
-  const actions = document.createElement('div'); actions.className = 'panel-actions';
-  const saveBtn = document.createElement('button'); saveBtn.className = 'primary'; saveBtn.id = 'save-entry-btn'; saveBtn.textContent = 'Enregistrer';
-  actions.appendChild(saveBtn); panel.appendChild(actions);
-  container.appendChild(panel);
-  saveBtn.addEventListener('click', () => saveCurrentEntry());
-}
-
-async function saveCurrentEntry() {
-  const titleVal = document.getElementById("edit-title").value.trim();
-  if (!titleVal) { alert("Titre obligatoire !"); return; }
-
-  let baseId = isEditingExisting ? editingEntryId : `${currentType}_${selectedItem ? (selectedItem.id || Date.now()) : Date.now()}`;
-  if (!isEditingExisting && selectedItem && selectedItem.source === "tmdb_tv" && selectedSubtitle) baseId += `_s${selectedSubtitle.season_number}`;
-  const entries = await dbAll();
-  let entryId = baseId;
-  if (!isEditingExisting && entries.some(e => e.id === entryId)) entryId = baseId + '_' + Date.now();
-
-  const entry = {
-    id: entryId, type: currentType, titre: titleVal,
-    sousTitre: document.getElementById("edit-sub").value.trim(),
-    note: currentNote, isFavorite: isFavorite, enCours: isEnCours,
-    dateFin: document.getElementById("date-fin").value.trim(),
-    comment: (document.getElementById("comment-input")?.value || "").trim(),
-    posterUrl: document.getElementById("edit-poster").value.trim(),
-    dateAjout: new Date().toISOString()
+  /* Toggles */
+  const toggle=(labelOn,labelOff,get,set)=>{
+    const b=document.createElement("button"); b.type="button"; b.className="toggle-btn"+(get()?" active":"");
+    b.textContent=get()?labelOn:labelOff;
+    b.addEventListener("click",()=>{ set(!get()); b.className="toggle-btn"+(get()?" active":""); b.textContent=get()?labelOn:labelOff; });
+    body.appendChild(b); return b;
   };
+  toggle("\u{1F49C} Coup de c\u0153ur !","\u{1F90D} Coup de c\u0153ur",()=>isFavorite,v=>isFavorite=v);
+  toggle("\u23F3 En cours !","\u23F3 En cours",()=>isEnCours,v=>isEnCours=v);
+  toggle("\u{1F440} \u00C0 voir !","\u{1F440} \u00C0 voir",()=>isAVoir,v=>isAVoir=v);
 
-  try {
-    await dbPut(entry);
-    showToast("Enregistré !");
-    closeModal();
-    // PAS DE SYNC AUTO ICI
-    if (document.getElementById("view-history").classList.contains("active")) renderHistory();
-  } catch (e) { console.error(e); alert('Erreur: ' + (e.message || '')); }
+  field("Horodatage / Avancement","date-fin","text",dateVal,"ex: 27/09/2026 ou S01E04 ou 15h");
+
+  /* Journal de bord */
+  const fj=document.createElement("div"); fj.className="field";
+  const lj=document.createElement("label"); lj.textContent="Journal de bord";
+  fj.appendChild(lj);
+  const jb=document.createElement("div"); jb.className="j-btns";
+  const mk=(txt,kind)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=txt; b.addEventListener("click",()=>openDraft(kind)); jb.appendChild(b); };
+  mk("\u{1F5D3}\uFE0F","time"); mk("✏️","free"); mk("\u{1F4FA}","ep");
+  fj.appendChild(jb);
+  const draft=document.createElement("div"); draft.className="j-draft"; draft.id="j-draft"; draft.style.display="none";
+  draft.innerHTML='<div class="j-ep-row" id="j-ep-row" style="display:none;">S<input id="j-s" type="number" min="0"> E<input id="j-e" type="number" min="0"> <input id="j-note" class="j-note-in" type="number" min="1" max="10" placeholder="/10"></div><textarea id="j-text" placeholder="Ton entr\u00e9e\u2026"></textarea><div class="j-draft-actions"><button class="primary" id="j-add">Ajouter</button><button id="j-cancel">Annuler</button></div>';
+  fj.appendChild(draft);
+  const jlist=document.createElement("div"); jlist.id="j-list"; fj.appendChild(jlist);
+  body.appendChild(fj);
+  renderJournalList();
+
+  let draftKind=null;
+  function openDraft(kind){
+    draftKind=kind; draft.style.display="block";
+    $("j-ep-row").style.display=(kind==="ep")?"flex":"none";
+    $("j-text").value=""; $("j-text").focus();
+  }
+  draft.querySelector("#j-cancel").addEventListener("click",()=>{ draft.style.display="none"; draftKind=null; });
+  draft.querySelector("#j-add").addEventListener("click",()=>{
+    const text=$("j-text").value.trim();
+    if(!text&&draftKind!=="ep"){ showToast("Entre un texte."); return; }
+    if(draftKind==="time") draftJournal.push({kind:"time",ts:nowStamp(),text});
+    else if(draftKind==="free") draftJournal.push({kind:"free",text});
+    else {
+      const n=$("j-note").value;
+      draftJournal.push({kind:"ep",s:parseInt($("j-s").value||"0",10),e:parseInt($("j-e").value||"0",10),note:n?Math.max(1,Math.min(10,parseInt(n,10))):null,text});
+    }
+    draft.style.display="none"; draftKind=null; renderJournalList();
+  });
+  function renderJournalList(){
+    const list=$("j-list"); if(!list) return; list.innerHTML="";
+    draftJournal.forEach((x,i)=>{
+      const d=document.createElement("div"); d.className="j-item";
+      const tag=x.kind==="time"?"\u{1F5D3}\uFE0F "+x.ts:(x.kind==="ep"?"\u{1F4FA} S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" \u2022 "+x.note+"/10":""):"✏️");
+      d.innerHTML='<button class="j-del" data-i="'+i+'">🗑️</button><span class="j-tag">'+tag+'</span><br>'+escapeHtml(x.text||"");
+      list.appendChild(d);
+    });
+    list.querySelectorAll(".j-del").forEach(b=>b.addEventListener("click",()=>{ draftJournal.splice(parseInt(b.dataset.i,10),1); renderJournalList(); }));
+  }
+  function escapeHtml(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  setFoot([["Enregistrer","primary",()=>saveCurrentEntry()],["Annuler","",closeModal]]);
 }
 
-document.getElementById("toggle-view-btn").addEventListener("click", () => {
-  isCalendarView = !isCalendarView;
-  const btn = document.getElementById("toggle-view-btn");
-  document.getElementById("history-list-container").style.display = isCalendarView ? "none" : "block";
-  document.getElementById("history-cal-container").style.display = isCalendarView ? "block" : "none";
-  btn.textContent = isCalendarView ? "📋 Vue Liste" : "📅 Vue Calendrier";
-  if (isCalendarView) renderCalendar(); else renderHistory();
-});
-
-async function renderHistory() {
-  const entries = await dbAll();
-  document.getElementById("hist-count").textContent = `${entries.length} œuvre(s)`;
-  const stats = {};
-  let enCoursCount = 0;
-  entries.forEach(e => { 
-    stats[e.type] = (stats[e.type] || 0) + 1;
-    if (e.enCours) enCoursCount++;
-  });
-  const statsBar = document.getElementById("stats-bar");
-  statsBar.innerHTML = Object.entries(stats).map(([type, count]) =>
-    `<div class="stat-chip">${type === 'Film' ? '' : type === 'Série' ? '' : type === 'Jeu' ? '🎮' : type === 'Manga' ? '📖' : type === 'BD' ? '📕' : '📚'} ${type}: <span>${count}</span></div>`
-  ).join('') + (enCoursCount > 0 ? `<div class="stat-chip"> En cours: <span>${enCoursCount}</span></div>` : '') || '<div class="stat-chip">Aucune donnée</div>';
-
-  const grid = document.getElementById("hist-grid"); grid.innerHTML = "";
-  if (!entries.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune note.</div>`;
-    return;
+async function saveCurrentEntry(){
+  const titleVal=$("edit-title").value.trim();
+  if(!titleVal){ alert("Titre obligatoire !"); return; }
+  const entries=await dbAll();
+  let entryId;
+  if(isEditingExisting){ entryId=editingEntryId; }
+  else {
+    const dup=entries.find(e=>e.type===currentType&&norm(e.titre)===norm(titleVal));
+    if(dup){
+      if(confirm('"'+dup.titre+'" existe d\u00e9j\u00e0 en '+currentType+'.\nModifier l\u2019existante ?\n(Annuler = cr\u00e9er un doublon)')){
+        isEditingExisting=true; entryId=dup.id;
+      } else entryId=currentType+"_"+(selectedItem?selectedItem.id:Date.now())+"_"+Date.now();
+    } else {
+      entryId=currentType+"_"+(selectedItem?(selectedItem.id||Date.now()):Date.now());
+      if(selectedItem&&selectedItem.source==="tmdb_tv"&&selectedSubtitle) entryId+="_s"+selectedSubtitle.season_number;
+      if(entries.some(e=>e.id===entryId)) entryId+="_"+Date.now();
+    }
   }
+  const entry={
+    id:entryId, type:currentType, titre:titleVal,
+    sousTitre:$("edit-sub").value.trim(),
+    note:currentNote, isFavorite, enCours:isEnCours, aVoir:isAVoir,
+    dateFin:$("date-fin").value.trim(),
+    journal:draftJournal,
+    comment:draftJournal.map(j=>j.text).filter(Boolean).join(" | "),
+    posterUrl:$("edit-poster").value.trim(),
+    dateAjout:isEditingExisting?(entries.find(e=>e.id===entryId)||{}).dateAjout||new Date().toISOString():new Date().toISOString()
+  };
+  try{
+    await dbPut(entry);
+    showToast("Enregistr\u00e9 !");
+    closeModal();
+    if($("view-history").classList.contains("active")) renderHistory();
+  }catch(e){ console.error(e); alert("Erreur: "+(e.message||"")); }
+}
 
-  entries.forEach(e => {
-    const card = document.createElement("div"); 
-    card.className = "hist-card" + (e.enCours ? " en-cours" : "");
-    const img = document.createElement('img'); img.src = e.posterUrl || NO_POSTER; img.alt = ''; img.loading = 'lazy';
-    const badge = document.createElement('div'); badge.className = 'hist-badge'; badge.textContent = `${e.note}/10`;
-    const favHtml = e.isFavorite ? (() => { const d = document.createElement('div'); d.className = 'hist-fav'; d.textContent = '💜'; return d; })() : null;
-    const enCoursBadge = e.enCours ? (() => { const d = document.createElement('div'); d.className = 'hist-en-cours-badge'; d.textContent = '⏳'; return d; })() : null;
-    const typeTag = document.createElement('div'); typeTag.className = 'hist-type'; typeTag.textContent = e.type;
-    const body = document.createElement('div'); body.className = 'hist-body';
-    const title = document.createElement('div'); title.className = 'hist-title'; title.textContent = e.titre;
-    const sub = document.createElement('div'); sub.style.fontSize = '10px'; sub.style.color = 'var(--accent-2)'; sub.textContent = e.sousTitre || '';
-    const date = document.createElement('div'); date.className = 'hist-date'; date.textContent = e.dateFin || '';
-    const comment = document.createElement('div'); comment.className = 'hist-comment'; comment.textContent = e.comment ? `"${e.comment}"` : '';
-    const scLink = document.createElement('a'); scLink.className = 'sc-link'; scLink.href = `https://www.senscritique.com/recherche?query=${encodeURIComponent(e.titre)}`; scLink.target = '_blank'; scLink.textContent = 'SC ↗';
-    const btnRow = document.createElement('div'); btnRow.className = 'hist-btn-row';
-    const editBtn = document.createElement('button'); editBtn.textContent = '📝';
-    const delBtn = document.createElement('button'); delBtn.textContent = '🗑️';
-    btnRow.appendChild(editBtn); btnRow.appendChild(delBtn);
+/* ===== HISTORIQUE ===== */
+$("hist-search").addEventListener("input", renderHistory);
+$("hist-sort").addEventListener("change", renderHistory);
+$("toggle-view-btn").addEventListener("click",()=>{
+  isCalendarView=!isCalendarView;
+  $("history-list-container").style.display=isCalendarView?"none":"block";
+  $("history-cal-container").style.display=isCalendarView?"block":"none";
+  $("toggle-view-btn").textContent=isCalendarView?"📋 Liste":"📅 Calendrier";
+  if(isCalendarView) renderCalendar(); else renderHistory();
+});
+async function renderHistory(){
+  let entries=await dbAll();
+  const q=norm($("hist-search").value);
+  if(q) entries=entries.filter(e=>norm(e.titre).includes(q)||norm(e.type).includes(q)||norm(descriptionOf(e)).includes(q));
+  const sort=$("hist-sort").value;
+  const byDate=e=>{ const p=parseDateFR(e.dateFin); return p?(p.y*10000+p.mo*100+p.d):0; };
+  if(sort==="date-desc") entries.sort((a,b)=>byDate(b)-byDate(a)||(b.dateAjout||"").localeCompare(a.dateAjout||""));
+  if(sort==="date-asc") entries.sort((a,b)=>byDate(a)-byDate(b));
+  if(sort==="note-desc") entries.sort((a,b)=>(b.note!=null?b.note:-1)-(a.note!=null?a.note:-1));
+  if(sort==="titre-asc") entries.sort((a,b)=>a.titre.localeCompare(b.titre,"fr"));
+  if(sort==="type") entries.sort((a,b)=>a.type.localeCompare(b.type,"fr")||a.titre.localeCompare(b.titre,"fr"));
 
-    body.appendChild(title); if (e.sousTitre) body.appendChild(sub); body.appendChild(date);
-    if (e.comment) body.appendChild(comment); body.appendChild(scLink); body.appendChild(btnRow);
-    card.appendChild(img); card.appendChild(badge); if (favHtml) card.appendChild(favHtml);
-    if (enCoursBadge) card.appendChild(enCoursBadge);
-    card.appendChild(typeTag); card.appendChild(body);
+  const all=await dbAll();
+  const stats={}; let enc=0;
+  all.forEach(e=>{ stats[e.type]=(stats[e.type]||0)+1; if(e.enCours) enc++; });
+  $("stats-bar").innerHTML=Object.entries(stats).map(([t,c])=>{
+    const ic=t==="Film"?"\u{1F3AC}":t==="S\u00e9rie"?"\u{1F4FA}":t==="Jeu"?"\u{1F3AE}":t==="Manga"?"\u{1F4D6}":t==="BD"?"\u{1F4D5}":"\u{1F4DA}";
+    return '<div class="stat-chip">'+ic+' '+t+': <span>'+c+'</span></div>';
+  }).join("")+(enc?'<div class="stat-chip">\u23F3 \u2022 En cours: <span>'+enc+'</span></div>':"");
+  $("hist-count").textContent=entries.length+" "+OE+"uvre(s)";
 
-    card.addEventListener("click", (evt) => {
-      if (evt.target.tagName !== 'BUTTON' && evt.target.tagName !== 'A') {
-        showDetailsModal(e);
-      }
-    });
-
-    editBtn.addEventListener("click", (evt) => { evt.stopPropagation(); currentType = e.type || "Film"; renderPanel(e); openModal(); });
-    delBtn.addEventListener("click", async (evt) => {
-      evt.stopPropagation();
-      if (confirm(`Supprimer "${e.titre}" ?`)) {
-        await dbDelete(e.id);
-        renderHistory();
-        showToast("Supprimé");
-      }
-    });
+  const grid=$("hist-grid"); grid.innerHTML="";
+  if(!entries.length){ grid.innerHTML='<div style="font-size:12px;color:var(--text-dim);text-align:center;padding:20px 0;">Aucune '+OE+'uvre.</div>'; return; }
+  entries.forEach(e=>{
+    const card=document.createElement("div"); card.className="hcard"+(e.enCours?" encours":"");
+    const img=document.createElement("img"); img.className="ph"; img.src=e.posterUrl||NO_POSTER; img.alt=""; img.loading="lazy";
+    const col=document.createElement("div"); col.className="col";
+    const t=document.createElement("div"); t.className="t"; t.textContent=e.titre+" "+statutStr(e);
+    const m=document.createElement("div"); m.className="meta";
+    m.textContent=e.type+" \u2022 "+(e.note!=null?e.note+"/10":"\u2014/10")+(e.sousTitre?" \u2022 "+e.sousTitre:"")+(e.dateFin?" \u2022 "+formatDate(e.dateFin):"");
+    const s=document.createElement("div"); s.className="sum";
+    const lines=journalLines(e); s.textContent=lines.length?('"'+lines[lines.length-1]+'"'):"";
+    const row=document.createElement("div"); row.className="row";
+    const sc=document.createElement("button"); sc.className="sc"; sc.textContent="SC \u2197";
+    const ed=document.createElement("button"); ed.textContent="📝";
+    const dl=document.createElement("button"); dl.textContent="🗑️";
+    row.appendChild(sc); row.appendChild(ed); row.appendChild(dl);
+    col.appendChild(t); col.appendChild(m); if(s.textContent) col.appendChild(s); col.appendChild(row);
+    card.appendChild(img); card.appendChild(col);
+    card.addEventListener("click",ev=>{ if(ev.target.tagName!=="BUTTON") showDetail(e); });
+    sc.addEventListener("click",ev=>{ ev.stopPropagation(); window.open("https://www.senscritique.com/recherche?query="+encodeURIComponent(e.titre),"_blank"); });
+    ed.addEventListener("click",ev=>{ ev.stopPropagation(); currentType=e.type||"Film"; renderPanel(e); openModal(); });
+    dl.addEventListener("click",async ev=>{ ev.stopPropagation();
+      if(confirm('Supprimer "'+e.titre+'" ?')){ await dbDelete(e.id); renderHistory(); showToast("Supprim\u00e9"); } });
     grid.appendChild(card);
   });
 }
 
-function showDetailsModal(entry) {
-  const container = document.getElementById("panel-container");
-  container.innerHTML = `
-    <h3 class="serif" style="color:var(--accent); margin-bottom:14px;">${entry.titre}</h3>
-    <div style="display:flex; gap:12px; margin-bottom:14px;">
-      <img src="${entry.posterUrl || NO_POSTER}" style="width:80px; height:120px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-      <div style="flex:1;">
-        <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;">${entry.type} ${entry.sousTitre ? '• ' + entry.sousTitre : ''}</div>
-        <div style="font-size:14px; color:var(--accent); font-weight:600; margin-bottom:4px;">Note: ${entry.note}/10 ${entry.isFavorite ? '💜' : ''} ${entry.enCours ? '⏳' : ''}</div>
-        <div style="font-size:11px; color:var(--text-dim);">Avancement: ${entry.dateFin || 'Non renseigné'}</div>
-      </div>
-    </div>
-    ${entry.comment ? `
-      <div class="details-comment-box">
-        <div style="font-size:11px; color:var(--text-dim); margin-bottom:6px;">Mon avis :</div>
-        <div class="details-comment-text">${entry.comment}</div>
-      </div>
-    ` : '<p style="color:var(--text-dim); font-size:12px;">Aucun commentaire.</p>'}
-    <div style="display:flex; gap:8px; margin-top:14px;">
-      <button class="primary" id="details-edit-btn" style="flex:1;">📝 Modifier</button>
-      <button class="outline" id="details-close-btn" style="flex:1;">Fermer</button>
-    </div>
-  `;
-  
-  document.getElementById("details-edit-btn").addEventListener("click", () => {
-    closeModal();
-    currentType = entry.type || "Film";
-    renderPanel(entry);
-    openModal();
-  });
-  document.getElementById("details-close-btn").addEventListener("click", closeModal);
+/* ===== DÉTAIL ===== */
+function showDetail(e){
+  detailEntry=e;
+  $("m-title").textContent=e.titre;
+  const body=$("panel-container"); body.innerHTML="";
+  const head=document.createElement("div"); head.className="d-head";
+  const img=document.createElement("img"); img.className="d-poster"; img.src=e.posterUrl||NO_POSTER; img.alt="";
+  img.addEventListener("click",()=>openPosterOverlay(e));
+  const info=document.createElement("div"); info.className="d-info";
+  const ti=document.createElement("div"); ti.className="d-title"; ti.textContent=e.titre+" "+statutStr(e);
+  const me=document.createElement("div"); me.className="d-meta";
+  me.innerHTML="<strong>Type:</strong> "+e.type+(e.sousTitre?"<br><strong>Sous-titre:</strong> "+escapeH(e.sousTitre):"")+
+    "<br><strong>Note:</strong> "+(e.note!=null?e.note+"/10":"\u2014/10")+
+    "<br><strong>Horodatage:</strong> "+(e.dateFin?escapeH(formatDate(e.dateFin)):"non renseign\u00e9");
+  info.appendChild(ti); info.appendChild(me);
+  head.appendChild(img); head.appendChild(info); body.appendChild(head);
+  const jl=document.createElement("div");
+  const lines=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);
+  if(lines.length){
+    const lb=document.createElement("label"); lb.style.fontSize="11px"; lb.style.color="var(--text-dim)"; lb.textContent="Journal de bord";
+    jl.appendChild(lb);
+    lines.forEach(x=>{
+      const d=document.createElement("div"); d.className="j-item";
+      const tag=x.kind==="time"?"\u{1F5D3}\uFE0F "+x.ts:(x.kind==="ep"?"\u{1F4FA} S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" \u2022 "+x.note+"/10":""):"✏️");
+      d.innerHTML='<span class="j-tag">'+tag+'</span><br>'+escapeH(x.text||"");
+      jl.appendChild(d);
+    });
+  } else { jl.innerHTML='<p style="color:var(--text-dim);font-size:12px;font-style:italic;">Pas encore de journal.</p>'; }
+  body.appendChild(jl);
+  setFoot([["📝 Modifier","primary",()=>{ renderPanel(e); }],["Fermer","",closeModal]]);
   openModal();
 }
+function escapeH(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-document.getElementById("cal-prev").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() - 1); renderCalendar(); });
-document.getElementById("cal-next").addEventListener("click", () => { calCurrentDate.setMonth(calCurrentDate.getMonth() + 1); renderCalendar(); });
+/* ===== AFFICHE PLEIN ÉCRAN ===== */
+function openPosterOverlay(e){
+  detailEntry=e;
+  $("poster-img").src=e.posterUrl||NO_POSTER;
+  $("poster-url-row").classList.remove("visible");
+  $("poster-url-input").value=e.posterUrl&&e.posterUrl.startsWith("data:")?"":(e.posterUrl||"");
+  $("poster-overlay").classList.add("active");
+}
+$("poster-close").addEventListener("click",()=>{ $("poster-overlay").classList.remove("active"); });
+$("poster-link-btn").addEventListener("click",()=>{ $("poster-url-row").classList.toggle("visible"); });
+$("poster-url-save").addEventListener("click",async ()=>{
+  const v=$("poster-url-input").value.trim(); if(!v||!detailEntry) return;
+  detailEntry.posterUrl=v; await dbPut(detailEntry);
+  $("poster-img").src=v; $("poster-url-row").classList.remove("visible");
+  showToast("Affiche chang\u00e9e !"); showDetail(detailEntry);
+});
+$("poster-import-btn").addEventListener("click",()=>$("poster-file").click());
+$("poster-file").addEventListener("change",async ev=>{
+  const f=ev.target.files[0]; if(!f||!detailEntry) return;
+  try{
+    const d=await fileToResizedDataUrl(f,500);
+    detailEntry.posterUrl=d; await dbPut(detailEntry);
+    $("poster-img").src=d; showToast("Image import\u00e9e !"); showDetail(detailEntry);
+  }catch(e){ alert("Image invalide."); }
+  ev.target.value="";
+});
 
-async function renderCalendar() {
-  const entries = await dbAll();
-  const grid = document.getElementById("cal-grid"); const title = document.getElementById("cal-title");
-  grid.innerHTML = "";
-  const year = calCurrentDate.getFullYear(), month = calCurrentDate.getMonth();
-  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-  title.textContent = `${monthNames[month]} ${year}`;
-  ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].forEach(d => {
-    const el = document.createElement("div"); el.className = "cal-day-name"; el.textContent = d; grid.appendChild(el);
-  });
-  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  for (let i = 0; i < firstDayIndex; i++) { const empty = document.createElement("div"); empty.className = "cal-cell empty"; grid.appendChild(empty); }
-  for (let day = 1; day <= daysInMonth; day++) {
-    const cell = document.createElement("div"); cell.className = "cal-cell";
-    const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    // On affiche les œuvres même si la date n'est pas un format ISO strict (ex: "S01E04")
-    const dayEntries = entries.filter(e => e.dateFin && e.dateFin.includes(dStr) || (day === 1 && !e.dateFin.includes('/') && !e.dateFin.includes('-'))); 
-    // Pour simplifier le calendrier avec des textes libres, on affiche un point si l'entrée existe ce jour-là ou si c'est un texte libre
-    const isTextEntry = e => e.dateFin && !e.dateFin.match(/^\d{4}-\d{2}-\d{2}$/);
-    const dayText = document.createElement('div'); dayText.textContent = day; cell.appendChild(dayText);
-    
-    const relevantEntries = entries.filter(e => {
-      if (!e.dateFin) return false;
-      if (e.dateFin === dStr) return true;
-      if (isTextEntry(e) && day === 1) return true; // Affiche les entrées "texte libre" le 1er du mois pour ne pas les perdre
-      return false;
-    });
-
-    if (relevantEntries.length > 0) {
+/* ===== CALENDRIER ===== */
+$("cal-prev").addEventListener("click",()=>{ calCurrentDate.setMonth(calCurrentDate.getMonth()-1); renderCalendar(); });
+$("cal-next").addEventListener("click",()=>{ calCurrentDate.setMonth(calCurrentDate.getMonth()+1); renderCalendar(); });
+async function renderCalendar(){
+  const entries=await dbAll();
+  const grid=$("cal-grid"); grid.innerHTML="";
+  const y=calCurrentDate.getFullYear(), mo=calCurrentDate.getMonth();
+  const names=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
+  $("cal-title").textContent=names[mo]+" "+y;
+  ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].forEach(d=>{ const el=document.createElement("div"); el.className="cal-day-name"; el.textContent=d; grid.appendChild(el); });
+  const first=(new Date(y,mo,1).getDay()+6)%7;
+  const days=new Date(y,mo+1,0).getDate();
+  for(let i=0;i<first;i++){ const e=document.createElement("div"); e.className="cal-cell empty"; grid.appendChild(e); }
+  for(let d=1;d<=days;d++){
+    const cell=document.createElement("div"); cell.className="cal-cell";
+    const txt=document.createElement("div"); txt.textContent=d; cell.appendChild(txt);
+    const dayE=entries.filter(e=>{ const p=parseDateFR(e.dateFin); return p&&p.y===y&&p.mo===mo+1&&p.d===d; });
+    if(dayE.length){
       cell.classList.add("has-entries");
-      const dot = document.createElement("div"); dot.className = "dot"; cell.appendChild(dot);
-      cell.addEventListener("click", () => showDayModal(dStr, relevantEntries));
+      const dot=document.createElement("div"); dot.className="dot"; cell.appendChild(dot);
+      cell.addEventListener("click",()=>showDayModal(d,mo,y,dayE));
     }
     grid.appendChild(cell);
   }
 }
-
-function showDayModal(dateStr, dayEntries) {
-  const container = document.getElementById("panel-container");
-  container.innerHTML = `<h3 class="serif" style="color:var(--accent); margin-bottom:14px;"> uvres du ${formatDate(dateStr)}</h3>`;
-  if (dayEntries.length === 0) {
-    container.innerHTML += `<p style="color:var(--text-dim);">Aucune œuvre.</p>`;
-  } else {
-    dayEntries.forEach(e => {
-      const div = document.createElement("div"); div.className = "result-card"; div.style.marginBottom = "8px";
-      div.innerHTML = `
-        <img src="${e.posterUrl || NO_POSTER}" class="poster" alt="">
-        <div class="result-info">
-          <div class="result-title">${e.titre} ${e.enCours ? '⏳' : ''}</div>
-          <div class="result-meta">${e.type} • Note: ${e.note}/10 ${e.isFavorite ? '💜' : ''}</div>
-        </div>`;
-      div.addEventListener("click", () => {
-        closeModal();
-        showDetailsModal(e);
-      });
-      container.appendChild(div);
-    });
-  }
+function showDayModal(d,mo,y,dayE){
+  $("m-title").textContent=OEC+"uvres du "+pad2(d)+"/"+pad2(mo+1)+"/"+y;
+  const body=$("panel-container"); body.innerHTML="";
+  dayE.forEach(e=>{
+    const div=document.createElement("div"); div.className="result-card"; div.style.marginBottom="8px";
+    const img=document.createElement("img"); img.className="poster"; img.src=e.posterUrl||NO_POSTER;
+    const info=document.createElement("div"); info.className="result-info";
+    const t=document.createElement("div"); t.className="result-title"; t.textContent=e.titre+" "+statutStr(e);
+    const m=document.createElement("div"); m.className="result-meta"; m.textContent=e.type+" \u2022 "+(e.note!=null?e.note+"/10":"\u2014/10");
+    info.appendChild(t); info.appendChild(m); div.appendChild(img); div.appendChild(info);
+    div.addEventListener("click",()=>showDetail(e));
+    body.appendChild(div);
+  });
+  setFoot([["Fermer","",closeModal]]);
   openModal();
 }
 
-document.getElementById("config-sheet-btn").addEventListener("click", () => {
-  const container = document.getElementById("sheet-url-container");
-  container.style.display = container.style.display === "none" ? "block" : "none";
-});
-
-document.getElementById("save-sheet-url").addEventListener("click", () => {
-  const val = document.getElementById("sheet-url").value.trim();
-  localStorage.setItem("sheet_url", val);
-  document.getElementById("sheet-url-container").style.display = "none";
-  showToast("URL enregistrée !");
-});
-
-// SYNC MANUEL UNIQUEMENT
-document.getElementById("sync-sheet-btn").addEventListener("click", async () => {
-  const url = localStorage.getItem("sheet_url");
-  if (!url) { alert("Configure l'URL dans Options."); return; }
-  const entries = await dbAll();
-  showToast("Envoi au Sheet…", 3000);
-  try {
-    await fetch(url, { method: "POST", body: JSON.stringify({ action: 'sync_all', entries: entries }) });
-    showToast("Toutes les œuvres envoyées !");
-  } catch (err) { alert("Erreur synchro: " + err.message); }
-});
-
-document.getElementById("export-btn").addEventListener("click", async () => {
-  const entries = await dbAll();
-  const backupData = {
-    version: "V4.4",
-    exportDate: new Date().toISOString(),
-    settings: { sheet_url: localStorage.getItem("sheet_url") || "" },
-    entries: entries
-  };
-  const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = `catalogue_backup_${new Date().toISOString().slice(0, 10)}.json`;
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  showToast('Backup exporté !');
-});
-
-document.getElementById("import-btn").addEventListener("click", () => { document.getElementById("import-file").click(); });
-document.getElementById("import-file").addEventListener("change", (evt) => {
-  const file = evt.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      const entries = data.entries || (Array.isArray(data) ? data : []);
-      let imported = 0;
-      for (const entry of entries) {
-        if (entry && entry.id) {
-          if (!entry.titre) entry.titre = 'Sans titre';
-          if (!entry.dateAjout) entry.dateAjout = new Date().toISOString();
-          await dbPut(entry); imported++;
-        }
-      }
-      if (data.settings && data.settings.sheet_url) {
-        localStorage.setItem("sheet_url", data.settings.sheet_url);
-        document.getElementById("sheet-url").value = data.settings.sheet_url;
-      }
-      showToast(`Importé (${imported} œuvres)`);
-      renderHistory();
-    } catch (err) { alert("JSON invalide."); }
-  };
-  reader.readAsText(file);
-});
-
-document.getElementById("clear-local-db").addEventListener("click", async () => {
-  if (confirm("Effacer TOUT ?")) {
-    const entries = await dbAll();
-    for (const e of entries) await dbDelete(e.id);
-    renderHistory(); showToast("Réinitialisé.");
-  }
-});
-
-function initAboutBuildDate() {
-  const dateObj = new Date(LAST_UPDATE_DATE);
-  const formatted = dateObj.toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
-  document.getElementById("about-build-date").textContent = `Dernière mise à jour : ${formatted} (Paris)`;
+/* ===== STATS ===== */
+$("recap-prev").addEventListener("click",()=>{ recapDate.setMonth(recapDate.getMonth()-1); renderStats(); });
+$("recap-next").addEventListener("click",()=>{ recapDate.setMonth(recapDate.getMonth()+1); renderStats(); });
+async function renderStats(){
+  const entries=await dbAll();
+  const byType={};
+  entries.forEach(e=>{ const o=byType[e.type]=byType[e.type]||{n:0,sum:0,coup:0}; o.n++; if(e.note!=null) o.sum+=e.note; if(e.isFavorite) o.coup++; });
+  $("stats-global").innerHTML=Object.entries(byType).map(([t,o])=>
+    '<div class="stats-line"><span>'+t+' '+statutIconCount(entries,t)+'</span><b>'+o.n+' \u2022 moy '+(o.n?(o.sum/o.n).toFixed(1):"\u2014")+'/10</b></div>'
+  ).join("")||'<div class="stats-line"><span>Aucune donn\u00e9e</span><b></b></div>';
+  const top=[...entries].filter(e=>e.note!=null).sort((a,b)=>b.note-a.note).slice(0,5);
+  $("stats-top").innerHTML=top.map((e,i)=>'<div class="stats-line"><span>'+(i+1)+'. '+escapeH(e.titre)+'</span><b>'+e.note+'/10</b></div>').join("")||'<div class="stats-line"><span>Pas encore de notes</span><b></b></div>';
+  const y=recapDate.getFullYear(), mo=recapDate.getMonth();
+  const names=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
+  $("recap-title").textContent="\u{1F381} "+names[mo]+" "+y;
+  const month=entries.filter(e=>{ const p=parseDateFR(e.dateFin); return p&&p.y===y&&p.mo===mo+1; });
+  const fav=month.filter(e=>e.isFavorite);
+  const avg=month.filter(e=>e.note!=null);
+  $("stats-recap").innerHTML=
+    '<div class="stats-line"><span>'+OEC+'uvres termin\u00e9es</span><b>'+month.length+'</b></div>'+
+    '<div class="stats-line"><span>Note moyenne</span><b>'+(avg.length?(avg.reduce((s,e)=>s+e.note,0)/avg.length).toFixed(1):"\u2014")+'/10</b></div>'+
+    '<div class="stats-line"><span>Coups de c\u0153ur</span><b>'+(fav.length?fav.map(e=>escapeH(e.titre)).join(", "):"aucun")+'</b></div>';
+}
+function statutIconCount(entries,t){
+  const list=entries.filter(e=>e.type===t);
+  return '<span style="color:var(--text-dim)">(\u23F3 '+list.filter(e=>e.enCours).length+' \u2022 \u{1F440} '+list.filter(e=>e.aVoir).length+')</span>';
 }
 
-openDB().then(() => {
-  document.getElementById("sheet-url").value = localStorage.getItem("sheet_url") || "";
-  renderRecentSearches(); initAboutBuildDate();
-}).catch(err => { alert('Erreur IndexedDB: ' + err.message); });
+/* ===== SHEET : COPIER + SYNC ===== */
+function flatten(e){
+  return {
+    titre:e.titre,
+    description:descriptionOf(e),
+    type:e.type,
+    note:e.note!=null?e.note:"",
+    statut:statutStr(e),
+    horodatage:e.dateFin||""
+  };
+}
+$("copy-sheet-btn").addEventListener("click",async ()=>{
+  const entries=await dbAll();
+  const clean=v=>String(v==null?"":v).replace(/[\t\r\n]+/g," ");
+  const rows=[["Titre","Description","Type","Note","Statut","Horodatage"]];
+  entries.forEach(e=>{ const f=flatten(e); rows.push([clean(f.titre),clean(f.description),clean(f.type),clean(f.note),clean(f.statut),clean(f.horodatage)]); });
+  await copyText(rows.map(r=>r.join("\t")).join("\n"));
+  showToast("\u{1F4CB} Copi\u00e9 ! Colle dans ton Sheet (A1).");
+});
+$("sync-sheet-btn").addEventListener("click",async ()=>{
+  const url=localStorage.getItem("sheet_url");
+  if(!url){ alert("Configure d'abord l'URL dans Options."); return; }
+  const entries=await dbAll();
+  showToast("Envoi au Sheet\u2026",2500);
+  try{
+    const res=await fetch(url,{method:"POST",body:JSON.stringify({action:"sync_all",entries:entries.map(flatten)})});
+    if(res.ok) showToast("Sheet mis \u00e0 jour !");
+    else showToast("Erreur webhook: "+res.status,true);
+  }catch(err){ alert("Erreur sync: "+err.message+"\n(Utilise 📋 Copier en secours.)"); }
+});
+
+/* ===== OPTIONS ===== */
+$("config-sheet-btn").addEventListener("click",()=>{ const c=$("sheet-url-container"); c.style.display=c.style.display==="none"?"block":"none"; });
+$("save-sheet-url").addEventListener("click",()=>{
+  localStorage.setItem("sheet_url",$("sheet-url").value.trim());
+  $("sheet-url-container").style.display="none"; showToast("URL enregistr\u00e9e !");
+});
+$("export-btn").addEventListener("click",async ()=>{
+  const entries=await dbAll();
+  const data={version:"V5",exportDate:new Date().toISOString(),settings:{sheet_url:localStorage.getItem("sheet_url")||""},entries};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=u; a.download="catalogue_backup_"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u);
+  localStorage.setItem("last_backup",String(Date.now()));
+  showToast("Backup export\u00e9 !");
+});
+$("import-btn").addEventListener("click",()=>$("import-file").click());
+$("import-file").addEventListener("change",async ev=>{
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      const list=data.entries||(Array.isArray(data)?data:[]);
+      const existing=await dbAll(); const ids=new Set(existing.map(x=>x.id));
+      let added=0,skipped=0;
+      for(const en of list){
+        if(en&&en.id&&!ids.has(en.id)){ if(!en.titre) en.titre="Sans titre"; if(!en.dateAjout) en.dateAjout=new Date().toISOString(); await dbPut(en); added++; }
+        else skipped++;
+      }
+      if(data.settings&&data.settings.sheet_url){ localStorage.setItem("sheet_url",data.settings.sheet_url); $("sheet-url").value=data.settings.sheet_url; }
+      showToast("Import: "+added+" ajout\u00e9(s), "+skipped+" d\u00e9j\u00e0 pr\u00e9sent(s)");
+      renderHistory();
+    }catch(err){ alert("JSON invalide."); }
+  };
+  r.readAsText(f); ev.target.value="";
+});
+$("clear-local-db").addEventListener("click",async ()=>{
+  if(confirm("Effacer TOUTES tes "+OE+"uvres locales ?")){
+    const all=await dbAll(); for(const e of all) await dbDelete(e.id);
+    renderHistory(); showToast("R\u00e9initialis\u00e9.");
+  }
+});
+function initAbout(){
+  const d=new Date(LAST_UPDATE_DATE);
+  $("about-build-date").textContent="Derni\u00e8re mise \u00e0 jour : "+d.toLocaleString("fr-FR",{timeZone:"Europe/Paris",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" (Paris)";
+}
+
+/* ===== INIT ===== */
+openDB().then(async ()=>{
+  $("sheet-url").value=localStorage.getItem("sheet_url")||"";
+  renderRecentSearches(); initAbout();
+  const entries=await dbAll();
+  const last=parseInt(localStorage.getItem("last_backup")||"0",10);
+  if(entries.length&&Date.now()-last>7*86400000) showToast("\u26A0\uFE0F Pense \u00e0 ta sauvegarde 📤 (Options)",4000);
+  if("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("./sw.js"); }catch(e){} }
+}).catch(err=>alert("Erreur IndexedDB: "+err.message));
 </script>
 </body>
 </html>
