@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes Notes</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0D0A1F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>Mes Notes</h1>
+    <div class="sub">Ma collection d'&oelig;uvres, vue et v&eacute;cue</div>
+  </div>
+  <button id="install-btn" class="icon-btn hidden" title="Installer">⬇</button>
+</header>
+
+<main>
+  <!-- RECHERCHE -->
+  <section id="view-search" class="view active">
+    <div class="chips" id="type-chips"></div>
+    <div class="seg" id="search-mode">
+      <button data-m="simple" class="on">Simple</button>
+      <button data-m="avance">Avanc&eacute;</button>
+    </div>
+    <div class="search-row">
+      <button class="icon-btn" id="manual-btn" title="Ajout manuel">+</button>
+      <input type="text" id="search-input" placeholder="Chercher un titre&hellip;" autocomplete="off">
+      <button class="primary" id="search-btn">Go</button>
+      <button class="icon-btn" id="recent-btn" title="Recherches r&eacute;centes">🕘</button>
+    </div>
+    <div id="adv-panel" class="card hidden">
+      <div class="row2">
+        <label>Ann&eacute;e min <input type="number" id="adv-year-min" placeholder="1900"></label>
+        <label>Ann&eacute;e max <input type="number" id="adv-year-max" placeholder="2026"></label>
+      </div>
+      <div class="row2">
+        <label>Note min <input type="number" id="adv-note-min" min="0" max="10" placeholder="0"></label>
+        <label>Plateforme <input type="text" id="adv-platform" placeholder="PS5, Switch&hellip;"></label>
+      </div>
+      <div class="chips small" id="adv-flags"></div>
+    </div>
+    <div id="recent-pop" class="pop hidden"></div>
+    <div class="status" id="search-status"></div>
+    <div id="fallback"></div>
+    <div class="result-list" id="results"></div>
+  </section>
+
+  <!-- COLLECTION -->
+  <section id="view-collection" class="view">
+    <input type="text" id="col-search" placeholder="Chercher dans ma collection&hellip;" autocomplete="off">
+    <div class="chips small" id="col-filters"></div>
+    <div class="row3">
+      <select id="col-sort">
+        <option value="date-desc">Date ↓</option>
+        <option value="date-asc">Date ↑</option>
+        <option value="note-desc">Note ↓</option>
+        <option value="titre-asc">Titre A-Z</option>
+        <option value="type">Type</option>
+      </select>
+      <label class="range">Note min <input type="range" id="col-notemin" min="0" max="10" value="0"><span id="col-notemin-val">0</span></label>
+      <button class="icon-btn" id="col-group" title="Grouper par type">▤</button>
+    </div>
+    <div class="card" id="col-stats"></div>
+    <div class="card" id="col-top"></div>
+    <div id="col-grid"></div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section id="view-journal" class="view">
+    <div class="hrow" id="j-encours"></div>
+    <div class="card" id="j-bilan">
+      <div class="cal-header">
+        <button class="icon-btn" id="bilan-prev">◀</button>
+        <strong id="bilan-title"></strong>
+        <button class="icon-btn" id="bilan-next">▶</button>
+      </div>
+      <div id="bilan-body"></div>
+    </div>
+    <button class="wide" id="j-cal-btn"> Voir le calendrier</button>
+    <div id="j-cal" class="card hidden"></div>
+    <div id="j-feed"></div>
+  </section>
+
+  <!-- OPTIONS -->
+  <section id="view-options" class="view">
+    <div id="opt-container"></div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- MODALE PRINCIPALE -->
+<div class="overlay" id="modal-overlay" aria-hidden="true">
+  <div class="sheet">
+    <div class="m-head"><div class="m-title" id="m-title"></div><button class="icon-btn" id="modal-close">✕</button></div>
+    <div class="m-body" id="m-body"></div>
+    <div class="m-foot" id="m-foot"></div>
+  </div>
+</div>
+
+<!-- AFFICHE PLEIN ÉCRAN -->
+<div class="overlay dark" id="poster-overlay">
+  <img id="poster-img" alt="">
+  <div class="row2 hidden" id="poster-url-row">
+    <input type="text" id="poster-url-input" placeholder="URL de l'image&hellip;">
+    <button class="primary" id="poster-url-save">OK</button>
+  </div>
+  <div class="bar">
+    <button class="outline" id="poster-link-btn">🔗 URL</button>
+    <button class="outline" id="poster-import-btn">📂 Importer</button>
+    <button id="poster-close">✕ Fermer</button>
+    <input type="file" id="poster-file" accept="image/*" hidden>
+  </div>
+</div>
+
+<!-- QUICK NOTE -->
+<div class="overlay" id="qn-overlay">
+  <div class="sheet low">
+    <div class="m-head"><div class="m-title" id="qn-title"></div><button class="icon-btn" id="qn-close">✕</button></div>
+    <div class="m-body">
+      <div class="chips small" id="qn-kind"></div>
+      <div class="row2 hidden" id="qn-ep-row">
+        <label>S<input type="number" id="qn-s" min="0"></label>
+        <label>E<input type="number" id="qn-e" min="0"></label>
+        <label>/10<input type="number" id="qn-note" min="1" max="10"></label>
+      </div>
+      <textarea id="qn-text" placeholder="Ton entr&eacute;e&hellip;"></textarea>
+    </div>
+    <div class="m-foot"><button class="primary" id="qn-save">Ajouter</button><button id="qn-cancel">Annuler</button></div>
+  </div>
+</div>
+
+<!-- SCAN EAN -->
+<div class="overlay dark" id="ean-overlay">
+  <video id="ean-video" playsinline></video>
+  <div class="bar"><button id="ean-cancel">✕ Annuler le scan</button></div>
+</div>
+
+<nav class="tabbar">
+  <button class="active" data-view="search"><span class="ic" data-ic="search"></span>Recherche</button>
+  <button data-view="collection"><span class="ic" data-ic="library"></span>Collection</button>
+  <button data-view="journal"><span class="ic" data-ic="book"></span>Journal</button>
+  <button data-view="options" class="emoji-only">🛠️</button>
+</nav>
+
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
