@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Design V6</title>
+<style>
+:root {
+  --bg: #0D0A1F;
+  --surface: #17112E;
+  --surface-2: #1F1738;
+  --border: #2A1F4A;
+  --accent: #B24BF3;
+  --accent-2: #7F5AF0;
+  --text: #EFECE6;
+  --text-dim: #8B83A8;
+  --fav: #FF5DA2;
+  --encours: #2CB67D;
+  --avoir: #F2E527;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--fav));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle { color: var(--text-dim); font-size: 13px; margin-bottom: 28px; }
+
+.section-title {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 32px 0 16px;
+}
+
+/* Chips de type */
+.type-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chip.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(178, 75, 243, 0.4);
+}
+
+/* Cartes en grille */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; perspective: 1000px; }
+
+/* BOÎTIERS PHYSIQUES */
+.box {
+  position: relative;
+  aspect-ratio: 2/3;
+  border-radius: 6px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.box:hover, .box:active {
+  transform: translateY(-4px) rotateY(-3deg);
+}
+.box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+  pointer-events: none;
+}
+.box-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 🎬 Film - Blu-ray */
+.bluray { box-shadow: 0 6px 16px rgba(0,0,0,0.5), -4px 0 0 #1a3a8a; }
+.bluray::before {
+  content: '';
+  position: absolute;
+  left: -4px; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, #3d6bc7, #1a3a8a);
+  z-index: 2;
+}
+.bluray::after {
+  content: 'FILM';
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(0,0,0,0.7);
+  color: #4d8aff;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 3;
+}
+
+/* 📺 Série - TV */
+.tv { box-shadow: 0 0 0 3px #0a0a0a, 0 0 0 6px var(--border), 0 8px 20px rgba(0,0,0,0.6); }
+.tv:hover { box-shadow: 0 0 0 3px #0a0a0a, 0 0 0 6px var(--accent), 0 0 20px rgba(178,75,243,0.4); }
+
+/* 🎮 Jeu - boîte de jeu */
+.game { box-shadow: 0 6px 16px rgba(0,0,0,0.5); }
+.game::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 20px;
+  background: linear-gradient(135deg, #ff3b3b, #c10000);
+  z-index: 2;
+}
+.game.ps5::before { background: linear-gradient(135deg, #006FCD, #003087); }
+.game.switch::before { background: linear-gradient(135deg, #E60012, #9C0A0B); }
+.game::after {
+  content: '🎮';
+  position: absolute;
+  bottom: 6px; right: 6px;
+  font-size: 11px;
+  background: rgba(0,0,0,0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+  z-index: 3;
+}
+
+/* 📖 Manga - reliure */
+.manga { box-shadow: 6px 0 0 #3d2817, 0 6px 14px rgba(0,0,0,0.5); }
+.manga::before {
+  content: '';
+  position: absolute;
+  right: -6px; top: 0; bottom: 0; width: 6px;
+  background: repeating-linear-gradient(0deg, #3d2817, #3d2817 2px, #5a3a22 2px, #5a3a22 4px);
+  z-index: 2;
+}
+
+/* 📕 BD - album cartonné */
+.bd {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+  border: 4px solid #8B6F47;
+  border-radius: 4px;
+}
+
+/* 📚 Roman - livre tranche */
+.book { box-shadow: -6px 0 0 #2A1F4A, 0 6px 14px rgba(0,0,0,0.5); }
+.book::before {
+  content: '';
+  position: absolute;
+  left: -6px; top: 0; bottom: 0; width: 6px;
+  background: repeating-linear-gradient(0deg, var(--border), var(--border) 1px, #1a1229 1px, #1a1229 3px);
+  z-index: 2;
+}
+
+/* Badge "En cours" avec breathing glow */
+.encours-badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: var(--encours);
+  color: #0a0a0a;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  z-index: 4;
+  animation: breathe 3s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(44,182,125,0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(44,182,125,0); }
+}
+
+/* Coup de cœur */
+.fav-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  color: var(--fav);
+  font-size: 16px;
+  z-index: 4;
+  filter: drop-shadow(0 0 4px rgba(255,93,162,0.6));
+}
+
+/* Labels en dessous */
+.box-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Bouton moderne */
+.btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(178,75,243,0.3);
+  margin-top: 20px;
+}
+.btn:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(178,75,243,0.3); }
+
+/* Scrollbar custom */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<h1>Test Design V6</h1>
+<p class="subtitle">Violet Espagnol Royal · Boîtiers physiques · Animations subtiles</p>
+
+<div class="section-title">🎛️ Sélecteur de type</div>
+<div class="type-chips" id="chips">
+  <div class="chip active">🎬 Film</div>
+  <div class="chip">📺 Série</div>
+  <div class="chip">🎮 Jeu</div>
+  <div class="chip">📖 Manga</div>
+  <div class="chip">📕 BD</div>
+  <div class="chip">📚 Roman</div>
+  <div class="chip">+ Autre…</div>
+</div>
+
+<div class="section-title">🎞️ Boîtiers physiques</div>
+<div class="grid">
+  <div>
+    <div class="box bluray">
+      <div class="fav-badge">♥</div>
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#8a3b2a,#2a1a3a);"></div>
+    </div>
+    <div class="box-label">Film · Blu-ray</div>
+  </div>
+
+  <div>
+    <div class="box tv">
+      <div class="encours-badge">⏳ EN COURS</div>
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#1a4a6a,#0a2a2a);"></div>
+    </div>
+    <div class="box-label">Série · TV (breathing glow)</div>
+  </div>
+
+  <div>
+    <div class="box game">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#6a1a1a,#2a0a0a);margin-top:20px;height:calc(100% - 20px);"></div>
+    </div>
+    <div class="box-label">Jeu · Switch</div>
+  </div>
+
+  <div>
+    <div class="box game ps5">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#0a2a4a,#0a0a2a);margin-top:20px;height:calc(100% - 20px);"></div>
+    </div>
+    <div class="box-label">Jeu · PS5</div>
+  </div>
+
+  <div>
+    <div class="box manga">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#e8d5a7,#8a6a3a);"></div>
+    </div>
+    <div class="box-label">Manga · Reliure</div>
+  </div>
+
+  <div>
+    <div class="box bd">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#4a3a8a,#1a1a3a);"></div>
+    </div>
+    <div class="box-label">BD · Cartonné</div>
+  </div>
+
+  <div>
+    <div class="box book">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#3a5a3a,#1a2a1a);"></div>
+    </div>
+    <div class="box-label">Roman · Tranche</div>
+  </div>
+
+  <div>
+    <div class="box" style="border:1px solid var(--border);">
+      <div class="encours-badge">⏳</div>
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,#4a2a5a,#2a1a3a);"></div>
+    </div>
+    <div class="box-label">Type libre</div>
+  </div>
+</div>
+
+<button class="btn" onclick="alert('Animation testée !')">✨ Tester une action</button>
+
+<script>
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
