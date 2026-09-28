@@ -102,7 +102,7 @@ function ic(n) {
    2. CONSTANTES GLOBALES
    ──────────────────────────────────────────────────────────────── */
 var PROXY    = "https://catalogue-api.nicolasarnaud1010.workers.dev"; // Proxy CORS pour TMDB/RAWG/Books
-var BUILD    = "2026-09-30T03:00:00+02:00";                           // Date de build (affichée dans À propos)
+var BUILD    = "2026-09-28T23:00+02:00";                           // Date de build (affichée dans À propos)
 var TMDB_IMG = "https://image.tmdb.org/t/p/w200";                     // Base URL des affiches TMDB
 var OE       = "\u0153";                                              // caractère œ
 var OEC      = "\u0152";                                              // caractère Œ
