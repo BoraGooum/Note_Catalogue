@@ -1,6 +1,6 @@
-var ST={entries:[],view:"search",colFilter:"all",colQuery:"",colSort:"date-desc",colNoteMin:0,recapDate:new Date(),calOpen:false,calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",recent:[],menuEntry:null};
+var ST={entries:[],view:"search",colFilter:"all",colQuery:"",colSort:"date-desc",colNoteMin:0,recapDate:new Date(),calOpen:false,calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",recent:[],menuEntry:null,fluxFilter:{types:[],status:[],noteRange:null,ownedOnly:false,search:"",sort:"date-desc"},currentReaderEntry:null,currentReaderJournalIdx:null};
 var overlayStack=[];
-var FOOT_IC={"Modifier":"edit","Noter":"plus","Fermer":"x","Enregistrer":"save","Annuler":"x","Ajouter":"plus","Copier":"copy"};
+var FOOT_IC={"Modifier":"edit","Noter":"plus","Fermer":"x","Enregistrer":"save","Annuler":"x","Ajouter":"plus","Copier":"clipboard-copy","Supprimer":"trash-2"};
 function el(t,c,h){var d=document.createElement(t);if(c)d.className=c;if(h!=null)d.innerHTML=h;return d;}
 function emptyBox(icn,txt){var d=el("div","empty");d.innerHTML='<span class="ic">'+ic(icn)+"</span>"+esc(txt);return d;}
 function toast(m,t){var e=document.getElementById("toast");e.textContent=m;e.classList.add("show");setTimeout(function(){e.classList.remove("show");},t||1800);}
@@ -23,6 +23,15 @@ function setModal(title,bodyNode,foot){
   }
   showOverlay("modal-overlay");
 }
+function showConfirm(title,msg,onYes,onNo){
+  document.getElementById("confirm-title").textContent=title;
+  document.getElementById("confirm-body").innerHTML='<p style="font-size:14px;line-height:1.6;">'+esc(msg)+'</p>';
+  var f=document.getElementById("confirm-foot");f.innerHTML="";
+  var noBtn=el("button","","Annuler");noBtn.addEventListener("click",function(){hideOverlay("confirm-overlay");if(onNo)onNo();});
+  var yesBtn=el("button","primary","Supprimer");yesBtn.addEventListener("click",function(){hideOverlay("confirm-overlay");if(onYes)onYes();});
+  f.appendChild(noBtn);f.appendChild(yesBtn);
+  showOverlay("confirm-overlay");
+}
 async function refreshAll(){ST.entries=await dbAll();renderCollection();renderJournal();}
 function neonClass(e){if(e.aVoir)return "n-voir";if(e.enCours)return "n-enc";return "n-fini";}
 function statIcon(e){if(e.aVoir)return ic("eye");if(e.enCours)return ic("hourglass");return ic("check");}
@@ -39,6 +48,9 @@ function renderPoster(e,withMenu){
   p.appendChild(img);
   if(e.note!=null)p.appendChild(el("div","pnote",e.note+"/10"));
   var st=el("div","pstat");st.innerHTML=statIcon(e);p.appendChild(st);
+  var reviews=countReviews(e);
+  if(reviews>1){var badge=el("div","pbadge","\u2713\u00d7"+reviews);p.appendChild(badge);}
+  if(e.sousTitre){var prog=el("div","pprog",esc(e.sousTitre));p.appendChild(prog);}
   if(withMenu!==false){var mb=el("button","pmenu");mb.innerHTML=ic("more");mb.addEventListener("click",function(ev){ev.stopPropagation();openMenu(e);});p.appendChild(mb);}
   return p;
 }
@@ -52,7 +64,7 @@ function openMenu(e){
   items.push(["duplicate","Dupliquer",function(){closeMenu();duplicateEntry(e);}]);
   items.push(["share","Partager en image",function(){closeMenu();shareJPG(e);}]);
   items.push(["link","SensCritique",function(){closeMenu();window.open("https://www.senscritique.com/recherche?query="+encodeURIComponent(e.titre),"_blank");}]);
-  items.push(["trash","Supprimer",function(){closeMenu();if(confirm("Supprimer "+e.titre+" ?")){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});}},"danger"]);
+  items.push(["trash","Supprimer",function(){closeMenu();showConfirm("Supprimer","Supprimer \u00ab"+e.titre+"\u00bb et toutes ses entr\u00e9es ?",function(){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});});}},"danger"]);
   for(var i=0;i<items.length;i++){
     var it=items[i];
     var m=el("div","mitem"+(it[3]?" "+it[3]:""));
@@ -149,12 +161,12 @@ function showDetail(e){
   var jl=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);
   if(jl.length){
     var tl=el("div","tl");
-    jl.forEach(function(x){
+    jl.forEach(function(x,idx){
       var t=el("div","tl-e");
       var tag=x.kind==="time"?x.ts:(x.kind==="ep"?("S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" \u2022 "+x.note+"/10":"")):"libre");
       t.appendChild(el("div","w",esc(tag)));
       var xx=el("div","x",esc(x.text||""));
-      xx.addEventListener("click",function(){openReader(e.titre,tag,x.text||"");});
+      xx.addEventListener("click",function(){openReaderForEntry(e,idx);});
       t.appendChild(xx);
       tl.appendChild(t);
     });
@@ -184,13 +196,18 @@ function openNoteEditor(e){
   body.appendChild(clearBtn);
   setModal("Modifier la note",body,[["Fermer","",closeModal]]);
 }
-function openReader(title,sub,text){
-  document.getElementById("r-title").textContent=title;
-  document.getElementById("r-sub").textContent=sub||"";
-  document.getElementById("r-body").textContent=text||"";
+function openReaderForEntry(entry,idx){
+  ST.currentReaderEntry=entry;
+  ST.currentReaderJournalIdx=idx;
+  var jl=entry.journal||(entry.comment?[{kind:"free",text:entry.comment}]:[]);
+  var x=jl[idx]||{text:""};
+  var tag=x.kind==="time"?x.ts:(x.kind==="ep"?("S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" \u2022 "+x.note+"/10":"")):"libre");
+  document.getElementById("r-title").textContent=entry.titre;
+  document.getElementById("r-sub").textContent=tag;
+  document.getElementById("r-body").textContent=x.text||"";
   showOverlay("reader-overlay");
 }
-function closeReader(){hideOverlay("reader-overlay");}
+function closeReader(){hideOverlay("reader-overlay");ST.currentReaderEntry=null;ST.currentReaderJournalIdx=null;}
 function renderPanel(entry){
   ST.editing=entry||null;
   if(entry){
@@ -255,7 +272,7 @@ function renderPanel(entry){
   sc(function(){return ST.isEnc;},function(v){ST.isEnc=v;},"en cours","hourglass");
   sc(function(){return ST.isVoir;},function(v){ST.isVoir=v;},"\u00e0 voir","eye");
   body.appendChild(sw);
-  var dIn=field("Date",el("input"));dIn.id="p-date";dIn.type="date";dIn.value=entry?(entry.dateFin||""):todayFR().split("/").reverse().join("-");
+  var dIn=field("Date",el("input"));dIn.id="p-date";dIn.type="date";dIn.value=entry?(entry.dateFin||""):todayFR();
   var cIn=field("Commentaire rapide",el("textarea"));cIn.id="p-comment";cIn.value=entry?(entry.comment||""):"";
   var aw=el("div");aw.style.marginBottom="12px";aw.appendChild(el("label","","Affiche"));
   var ar=el("div");ar.style.display="flex";ar.style.gap="8px";ar.style.alignItems="center";
@@ -482,10 +499,10 @@ function duplicateEntry(e){
     ST.panelType=e.type;
   },60);
 }
-function quickNoteOpen(e){
+function quickNoteOpen(e,preText){
   ST.qnEntry=e;ST.qnKind="time";
   document.getElementById("qn-title").textContent="Noter : "+e.titre;
-  document.getElementById("qn-text").value="";
+  document.getElementById("qn-text").value=preText||"";
   document.getElementById("qn-when").value="";
   document.getElementById("qn-when-row").classList.remove("hidden");
   document.getElementById("qn-ep-row").classList.add("hidden");
@@ -525,6 +542,47 @@ async function quickNoteSave(){
   toast("Entr\u00e9e ajout\u00e9e");
   quickNoteClose();refreshAll();
 }
+function getFluxEntries(){
+  var y=ST.calDate.getFullYear(),mo=ST.calDate.getMonth();
+  var feed=[];
+  ST.entries.forEach(function(en){
+    (en.journal||[]).forEach(function(x,idx){
+      var entryDate=parseDateFR(en.dateFin);
+      if(entryDate&&entryDate.y===y&&entryDate.mo===mo+1){
+        feed.push({e:en,x:x,idx:idx,at:x.at||0});
+      }
+    });
+  });
+  feed.sort(function(a,b){return b.at-a.at;});
+  var f=ST.fluxFilter;
+  if(f.types.length>0)feed=feed.filter(function(it){return f.types.indexOf(it.e.type)>=0;});
+  if(f.status.length>0){
+    feed=feed.filter(function(it){
+      if(f.status.indexOf("enc")>=0&&it.e.enCours)return true;
+      if(f.status.indexOf("fini")>=0&&!it.e.enCours&&!it.e.aVoir)return true;
+      if(f.status.indexOf("voir")>=0&&it.e.aVoir)return true;
+      return false;
+    });
+  }
+  if(f.noteRange){
+    if(f.noteRange==="none")feed=feed.filter(function(it){return it.e.note==null;});
+    else if(f.noteRange==="low")feed=feed.filter(function(it){return it.e.note!=null&&it.e.note<=3;});
+    else if(f.noteRange==="mid")feed=feed.filter(function(it){return it.e.note!=null&&it.e.note>=4&&it.e.note<=6;});
+    else if(f.noteRange==="high")feed=feed.filter(function(it){return it.e.note!=null&&it.e.note>=7&&it.e.note<=8;});
+    else if(f.noteRange==="top")feed=feed.filter(function(it){return it.e.note!=null&&it.e.note>=9;});
+  }
+  if(f.ownedOnly)feed=feed.filter(function(it){return it.e.inCollection;});
+  if(f.search){
+    var q=norm(f.search);
+    feed=feed.filter(function(it){return norm(it.e.titre).indexOf(q)>=0||norm(it.x.text||"").indexOf(q)>=0;});
+  }
+  if(f.sort==="date-desc")feed.sort(function(a,b){return b.at-a.at;});
+  else if(f.sort==="date-asc")feed.sort(function(a,b){return a.at-b.at;});
+  else if(f.sort==="note-desc")feed.sort(function(a,b){return (b.e.note!=null?b.e.note:-1)-(a.e.note!=null?a.e.note:-1);});
+  else if(f.sort==="note-asc")feed.sort(function(a,b){return (a.e.note!=null?a.e.note:99)-(b.e.note!=null?b.e.note:99);});
+  else if(f.sort==="titre-asc")feed.sort(function(a,b){return a.e.titre.localeCompare(b.e.titre,"fr");});
+  return feed;
+}
 async function renderJournal(){
   var enc=ST.entries.filter(function(e){return e.enCours;});
   var row=document.getElementById("j-encours");row.innerHTML="";
@@ -544,29 +602,22 @@ async function renderJournal(){
   var y=ST.calDate.getFullYear(),mo=ST.calDate.getMonth();
   var names=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
   document.getElementById("bilan-title").textContent=names[mo]+" "+y;
-  var feed=[];
-  ST.entries.forEach(function(en){
-    (en.journal||[]).forEach(function(x){
-      var entryDate=parseDateFR(en.dateFin);
-      if(entryDate&&entryDate.y===y&&entryDate.mo===mo+1){
-        feed.push({e:en,x:x,at:x.at||0});
-      }
-    });
-  });
-  feed.sort(function(a,b){return b.at-a.at;});
+  var feed=getFluxEntries();
   var f=document.getElementById("j-feed");f.innerHTML="";
   if(!feed.length)f.appendChild(emptyBox("book","Aucune entr\u00e9e ce mois-ci."));
   feed.slice(0,60).forEach(function(it){
     var item=el("div","fitem");
     var posterDiv=renderPoster(it.e,false);
+    posterDiv.addEventListener("click",function(ev){ev.stopPropagation();openReaderForEntry(it.e,it.idx);});
     item.appendChild(posterDiv);
-    var b=el("div");
+    var b=el("div","ftext-area");
     var tag=it.x.kind==="time"?it.x.ts:(it.x.kind==="ep"?("S"+pad2(it.x.s)+"E"+pad2(it.x.e)+(it.x.note!=null?" \u2022 "+it.x.note+"/10":"")):"libre");
     b.appendChild(el("div","ftime",esc(tag)));
-    b.appendChild(el("div","ftext",esc(it.x.text||"")));
+    var textEl=el("div","ftext",esc(it.x.text||""));
+    textEl.addEventListener("click",function(ev){ev.stopPropagation();quickNoteOpen(it.e,it.x.text||"");});
+    b.appendChild(textEl);
     b.appendChild(el("div","fwork",esc(it.e.titre)));
     item.appendChild(b);
-    item.addEventListener("click",function(){openReader(it.e.titre,tag,it.x.text||"");});
     f.appendChild(item);
   });
   if(ST.calOpen)renderCalendar();
@@ -633,6 +684,7 @@ function renderOptions(){
     {icon:"sheet",label:"Sheet",fn:openOptSheet},
     {icon:"save",label:"Sauvegarde",fn:openOptSave},
     {icon:"palette",label:"Apparence",fn:openOptAppearance},
+    {icon:"bar-chart-3",label:"Stats",fn:openOptStats},
     {icon:"tag",label:"Types",fn:openOptTypes},
     {icon:"search",label:"Recherche",fn:openOptSearch},
     {icon:"phone",label:"Application",fn:openOptApp},
@@ -655,7 +707,7 @@ function openOptSheet(){
   saveBtn.addEventListener("click",function(){localStorage.setItem("sheet_url",uIn.value.trim());toast("URL enregistr\u00e9e");});
   body.appendChild(saveBtn);
   body.appendChild(el("div",null,"<br>"));
-  var copyBtn=el("button");copyBtn.innerHTML='<span class="ic">'+ic("copy")+"</span>Copier (TSV)";
+  var copyBtn=el("button");copyBtn.innerHTML='<span class="ic">'+ic("clipboard-copy")+"</span>Copier (TSV)";
   copyBtn.addEventListener("click",function(){copyTSV();});
   body.appendChild(copyBtn);
   body.appendChild(el("div",null,"<br>"));
@@ -674,6 +726,10 @@ function openOptSave(){
   impBtn.addEventListener("click",function(){importJSON();});
   body.appendChild(impBtn);
   body.appendChild(el("div",null,"<br>"));
+  var expTSVBtn=el("button");expTSVBtn.innerHTML='<span class="ic">'+ic("calendar-range")+"</span>Export journal (TSV)";
+  expTSVBtn.addEventListener("click",function(){openExportTSVModal();});
+  body.appendChild(expTSVBtn);
+  body.appendChild(el("div",null,"<br>"));
   var lb=localStorage.getItem("last_backup");
   body.appendChild(el("div","","Dernier backup : <b>"+(lb?new Date(parseInt(lb,10)).toLocaleDateString("fr-FR"):"jamais")+"</b>"));
   body.appendChild(el("div",null,"<br>"));
@@ -687,6 +743,21 @@ function openOptSave(){
   });
   body.appendChild(pill);
   setModal("Sauvegarde",body,[["Fermer","",closeModal]]);
+}
+function openExportTSVModal(){
+  var body=el("div");
+  var names=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
+  var y=ST.calDate.getFullYear(),mo=ST.calDate.getMonth();
+  body.appendChild(el("div","","<b>"+names[mo]+" "+y+"</b>"));
+  body.appendChild(el("div",null,"<br>"));
+  var btn1=el("button","wide");btn1.innerHTML='<span class="ic">'+ic("clipboard-copy")+"</span>Copier ce mois";
+  btn1.addEventListener("click",function(){copyTSVMonth(y,mo+1);closeModal();});
+  body.appendChild(btn1);
+  body.appendChild(el("div",null,"<br>"));
+  var btn2=el("button","wide");btn2.innerHTML='<span class="ic">'+ic("clipboard-copy")+"</span>Copier tout le journal";
+  btn2.addEventListener("click",function(){copyTSVAll();closeModal();});
+  body.appendChild(btn2);
+  setModal("Export journal",body,[["Fermer","",closeModal]]);
 }
 function openOptAppearance(){
   var s=settingsLoad();
@@ -719,6 +790,90 @@ function openOptAppearance(){
   hTog.addEventListener("click",function(){s.hcMode=!s.hcMode;settingsSave(s);applySettings();hTog.classList.toggle("on",s.hcMode);});
   body.appendChild(hTog);
   setModal("Apparence",body,[["Fermer","",closeModal]]);
+}
+function openOptStats(){
+  var body=el("div");
+  var entries=ST.entries;
+  var total=entries.length;
+  var byType={};
+  var byStatus={fini:0,enc:0,voir:0};
+  var byColl={phys:0,demat:0,no:0};
+  var notes=[],sum=0,cnt=0;
+  var totalEntries=0;
+  var monthCount={};
+  var reviewCount={};
+  entries.forEach(function(e){
+    byType[e.type]=(byType[e.type]||0)+1;
+    if(e.enCours)byStatus.enc++;
+    else if(e.aVoir)byStatus.voir++;
+    else byStatus.fini++;
+    if(e.inCollection){
+      if(e.support==="D\u00e9mat\u00e9rialis\u00e9"||e.support==="Streaming"||e.support==="Num\u00e9rique")byColl.demat++;
+      else byColl.phys++;
+    }else byColl.no++;
+    if(e.note!=null){notes.push(e.note);sum+=e.note;cnt++;}
+    var rev=countReviews(e);
+    totalEntries+=rev;
+    if(rev>1)reviewCount[e.titre]=rev;
+    var p=parseDateFR(e.dateFin);
+    if(p){
+      var key=p.y+"-"+pad2(p.mo);
+      monthCount[key]=(monthCount[key]||0)+rev;
+    }
+  });
+  var avg=cnt?(sum/cnt).toFixed(1):"\u2014";
+  var maxNote=Math.max.apply(null,notes.concat([0]));
+  var minNote=cnt?Math.min.apply(null,notes):0;
+  var modeNote=notes.length?notes.sort(function(a,b){return notes.filter(function(v){return v===a;}).length-notes.filter(function(v){return v===b;}).length;})[notes.length-1]:"\u2014";
+  var mostActiveMonth=Object.keys(monthCount).sort(function(a,b){return monthCount[b]-monthCount[a];})[0]||"\u2014";
+  var mostReviewed=Object.keys(reviewCount).sort(function(a,b){return reviewCount[b]-reviewCount[a];})[0]||"\u2014";
+  var mostReviewedCount=reviewCount[mostReviewed]||0;
+  var sec1=el("div","stats-section");
+  sec1.appendChild(el("h4","","Par type"));
+  CORE_TYPES.forEach(function(t){
+    var n=byType[t.name]||0;
+    var typeEntries=entries.filter(function(e){return e.type===t.name;});
+    var typeSum=0,typeCnt=0;
+    typeEntries.forEach(function(e){if(e.note!=null){typeSum+=e.note;typeCnt++;}});
+    var typeAvg=typeCnt?(typeSum/typeCnt).toFixed(1):"\u2014";
+    var row=el("div","stats-row");
+    row.innerHTML='<span>'+esc(t.name)+'</span><span><b>'+n+'</b> <span class="dim">(moy '+typeAvg+')</span></span>';
+    sec1.appendChild(row);
+  });
+  body.appendChild(sec1);
+  var sec2=el("div","stats-section");
+  sec2.appendChild(el("h4","","Par statut"));
+  [["Fini",byStatus.fini],["En cours",byStatus.enc],["\u00c0 voir",byStatus.voir]].forEach(function(s){
+    var row=el("div","stats-row");
+    row.innerHTML='<span>'+s[0]+'</span><b>'+s[1]+'</b>';
+    sec2.appendChild(row);
+  });
+  body.appendChild(sec2);
+  var sec3=el("div","stats-section");
+  sec3.appendChild(el("h4","","Collection"));
+  [["Physique",byColl.phys],["D\u00e9mat\u00e9rialis\u00e9",byColl.demat],["Non poss\u00e9d\u00e9",byColl.no]].forEach(function(s){
+    var row=el("div","stats-row");
+    row.innerHTML='<span>'+s[0]+'</span><b>'+s[1]+'</b>';
+    sec3.appendChild(row);
+  });
+  body.appendChild(sec3);
+  var sec4=el("div","stats-section");
+  sec4.appendChild(el("h4","","Notes"));
+  [["Total \u0153uvres",total],["Moyenne g\u00e9n\u00e9rale",avg+"/10"],["Meilleure note",maxNote+"/10"],["Pire note",minNote+"/10"],["Note la plus fr\u00e9quente",modeNote+"/10"]].forEach(function(s){
+    var row=el("div","stats-row");
+    row.innerHTML='<span>'+s[0]+'</span><b>'+s[1]+'</b>';
+    sec4.appendChild(row);
+  });
+  body.appendChild(sec4);
+  var sec5=el("div","stats-section");
+  sec5.appendChild(el("h4","","Activit\u00e9"));
+  [["Total entr\u00e9es",totalEntries],["Mois le plus actif",mostActiveMonth.replace("-","/ ")+" ("+(monthCount[mostActiveMonth]||0)+")"],["\u0152uvre la plus revue",mostReviewed+(mostReviewedCount>1?" (\u2713\u00d7"+mostReviewedCount+")":"")]].forEach(function(s){
+    var row=el("div","stats-row");
+    row.innerHTML='<span>'+s[0]+'</span><b>'+s[1]+'</b>';
+    sec5.appendChild(row);
+  });
+  body.appendChild(sec5);
+  setModal("Statistiques",body,[["Fermer","",closeModal]]);
 }
 function openOptTypes(){
   var body=el("div");
@@ -802,16 +957,19 @@ function openOptAbout(){
 function openOptDanger(){
   var body=el("div");
   var clearBtn=el("button");clearBtn.innerHTML='<span class="ic">'+ic("trash")+"</span>Vider la collection";
-  clearBtn.addEventListener("click",async function(){
-    if(confirm("Effacer TOUTES tes "+OE+"uvres ?")){
-      for(var i=0;i<ST.entries.length;i++)await dbDelete(ST.entries[i].id);
-      refreshAll();toast("Vid\u00e9");closeModal();
-    }
+  clearBtn.addEventListener("click",function(){
+    showConfirm("Vider la collection","Effacer TOUTES tes "+OE+"uvres ? Cette action est irr\u00e9versible.",function(){
+      (async function(){for(var i=0;i<ST.entries.length;i++)await dbDelete(ST.entries[i].id);refreshAll();toast("Vid\u00e9");})();
+    });
   });
   body.appendChild(clearBtn);
   body.appendChild(el("div",null,"<br>"));
   var resetBtn=el("button");resetBtn.innerHTML='<span class="ic">'+ic("x")+"</span>R\u00e9initialiser r\u00e9glages";
-  resetBtn.addEventListener("click",function(){localStorage.removeItem("settings");settingsSave(Object.assign({},SETTINGS_DEFAULTS));applySettings();toast("R\u00e9glages r\u00e9initialis\u00e9s");closeModal();});
+  resetBtn.addEventListener("click",function(){
+    showConfirm("R\u00e9initialiser","Remettre tous les r\u00e9glages par d\u00e9faut ?",function(){
+      localStorage.removeItem("settings");settingsSave(Object.assign({},SETTINGS_DEFAULTS));applySettings();toast("R\u00e9glages r\u00e9initialis\u00e9s");
+    });
+  });
   body.appendChild(resetBtn);
   setModal("Danger",body,[["Fermer","",closeModal]]);
 }
