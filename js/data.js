@@ -57,7 +57,7 @@ smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 function ic(n){return I[n]||'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';}
 
 var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
-var BUILD="2026-09-29T18:00:00+02:00";
+var BUILD="2026-09-29T20:00:00+02:00";
 var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var OE="\u0153",OEC="\u0152";
 var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#121216'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#9C93B8' text-anchor='middle'>pas d'affiche</text></svg>");
