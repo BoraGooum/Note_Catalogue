@@ -21,11 +21,8 @@
 <main>
 <section id="view-search" class="view active">
 <div class="sbar">
-<div class="sbar-wrap">
-<span class="search-ic" id="search-loupe"><span class="ic" data-ic="search"></span></span>
 <input type="search" id="search-input" placeholder="Chercher un titre..." enterkeyhint="search" autocomplete="off">
-</div>
-<button class="menu-btn" id="search-menu-btn"><span class="ic" data-ic="more-horizontal"></span></button>
+<button class="loupe-btn" id="search-loupe"><span class="ic" data-ic="search"></span></button>
 </div>
 <div class="type-dropdown">
 <div class="type-dropdown-btn" id="type-btn">
@@ -46,7 +43,8 @@
 
 <section id="view-collection" class="view">
 <div class="sbar">
-<input type="search" id="col-search" placeholder="Chercher dans ma collection..." autocomplete="off">
+<input type="search" id="col-search" placeholder="Chercher dans ma bibliotheque..." autocomplete="off">
+<button class="loupe-btn" id="col-loupe"><span class="ic" data-ic="search"></span></button>
 </div>
 <div class="tools">
 <button id="col-filter-btn"><span class="ic" data-ic="sliders-horizontal"></span>Filtres</button>
@@ -55,6 +53,7 @@
 </section>
 
 <section id="view-journal" class="view">
+<button class="primary wide" id="journal-add-btn" style="margin-bottom:16px;"><span class="ic" data-ic="plus"></span>Note rapide</button>
 <div class="bilan-mini" id="bilan-mini">
 <span class="ic" data-ic="calendar"></span>
 <strong id="bilan-date"></strong>
@@ -62,7 +61,7 @@
 <div class="hrow" id="j-encours"></div>
 <div class="section-title">
 <span class="ic" data-ic="book-open"></span>
-<span>Journal</span>
+<span>Notes du mois</span>
 </div>
 <div id="j-feed"></div>
 </section>
@@ -108,7 +107,7 @@
 <div class="chips small" id="qn-kind"></div>
 <div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label></div>
 <div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><label>/10<input type="number" id="qn-note" inputmode="numeric" min="1" max="10"></label></div>
-<textarea id="qn-text" placeholder="Ton entree..."></textarea>
+<textarea id="qn-text" placeholder="Ta note libre..."></textarea>
 </div>
 <div class="m-foot"><button class="primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
@@ -174,8 +173,8 @@
 
 <nav class="tabbar">
 <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
-<button data-view="collection"><span class="ic" data-ic="library"></span><span>Collection</span></button>
-<button data-view="journal"><span class="ic" data-ic="book-open"></span><span>Journal</span></button>
+<button data-view="collection"><span class="ic" data-ic="library"></span><span>Bibliotheque</span></button>
+<button data-view="journal" id="tab-journal"><span class="badge-dot" id="journal-badge" style="display:none;"></span><span class="ic" data-ic="book-open"></span><span>Journal</span></button>
 <button data-view="options"><span class="ic" data-ic="settings"></span><span>Options</span></button>
 </nav>
 
