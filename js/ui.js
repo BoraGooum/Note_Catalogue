@@ -342,7 +342,7 @@ function renderOptions(){
   row(g3,"Contraste \u00e9lev\u00e9",tog(s.hcMode,function(v){s.hcMode=v;settingsSave(s);applySettings();}));
   var g4=group("tag","Types personnalis\u00e9s");
   var ct=loadCustomTypes();
-  ct.forEach(function(t,i){row(g4,esc(t.name),btn("trash","",function(){var used=ST.entries.some(function(e){return e.type===t.name;});if(used){toast("Type encore utilis\u00e9.");return;}ct.splice(i,1);saveCustomTypes(ct);renderOptions();buildTypeChips();},""));} );
+  ct.forEach(function(t,i){row(g4,esc(t.name),btn("trash","",function(){var used=ST.entries.some(function(e){return e.type===t.name;});if(used){toast("Type encore utilis\u00e9.");return;}ct.splice(i,1);saveCustomTypes(ct);renderOptions();buildTypeChips();},""));});
   var nt=el("input");nt.placeholder="Nouveau type\u2026";nt.style.maxWidth="55%";
   row(g4,"",nt);
   row(g4,"",btn("plus","Ajouter",function(){var v=nt.value.trim();if(!v)return;if(allTypes().indexOf(v)>=0){toast("Existe d\u00e9j\u00e0.");return;}ct.push({name:v});saveCustomTypes(ct);renderOptions();buildTypeChips();}));
