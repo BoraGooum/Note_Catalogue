@@ -86,6 +86,7 @@ function saveCustomTypes(l){localStorage.setItem("custom_types",JSON.stringify(l
 function allTypes(){return CORE_TYPES.concat(loadCustomTypes().map(function(t){return t.name;}));}
 function allTypesWithIcons(){return CORE_TYPES.concat(loadCustomTypes().map(function(t){return {name:t.name,icon:"tag"};}));}
 var pad2=function(n){return String(n).padStart(2,"0");};
+function todayFR(){var d=new Date();return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+"/"+d.getFullYear();}
 function nowStamp(){var d=new Date();return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+" \u00e0 "+pad2(d.getHours())+"h"+pad2(d.getMinutes());}
 function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9]/g,"");}
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
