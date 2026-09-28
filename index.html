@@ -15,176 +15,168 @@
 </head>
 <body>
 <header>
-  <span class="ic" data-ic="library"></span>
-  <h1>Ma Collection</h1>
+<span class="ic" data-ic="library"></span>
+<h1>Ma Collection</h1>
 </header>
 <main>
-  <section id="view-search" class="view active">
-    <div class="sbar">
-      <div class="sbar-wrap">
-        <span class="search-ic" id="search-loupe"><span class="ic" data-ic="search"></span></span>
-        <input type="search" id="search-input" placeholder="Chercher un titre…" enterkeyhint="search" autocomplete="off">
-      </div>
-      <button class="menu-btn" id="search-menu-btn"><span class="ic" data-ic="more-horizontal"></span></button>
-    </div>
-    <div class="type-dropdown">
-      <div class="type-dropdown-btn" id="type-btn">
-        <span class="ic" id="type-btn-ic" data-ic="film"></span>
-        <span id="type-label">Film</span>
-        <span class="ic chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </div>
-      <div class="type-dropdown-list" id="type-list"></div>
-    </div>
-    <div id="adv-panel" class="card hidden">
-      <div class="row2"><label>Année min<input type="number" id="adv-year-min" inputmode="numeric" placeholder="1900"></label><label>Année max<input type="number" id="adv-year-max" inputmode="numeric" placeholder="2026"></label></div>
-      <div class="row2"><label>Note min<input type="number" id="adv-note-min" inputmode="numeric" min="0" max="10" placeholder="0"></label><label id="adv-plat-wrap">Plateforme<input type="text" id="adv-platform" placeholder="PS5, Switch…"></label></div>
-    </div>
-    <div class="status" id="search-status"></div>
-    <div id="fallback"></div>
-    <div class="result-list" id="results"></div>
-  </section>
+<section id="view-search" class="view active">
+<div class="sbar">
+<div class="sbar-wrap">
+<span class="search-ic" id="search-loupe"><span class="ic" data-ic="search"></span></span>
+<input type="search" id="search-input" placeholder="Chercher un titre..." enterkeyhint="search" autocomplete="off">
+</div>
+<button class="menu-btn" id="search-menu-btn"><span class="ic" data-ic="more-horizontal"></span></button>
+</div>
+<div class="type-dropdown">
+<div class="type-dropdown-btn" id="type-btn">
+<span class="ic" id="type-btn-ic" data-ic="film"></span>
+<span id="type-label">Film</span>
+<span class="ic chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+</div>
+<div class="type-dropdown-list" id="type-list"></div>
+</div>
+<div id="adv-panel" class="card hidden">
+<div class="row2"><label>Année min<input type="number" id="adv-year-min" inputmode="numeric" placeholder="1900"></label><label>Année max<input type="number" id="adv-year-max" inputmode="numeric" placeholder="2026"></label></div>
+<div class="row2"><label>Note min<input type="number" id="adv-note-min" inputmode="numeric" min="0" max="10" placeholder="0"></label><label>Plateforme<input type="text" id="adv-platform" placeholder="PS5, Switch..."></label></div>
+</div>
+<div class="status" id="search-status"></div>
+<div id="fallback"></div>
+<div class="result-list" id="results"></div>
+</section>
 
-  <section id="view-collection" class="view">
-    <div class="sbar">
-      <input type="search" id="col-search" placeholder="Chercher dans ma collection…" autocomplete="off">
-    </div>
-    <div class="tools">
-      <button class="btn" id="col-filter-btn"><span class="ic" data-ic="sliders-horizontal"></span>Filtres</button>
-    </div>
-    <div class="grid" id="col-grid"></div>
-  </section>
+<section id="view-collection" class="view">
+<div class="sbar">
+<input type="search" id="col-search" placeholder="Chercher dans ma bibliothèque..." autocomplete="off">
+</div>
+<div class="tools">
+<button id="col-filter-btn"><span class="ic" data-ic="sliders-horizontal"></span>Filtres</button>
+</div>
+<div class="grid" id="col-grid"></div>
+</section>
 
-  <section id="view-journal" class="view">
-    <div class="bilan-mini" id="bilan-mini">
-      <span class="ic" data-ic="calendar"></span>
-      <strong id="bilan-date"></strong>
-    </div>
-    <div class="section-title">
-      <span class="ic" data-ic="book-open"></span>
-      <span>Journal</span>
-    </div>
-    <div id="j-feed"></div>
-  </section>
+<section id="view-journal" class="view">
+<div class="bilan-mini" id="bilan-mini">
+<span class="ic" data-ic="calendar"></span>
+<strong id="bilan-date"></strong>
+</div>
+<div class="hrow" id="j-encours"></div>
+<div class="section-title">
+<span class="ic" data-ic="book-open"></span>
+<span>Journal</span>
+</div>
+<div id="j-feed"></div>
+</section>
 
-  <section id="view-options" class="view">
-    <div class="opt-grid" id="opt-grid"></div>
-  </section>
+<section id="view-options" class="view">
+<div class="opt-grid" id="opt-grid"></div>
+</section>
 </main>
 
 <div class="toast" id="toast"></div>
 
 <div class="overlay" id="modal-overlay"><div class="sheet">
-  <div class="m-head">
-    <button class="back-btn" id="m-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title" id="m-title"></div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="m-body" id="m-body"></div>
-  <div class="m-foot" id="m-foot"></div>
+<div class="m-head">
+<button class="back-btn" id="m-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="m-title"></div>
+<div style="width:36px;"></div>
+</div>
+<div class="m-body" id="m-body"></div>
+<div class="m-foot" id="m-foot"></div>
 </div></div>
 
 <div class="overlay" id="reader-overlay"><div class="sheet reader">
-  <div class="m-head">
-    <button class="back-btn" id="r-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title" id="r-title"></div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="r-sub mono" id="r-sub"></div>
-  <div class="m-body" id="r-body"></div>
-  <div class="m-foot">
-    <button class="btn" id="r-delete"><span class="ic" data-ic="trash-2"></span>Supprimer</button>
-    <button class="btn" id="r-edit"><span class="ic" data-ic="pen"></span>Modifier</button>
-  </div>
+<div class="m-head">
+<button class="back-btn" id="r-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="r-title"></div>
+<div style="width:36px;"></div>
+</div>
+<div class="r-sub mono" id="r-sub"></div>
+<div class="m-body" id="r-body"></div>
+<div class="m-foot">
+<button id="r-delete"><span class="ic" data-ic="trash-2"></span>Supprimer</button>
+<button id="r-edit"><span class="ic" data-ic="pen"></span>Modifier</button>
+</div>
 </div></div>
 
 <div class="overlay" id="qn-overlay"><div class="sheet low">
-  <div class="m-head">
-    <button class="back-btn" id="qn-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title" id="qn-title"></div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="m-body">
-    <div class="chips small" id="qn-kind"></div>
-    <div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label></div>
-    <div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><label>/10<input type="number" id="qn-note" inputmode="numeric" min="1" max="10"></label></div>
-    <textarea id="qn-text" placeholder="Ton entrée…"></textarea>
-  </div>
-  <div class="m-foot"><button class="btn primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button class="btn" id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
+<div class="m-head">
+<button class="back-btn" id="qn-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="qn-title"></div>
+<div style="width:36px;"></div>
+</div>
+<div class="m-body">
+<div class="chips small" id="qn-kind"></div>
+<div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label></div>
+<div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><label>/10<input type="number" id="qn-note" inputmode="numeric" min="1" max="10"></label></div>
+<textarea id="qn-text" placeholder="Ton entree..."></textarea>
+</div>
+<div class="m-foot"><button class="primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
 
 <div class="overlay" id="menu-overlay"><div class="sheet low">
-  <div class="m-head">
-    <button class="back-btn" id="menu-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title" id="menu-title"></div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="m-body" id="menu-body"></div>
+<div class="m-head">
+<button class="back-btn" id="menu-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="menu-title"></div>
+<div style="width:36px;"></div>
+</div>
+<div class="m-body" id="menu-body"></div>
 </div></div>
 
 <div class="overlay" id="search-menu-overlay"><div class="sheet low">
-  <div class="m-head">
-    <button class="back-btn" id="search-menu-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title">Plus…</div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="m-body" id="search-menu-body"></div>
+<div class="m-head">
+<button class="back-btn" id="search-menu-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title">Plus...</div>
+<div style="width:36px;"></div>
+</div>
+<div class="m-body" id="search-menu-body"></div>
 </div></div>
 
 <div class="overlay" id="confirm-overlay"><div class="sheet low">
-  <div class="m-head">
-    <button class="back-btn" id="confirm-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <div class="m-title" id="confirm-title"></div>
-    <div style="width:36px;"></div>
-  </div>
-  <div class="m-body" id="confirm-body"></div>
-  <div class="m-foot" id="confirm-foot"></div>
+<div class="m-head">
+<button class="back-btn" id="confirm-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="confirm-title"></div>
+<div style="width:36px;"></div>
+</div>
+<div class="m-body" id="confirm-body"></div>
+<div class="m-foot" id="confirm-foot"></div>
 </div></div>
 
 <div class="overlay dark" id="poster-overlay">
-  <img id="poster-img" alt="">
-  <div class="bar"><button class="btn" id="poster-close"><span class="ic" data-ic="chevron-left"></span>Fermer</button></div>
+<img id="poster-img" alt="">
+<div class="bar"><button id="poster-close"><span class="ic" data-ic="chevron-left"></span>Fermer</button></div>
 </div>
 
 <div class="overlay" id="filter-panel-overlay"><div class="filter-panel" id="filter-panel">
-  <div class="head">
-    <button class="back-btn" id="filter-back"><span class="ic" data-ic="chevron-left"></span></button>
-    <h3>Filtres & Tri</h3>
-    <button class="apply-btn" id="filter-apply">Appliquer</button>
-  </div>
-  <div class="filter-section">
-    <h4>Type</h4>
-    <div class="chips" id="filter-type-chips"></div>
-  </div>
-  <div class="filter-section">
-    <h4>Support</h4>
-    <div class="chips" id="filter-support-chips"></div>
-  </div>
-  <div class="filter-section">
-    <h4>Trier par</h4>
-    <div class="chips" id="filter-sort-chips"></div>
-  </div>
-  <div class="filter-actions">
-    <button class="btn" id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span>Réinitialiser</button>
-  </div>
+<div class="head">
+<button class="back-btn" id="filter-back"><span class="ic" data-ic="chevron-left"></span></button>
+<h3>Filtres & Tri</h3>
+<button class="apply-btn" id="filter-apply">Appliquer</button>
+</div>
+<div class="filter-section"><h4>Type</h4><div class="chips" id="filter-type-chips"></div></div>
+<div class="filter-section"><h4>Support</h4><div class="chips" id="filter-support-chips"></div></div>
+<div class="filter-section"><h4>Trier par</h4><div class="chips" id="filter-sort-chips"></div></div>
+<div class="filter-actions"><button id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span>Réinitialiser</button></div>
 </div></div>
 
 <div class="overlay" id="calendar-overlay">
-  <div class="calendar-modal">
-    <div class="head">
-      <button class="back-btn" id="cal-back"><span class="ic" data-ic="chevron-left"></span></button>
-      <h3 id="cal-month-title"></h3>
-      <button class="nav-btn" id="cal-prev"><span class="ic" data-ic="chevron-left"></span></button>
-      <button class="nav-btn" id="cal-next"><span class="ic" data-ic="chevron-right"></span></button>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-  </div>
+<div class="calendar-modal">
+<div class="head">
+<button class="back-btn" id="cal-back"><span class="ic" data-ic="chevron-left"></span></button>
+<h3 id="cal-month-title"></h3>
+<div class="cal-nav">
+<button class="nav-btn" id="cal-prev"><span class="ic" data-ic="chevron-left"></span></button>
+<button class="nav-btn" id="cal-next"><span class="ic" data-ic="chevron-right"></span></button>
+</div>
+</div>
+<div class="cal-grid" id="cal-grid"></div>
+</div>
 </div>
 
 <nav class="tabbar">
-  <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
-  <button data-view="collection"><span class="ic" data-ic="library"></span><span>Collection</span></button>
-  <button data-view="journal"><span class="ic" data-ic="book-open"></span><span>Journal</span></button>
-  <button data-view="options"><span class="ic" data-ic="settings"></span><span>Options</span></button>
+<button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
+<button data-view="collection"><span class="ic" data-ic="library"></span><span>Bibliothèque</span></button>
+<button data-view="journal"><span class="ic" data-ic="book-open"></span><span>Journal</span></button>
+<button data-view="options"><span class="ic" data-ic="settings"></span><span>Options</span></button>
 </nav>
 
 <script src="js/data.js"></script>
