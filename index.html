@@ -19,13 +19,15 @@ window.__dbgLines=[];
 window.__dbg=function(m){window.__dbgLines.push(m);var d=document.getElementById("dbg");if(!d){d=document.createElement("div");d.id="dbg";d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:9999;background:#7a1020;color:#fff;font:11px monospace;padding:8px;white-space:pre-wrap;max-height:45vh;overflow:auto;";document.body.appendChild(d);}d.textContent=window.__dbgLines.join("\n");};
 window.addEventListener("error",function(e){__dbg("ERR: "+e.message+" @"+(e.filename||"").split("/").pop()+":"+e.lineno);});
 window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.reason&&e.reason.message)||e.reason));});
-setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.children.length===0){__dbg("DIAG: data.js="+(typeof window.ic)+" ui.js="+(typeof window.ST)+" app.js="+(typeof window.init)+" idb="+("indexedDB" in window));}},4000);
+setTimeout(function(){var c=document.getElementById("type-list");if(!c){__dbg("DIAG: HTML non mis à jour !");}},4000);
 </script>
 <header>
   <span class="ic" data-ic="library"></span>
   <h1>Ma Collection</h1>
 </header>
 <main>
+
+  <!-- VUE RECHERCHE -->
   <section id="view-search" class="view active">
     <div class="sbar">
       <div class="sbar-wrap">
@@ -51,6 +53,7 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
     <div class="result-list" id="results"></div>
   </section>
 
+  <!-- VUE COLLECTION -->
   <section id="view-collection" class="view">
     <input type="search" id="col-search" placeholder="Chercher dans ma biblioth&egrave;que&hellip;" autocomplete="off">
     <div class="chips small" id="col-support-filter"></div>
@@ -61,6 +64,7 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
     <div id="col-grid" class="grid"></div>
   </section>
 
+  <!-- VUE JOURNAL -->
   <section id="view-journal" class="view">
     <div class="hrow" id="j-encours"></div>
     <div class="card bilan" id="j-bilan">
@@ -81,19 +85,24 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
     <div id="j-feed"></div>
   </section>
 
+  <!-- VUE OPTIONS -->
   <section id="view-options" class="view">
     <div class="opt-grid" id="opt-grid"></div>
   </section>
+
 </main>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- MODAL PRINCIPAL -->
 <div class="overlay" id="modal-overlay"><div class="sheet">
   <div class="m-head"><div class="m-title" id="m-title"></div><button class="btn icon" id="m-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="m-body"></div>
   <div class="m-foot" id="m-foot"></div>
 </div></div>
 
+<!-- LECTEUR -->
 <div class="overlay" id="reader-overlay"><div class="sheet reader">
   <div class="m-head"><div class="m-title" id="r-title"></div><button class="btn icon" id="r-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="r-sub mono" id="r-sub"></div>
@@ -104,6 +113,7 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
   </div>
 </div></div>
 
+<!-- NOTE RAPIDE -->
 <div class="overlay" id="qn-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="qn-title"></div><button class="btn icon" id="qn-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body">
@@ -115,27 +125,32 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
   <div class="m-foot"><button class="btn primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button class="btn" id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
 
+<!-- MENU ŒUVRE -->
 <div class="overlay" id="menu-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="menu-title"></div><button class="btn icon" id="menu-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="menu-body"></div>
 </div></div>
 
+<!-- MENU RECHERCHE (⋮) -->
 <div class="overlay" id="search-menu-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title">Menu</div><button class="btn icon" id="search-menu-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="search-menu-body"></div>
 </div></div>
 
+<!-- CONFIRMATION -->
 <div class="overlay" id="confirm-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="confirm-title"></div><button class="btn icon" id="confirm-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="confirm-body"></div>
   <div class="m-foot" id="confirm-foot"></div>
 </div></div>
 
+<!-- AFFICHE PLEIN ÉCRAN -->
 <div class="overlay dark" id="poster-overlay">
   <img id="poster-img" alt="">
   <div class="bar"><button class="btn" id="poster-close"><span class="ic" data-ic="x"></span>Fermer</button></div>
 </div>
 
+<!-- TABBAR -->
 <nav class="tabbar">
   <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
   <button data-view="collection"><span class="ic" data-ic="library"></span><span>Collection</span></button>
