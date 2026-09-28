@@ -25,7 +25,7 @@ main{padding:0 14px 24px;max-width:760px;margin:0 auto;}
 input,select,textarea{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:var(--r);padding:11px 12px;font-family:var(--fs);font-size:16px;font-weight:500;width:100%;min-width:0;}
 input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;}
 textarea{min-height:84px;resize:vertical;}
-input[type="datetime-local"]{color-scheme:dark;}
+input[type="datetime-local"],input[type="date"]{color-scheme:dark;}
 button{font-family:var(--fs);font-size:14px;font-weight:600;color:var(--tx);background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
 button:active{transform:translateY(1px);}
 button.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(178,75,243,.28);}
@@ -62,9 +62,8 @@ button.wide{width:100%;}
 .poster{position:relative;width:100%;padding-top:150%;border-radius:10px;}
 .poster .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:10px;background:var(--s2);}
 .poster.n-fini{box-shadow:0 0 0 1.5px var(--acc);}
-.poster.n-enc{box-shadow:0 0 0 1.5px var(--acc);animation:pulse 2.4s ease-in-out infinite;}
+.poster.n-enc{box-shadow:0 0 0 1.5px var(--acc);}
 .poster.n-voir{box-shadow:0 0 0 1px rgba(178,75,243,.5);}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 1.5px var(--acc),0 0 8px rgba(178,75,243,.3);}50%{box-shadow:0 0 0 1.5px var(--acc),0 0 16px rgba(178,75,243,.6);}}
 .poster .pnote{position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,.8);padding:2px 7px;border-radius:5px;font-family:var(--fm);font-size:10px;font-weight:600;}
 .poster .pstat{position:absolute;top:5px;right:5px;width:23px;height:23px;border-radius:50%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;}
 .poster .pstat .ic svg,.poster .pstat svg{width:12px;height:12px;color:var(--acc);}
@@ -88,8 +87,6 @@ button.wide{width:100%;}
 .mini .s{font-size:10.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .bilan{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .bilan strong{font-family:var(--ft);font-size:15px;flex:1;text-align:center;min-width:0;}
-.bilan-line{width:100%;display:flex;justify-content:space-around;font-size:12.5px;color:var(--dim);gap:6px;flex-wrap:wrap;}
-.bilan-line b{color:var(--acc);}
 .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
 .cdname{font-size:10px;font-weight:600;color:var(--dim);text-align:center;overflow:hidden;}
@@ -99,11 +96,16 @@ button.wide{width:100%;}
 .cday .dot{width:4px;height:4px;border-radius:50%;background:var(--acc);margin-top:2px;}
 .fitem{display:flex;gap:10px;padding:11px 2px;border-bottom:1px solid var(--bd);cursor:pointer;min-width:0;align-items:flex-start;}
 .fitem:last-child{border-bottom:none;}
-.fitem .poster{width:60px;padding-top:90px;flex-shrink:0;}
+.fitem .poster{width:50px;padding-top:75px;flex-shrink:0;}
 .fitem>div{min-width:0;flex:1;}
 .ftime{font-size:10.5px;color:var(--dim);font-family:var(--fm);}
 .ftext{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;}
 .fwork{font-size:11.5px;font-weight:600;color:var(--acc);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.opt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.opt-btn{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:16px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:90px;justify-content:center;transition:all .15s;}
+.opt-btn:active{transform:translateY(1px);}
+.opt-btn .ic svg{width:28px;height:28px;color:var(--acc);}
+.opt-btn span{font-size:12px;font-weight:600;color:var(--dim);}
 .ogroup{margin-bottom:4px;}
 .ogroup h3{font-size:15px;color:var(--acc);margin:12px 0 4px;display:flex;align-items:center;gap:7px;}
 .ogroup h3 .ic svg{width:16px;height:16px;}
