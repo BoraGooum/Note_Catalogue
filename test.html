@@ -42,12 +42,16 @@ button.icon{padding:10px;width:44px;}
 .custom-select-btn .ic svg{width:18px;height:18px;color:var(--acc);}
 .custom-select-btn span{flex:1;font-weight:600;font-size:14px;}
 .custom-select-btn .chev svg{width:16px;height:16px;color:var(--dim);}
-.custom-select-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:6px;z-index:50;display:none;max-height:200px;overflow-y:auto;}
+.custom-select-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:6px;z-index:50;display:none;max-height:240px;overflow-y:auto;}
 .custom-select-list.open{display:block;}
 .custom-select-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;}
 .custom-select-item:hover{background:rgba(178,75,243,.1);}
 .custom-select-item.active{background:rgba(178,75,243,.15);color:var(--acc);font-weight:600;}
-.custom-select-item .check{margin-left:auto;color:var(--acc);}
+.custom-select-item.libre{border-top:1px solid var(--bd);margin-top:4px;padding-top:12px;font-style:italic;color:var(--dim);}
+.custom-select-item.libre:hover{color:var(--acc);}
+.libre-input{display:flex;gap:6px;padding:8px 12px;margin-top:4px;}
+.libre-input input{flex:1;padding:8px 10px;font-size:13px;border-radius:8px;}
+.libre-input button{padding:8px 12px;font-size:12px;min-height:auto;}
 
 /* POSTERS / NÉONS */
 .poster{position:relative;width:100%;padding-top:150%;border-radius:10px;margin-bottom:10px;}
@@ -126,7 +130,7 @@ nav.tabbar button .ic svg{width:20px;height:20px;}
 </div>
 
 <!-- COLLECTION PHYSIQUE : QUOI / COMMENT EN LISTE DÉROULANTE -->
-<h3 style="margin:20px 0 10px;">Collection physique (liste déroulante)</h3>
+<h3 style="margin:20px 0 10px;">Collection physique (liste déroulante + entrée libre)</h3>
 <div class="card">
   <div class="custom-select" id="quoi-select">
     <div class="custom-select-btn">
@@ -260,28 +264,68 @@ for(var n=1;n<=10;n++){
   })(n);
 }
 
-// Sélecteurs custom Quoi/Comment
+// Sélecteurs custom Quoi/Comment avec entrée libre
 function buildCustomSelect(selectId,listId,labelId,values){
   var btn=document.querySelector("#"+selectId+" .custom-select-btn");
   var list=document.getElementById(listId);
   var label=document.getElementById(labelId);
   var selected=null;
   
-  values.forEach(function(v){
-    var item=document.createElement("div");
-    item.className="custom-select-item";
-    item.textContent=v;
-    item.addEventListener("click",function(){
-      selected=v;
-      label.textContent=v;
-      list.querySelectorAll(".custom-select-item").forEach(function(x){x.classList.remove("active");});
-      item.classList.add("active");
-      list.classList.remove("open");
+  function renderList(){
+    list.innerHTML="";
+    values.forEach(function(v){
+      var item=document.createElement("div");
+      item.className="custom-select-item"+(selected===v?" active":"");
+      item.textContent=v;
+      item.addEventListener("click",function(){
+        selected=v;
+        label.textContent=v;
+        list.querySelectorAll(".custom-select-item").forEach(function(x){x.classList.remove("active");});
+        item.classList.add("active");
+        list.classList.remove("open");
+      });
+      list.appendChild(item);
     });
-    list.appendChild(item);
-  });
+    
+    // Item "Entrée libre..."
+    var libre=document.createElement("div");
+    libre.className="custom-select-item libre";
+    libre.textContent="+ Entrée libre...";
+    libre.addEventListener("click",function(e){
+      e.stopPropagation();
+      // Créer le champ de saisie
+      var inputRow=document.createElement("div");
+      inputRow.className="libre-input";
+      var input=document.createElement("input");
+      input.type="text";
+      input.placeholder="Ta valeur...";
+      var okBtn=document.createElement("button");
+      okBtn.textContent="OK";
+      okBtn.className="primary";
+      okBtn.addEventListener("click",function(){
+        var val=input.value.trim();
+        if(val){
+          values.push(val);
+          selected=val;
+          label.textContent=val;
+          renderList();
+        }
+      });
+      input.addEventListener("keydown",function(e){
+        if(e.key==="Enter")okBtn.click();
+      });
+      inputRow.appendChild(input);
+      inputRow.appendChild(okBtn);
+      libre.replaceWith(inputRow);
+      input.focus();
+    });
+    list.appendChild(libre);
+  }
   
-  btn.addEventListener("click",function(){
+  renderList();
+  
+  btn.addEventListener("click",function(e){
+    e.stopPropagation();
     list.classList.toggle("open");
   });
   
