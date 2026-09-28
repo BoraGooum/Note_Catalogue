@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>Apercu - Episodes autour</title>
+<title>Apercu - bouton prochain episode</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,21 +20,30 @@ header h1{font-family:'Fraunces',serif;font-size:26px;font-weight:700;}
 main{padding:24px 16px;max-width:760px;margin:0 auto;}
 .label{font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px;}
 .card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:16px;}
-.row{display:flex;gap:10px;margin-bottom:10px;}
+.work{display:flex;gap:12px;align-items:center;}
+.work .wp{width:60px;height:90px;border-radius:10px;flex-shrink:0;background:linear-gradient(160deg,#1F3A34,#0E1A17);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:9px;}
+.work .wi{flex:1;min-width:0;}
+.work .wt{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:6px;}
+.next-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;min-height:42px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid var(--acc);background:rgba(178,75,243,.12);color:var(--acc);cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.next-btn .ic svg{width:15px;height:15px;}
+.row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-end;}
 .row label{flex:1;font-size:12px;font-weight:600;color:var(--dim);display:flex;flex-direction:column;gap:6px;}
 input,textarea{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:12px;padding:12px;font-family:inherit;font-size:16px;width:100%;outline:none;}
 input:focus,textarea:focus{border-color:var(--acc);}
 button{font-family:inherit;font-size:15px;font-weight:600;color:var(--tx);background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
 button.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff;font-weight:700;}
 button.wide{width:100%;}
+.plus-btn{width:48px;min-width:48px;height:48px;min-height:48px;padding:0;border-radius:12px;border:1px solid var(--bd);background:var(--s2);color:var(--acc);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.plus-btn .ic svg{width:20px;height:20px;}
 .feed{margin-top:8px;}
-.jentry{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--bd);align-items:flex-start;}
-.jentry .jp{width:50px;height:75px;border-radius:8px;flex-shrink:0;background:linear-gradient(160deg,#1F3A34,#0E1A17);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;}
+.jentry{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);align-items:flex-start;}
+.jentry .jp{width:44px;height:66px;border-radius:8px;flex-shrink:0;background:linear-gradient(160deg,#1F3A34,#0E1A17);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:9px;}
 .jentry .jc{flex:1;min-width:0;}
-.jentry .jt{font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-bottom:4px;}
+.jentry .jt{font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-bottom:3px;}
 .jentry .jx{font-size:14px;}
-.jentry .jn{font-size:12px;font-weight:600;color:var(--acc);margin-top:4px;}
-.empty{color:var(--dim);font-size:12.5px;text-align:center;padding:24px 0;}
+.more{color:var(--dim);font-size:11px;text-align:center;padding:8px 0;}
+.demo{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);margin-bottom:16px;cursor:pointer;}
+.demo input{width:auto;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;z-index:200;}
 .overlay.on{display:flex;}
 .sheet{width:100%;max-width:560px;max-height:86vh;display:flex;flex-direction:column;background:var(--s2);border:1px solid var(--bd);border-bottom:none;border-radius:18px 18px 0 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));}
@@ -47,13 +56,13 @@ button.wide{width:100%;}
 .chip{padding:8px 14px;min-height:38px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--bd);background:var(--s1);color:var(--dim);cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
 .chip.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;}
 .sect{font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px;}
-.eplist{max-height:180px;overflow-y:auto;border:1px solid var(--bd);border-radius:12px;background:var(--s1);}
+.eplist{max-height:170px;overflow-y:auto;border:1px solid var(--bd);border-radius:12px;background:var(--s1);}
 .eprow{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--bd);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;}
 .eprow:last-child{border-bottom:none;}
 .eprow .box{width:22px;height:22px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .eprow.on .box{background:var(--acc);border-color:var(--acc);}
-.eprow.on .box svg{display:block;}
 .eprow .box svg{display:none;width:14px;height:14px;color:#fff;}
+.eprow.on .box svg{display:block;}
 .eprow.cur{background:rgba(178,75,243,.12);color:var(--acc);font-weight:700;}
 .eprow.cur .tagcur{margin-left:auto;font-size:10px;font-weight:700;color:var(--enc);}
 .count{font-size:12px;color:var(--dim);text-align:center;margin:12px 0 4px;}
@@ -69,26 +78,38 @@ button.wide{width:100%;}
 <h1>Ma Collection</h1>
 </header>
 <main>
-<div class="label">Apercu - ajout d'episode (Lost S01E18)</div>
 
+<label class="demo"><input type="checkbox" id="demo-all"> Démo : considère E01 à E17 comme déjà notés</label>
+
+<div class="label">Oeuvre</div>
+<div class="card work">
+<div class="wp">LOST</div>
+<div class="wi">
+<div class="wt">Lost : Les Disparus</div>
+<button class="next-btn" id="next-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span id="next-label">S01E19</span></button>
+</div>
+</div>
+
+<div class="label">Note rapide (saison / episode)</div>
 <div class="card">
 <div class="row">
 <label>S<input type="number" id="in-s" value="1" min="0"></label>
-<label>E<input type="number" id="in-e" value="18" min="0"></label>
+<label>E<input type="number" id="in-e" value="19" min="0"></label>
+<button class="plus-btn" id="btn-plus" title="Episodes autour"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></button>
 </div>
-<textarea id="in-text" rows="2" placeholder="Ta note...">Vu, episode incroyable</textarea>
-<button class="primary wide" id="btn-add"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span>Ajouter</button>
+<textarea id="in-text" rows="2" placeholder="Ta note..."></textarea>
+<button class="primary wide" id="btn-add" style="margin-top:10px;">Ajouter (sans ouvrir la fenetre)</button>
 </div>
 
 <div class="label">Journal de septembre 2026</div>
-<div class="feed" id="feed"><div class="empty">Aucune entree pour l'instant.</div></div>
+<div class="feed" id="feed"></div>
 </main>
 
 <div class="overlay" id="ov">
 <div class="sheet">
 <div class="m-head">
 <button class="back-btn" id="ep-back"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></span></button>
-<h3 id="ep-title">Episodes autour de S01E18</h3>
+<h3 id="ep-title">Episodes autour</h3>
 <div style="width:36px;"></div>
 </div>
 <div class="m-body">
@@ -99,13 +120,15 @@ button.wide{width:100%;}
 <div class="chip" data-p="after3">3 apres</div>
 <div class="chip" data-p="afterall">Tout apres</div>
 </div>
-<div class="sect">Avant (deja vus ?)</div>
+<div id="wrap-before">
+<div class="sect">Avant (manquants)</div>
 <div class="eplist" id="list-before"></div>
-<div class="sect">En cours d'ajout</div>
-<div class="eplist"><div class="eprow cur"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span id="cur-label">S01E18</span><span class="tagcur">AJOUTE</span></div></div>
-<div class="sect">Apres (a ajouter aussi ?)</div>
+</div>
+<div class="sect">En cours</div>
+<div class="eplist"><div class="eprow cur"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span id="cur-label"></span><span class="tagcur">AJOUTE</span></div></div>
+<div class="sect">Apres (optionnel)</div>
 <div class="eplist" id="list-after"></div>
-<div class="count" id="count">0 episode supplementaire selectionne</div>
+<div class="count" id="count"></div>
 </div>
 <div class="m-foot">
 <button id="ep-cancel">Annuler</button>
@@ -118,79 +141,92 @@ button.wide{width:100%;}
 
 <script>
 var TOTAL=24;
+var noted={18:"Vu, episode incroyable"};
+var texts={};
 var sel={before:{},after:{}};
-var cur={s:1,e:18,text:""};
+var center=19;
 function pad(n){return String(n).padStart(2,"0");}
-function label(s,e){return "S"+pad(s)+"E"+pad(e);}
+function lab(e){return "S01E"+pad(e);}
 function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2000);}
-function buildLists(){
-var b=document.getElementById("list-before");b.innerHTML="";
-for(var e=1;e<cur.e;e++){
-(function(e){
-var r=document.createElement("div");r.className="eprow"+(sel.before[e]?" on":"");
-r.innerHTML='<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>'+label(cur.s,e)+"</span>";
-r.addEventListener("click",function(){sel.before[e]=!sel.before[e];buildLists();});
-b.appendChild(r);
-})(e);
-}
-if(cur.e<=1){b.innerHTML='<div class="empty" style="padding:12px;">Rien avant.</div>';}
-var a=document.getElementById("list-after");a.innerHTML="";
-for(var e2=cur.e+1;e2<=TOTAL;e2++){
-(function(e2){
-var r=document.createElement("div");r.className="eprow"+(sel.after[e2]?" on":"");
-r.innerHTML='<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>'+label(cur.s,e2)+"</span>";
-r.addEventListener("click",function(){sel.after[e2]=!sel.after[e2];buildLists();});
-a.appendChild(r);
-})(e2);
-}
-if(cur.e>=TOTAL){a.innerHTML='<div class="empty" style="padding:12px;">Rien apres.</div>';}
-var n=countSel();
-document.getElementById("count").textContent=n+" episode"+(n>1?"s":"")+" supplementaire"+(n>1?"s":"")+" selectionne"+(n>1?"s":"");
+function notedSet(){var s={};for(var k in noted)s[k]=1;if(document.getElementById("demo-all").checked){for(var e=1;e<=17;e++)s[e]=1;}return s;}
+function nextEp(){var s=notedSet();var mx=0;for(var k in s){if(+k>mx)mx=+k;}return Math.min(TOTAL,mx+1);}
+function renderWork(){var n=nextEp();document.getElementById("next-label").textContent=lab(n);}
+function renderFeed(){
+var s=notedSet();var eps=Object.keys(s).map(Number).sort(function(a,b){return a-b;});
+var f=document.getElementById("feed");f.innerHTML="";
+var shown=eps.slice(-8);
+if(eps.length>shown.length){var m=document.createElement("div");m.className="more";m.textContent="+"+(eps.length-shown.length)+" plus anciennes";f.appendChild(m);}
+shown.forEach(function(e){
+var d=document.createElement("div");d.className="jentry";
+d.innerHTML='<div class="jp">'+lab(e)+'</div><div class="jc"><div class="jt">'+lab(e)+'</div><div class="jx">'+(noted[e]||texts[e]||"Vu")+'</div></div>';
+f.appendChild(d);
+});
+if(!eps.length){f.innerHTML='<div class="more">Aucune entree.</div>';}
+renderWork();
 }
 function countSel(){var n=0;for(var k in sel.before){if(sel.before[k])n++;}for(var k2 in sel.after){if(sel.after[k2])n++;}return n;}
-function clearChips(){document.querySelectorAll("#presets .chip").forEach(function(c){c.classList.remove("on");});}
-document.querySelectorAll("#presets .chip").forEach(function(c){
-c.addEventListener("click",function(){
-clearChips();c.classList.add("on");
-sel={before:{},after:{}};
-var p=c.dataset.p;
-if(p==="before"){for(var e=1;e<cur.e;e++)sel.before[e]=true;}
-if(p==="after1"){sel.after[cur.e+1]=true;}
-if(p==="after3"){for(var e2=cur.e+1;e2<=Math.min(TOTAL,cur.e+3);e2++)sel.after[e2]=true;}
-if(p==="afterall"){for(var e3=cur.e+1;e3<=TOTAL;e3++)sel.after[e3]=true;}
-buildLists();
-});
-});
-document.getElementById("btn-add").addEventListener("click",function(){
-cur.s=parseInt(document.getElementById("in-s").value||"1",10);
-cur.e=parseInt(document.getElementById("in-e").value||"1",10);
-cur.text=document.getElementById("in-text").value.trim();
-sel={before:{},after:{}};
-clearChips();
-document.getElementById("ep-title").textContent="Episodes autour de "+label(cur.s,cur.e);
-document.getElementById("cur-label").textContent=label(cur.s,cur.e);
+function buildLists(){
+var s=notedSet();
+var wb=document.getElementById("wrap-before");var lb=document.getElementById("list-before");lb.innerHTML="";
+var missing=[];for(var e=1;e<center;e++){if(!s[e])missing.push(e);}
+if(missing.length===0){wb.style.display="none";}
+else{wb.style.display="";missing.forEach(function(e){
+var r=document.createElement("div");r.className="eprow"+(sel.before[e]?" on":"");
+r.innerHTML='<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>'+lab(e)+'</span>';
+r.addEventListener("click",function(){sel.before[e]=!sel.before[e];buildLists();});
+lb.appendChild(r);});}
+var la=document.getElementById("list-after");la.innerHTML="";
+for(var e2=center+1;e2<=TOTAL;e2++){
+(function(e2){
+var r=document.createElement("div");r.className="eprow"+(sel.after[e2]?" on":"");
+r.innerHTML='<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>'+lab(e2)+'</span>';
+r.addEventListener("click",function(){sel.after[e2]=!sel.after[e2];buildLists();});
+la.appendChild(r);
+})(e2);
+}
+var n=countSel();
+document.getElementById("count").textContent=n+" episode"+(n>1?"s":"")+" supplementaire"+(n>1?"s":"");
+}
+function openWindow(c){
+center=c;sel={before:{},after:{}};
+document.querySelectorAll("#presets .chip").forEach(function(x){x.classList.remove("on");});
+document.getElementById("ep-title").textContent="Episodes autour de "+lab(center);
+document.getElementById("cur-label").textContent=lab(center);
 buildLists();
 document.getElementById("ov").classList.add("on");
-});
+}
 function closeOv(){document.getElementById("ov").classList.remove("on");}
+document.getElementById("next-btn").addEventListener("click",function(){openWindow(nextEp());});
+document.getElementById("btn-plus").addEventListener("click",function(){openWindow(parseInt(document.getElementById("in-e").value||"1",10));});
+document.getElementById("btn-add").addEventListener("click",function(){
+var e=parseInt(document.getElementById("in-e").value||"1",10);
+var t=document.getElementById("in-text").value.trim()||"Vu";
+noted[e]=t;texts[e]=t;
+renderFeed();toast(lab(e)+" ajoute (fenetre non ouverte)");
+});
+document.querySelectorAll("#presets .chip").forEach(function(c){
+c.addEventListener("click",function(){
+document.querySelectorAll("#presets .chip").forEach(function(x){x.classList.remove("on");});
+c.classList.add("on");sel={before:{},after:{}};
+var p=c.dataset.p;
+if(p==="before"){for(var e=1;e<center;e++)sel.before[e]=true;}
+if(p==="after1"){sel.after[center+1]=true;}
+if(p==="after3"){for(var e2=center+1;e2<=Math.min(TOTAL,center+3);e2++)sel.after[e2]=true;}
+if(p==="afterall"){for(var e3=center+1;e3<=TOTAL;e3++)sel.after[e3]=true;}
+buildLists();
+});
+});
 document.getElementById("ep-back").addEventListener("click",closeOv);
 document.getElementById("ep-cancel").addEventListener("click",closeOv);
 document.getElementById("ep-ok").addEventListener("click",function(){
-var eps=[];
-for(var e=1;e<cur.e;e++){if(sel.before[e])eps.push(e);}
-eps.push(cur.e);
-for(var e2=cur.e+1;e2<=TOTAL;e2++){if(sel.after[e2])eps.push(e2);}
-eps.sort(function(a,b){return a-b;});
-var feed=document.getElementById("feed");
-feed.innerHTML="";
-eps.forEach(function(ep){
-var d=document.createElement("div");d.className="jentry";
-d.innerHTML='<div class="jp">'+label(cur.s,ep)+'</div><div class="jc"><div class="jt">'+label(cur.s,ep)+"</div>"+'<div class="jx">'+(cur.text||"Vu")+"</div>"+'<div class="jn">Lost : Les Disparus</div></div>';
-feed.appendChild(d);
+var t=document.getElementById("in-text").value.trim()||"Vu";
+noted[center]=t;texts[center]=t;
+for(var e in sel.before){if(sel.before[e]){noted[e]=texts[e]||"Vu";}}
+for(var e2 in sel.after){if(sel.after[e2]){noted[e2]=texts[e2]||"Vu";}}
+closeOv();renderFeed();toast("Enregistre");
 });
-closeOv();
-toast(eps.length+" entree"+(eps.length>1?"s":"")+" ajoutee"+(eps.length>1?"s":""));
-});
+document.getElementById("demo-all").addEventListener("change",function(){renderFeed();});
+renderFeed();
 </script>
 </body>
 </html>
