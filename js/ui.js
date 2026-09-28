@@ -23,12 +23,14 @@ function openMenu(e){
   ST.menuEntry=e;
   document.getElementById("menu-title").textContent=e.titre;
   var b=document.getElementById("menu-body");b.innerHTML="";
-  var items=[["edit","Modifier",function(){closeMenu();renderPanel(e);}],
-  ["plus","Noter vite",function(){closeMenu();quickNoteOpen(e);}],
-  ["duplicate","Dupliquer",function(){closeMenu();duplicateEntry(e);}],
-  ["share","Partager en image",function(){closeMenu();shareJPG(e);}],
-  ["link","SensCritique",function(){closeMenu();window.open("https://www.senscritique.com/recherche?query="+encodeURIComponent(e.titre),"_blank");}],
-  ["trash","Supprimer",function(){closeMenu();if(confirm("Supprimer \u00AB"+e.titre+"\u00BB ?")){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});},"danger"]}];
+  var items=[
+    ["edit","Modifier",function(){closeMenu();renderPanel(e);}],
+    ["plus","Noter vite",function(){closeMenu();quickNoteOpen(e);}],
+    ["duplicate","Dupliquer",function(){closeMenu();duplicateEntry(e);}],
+    ["share","Partager en image",function(){closeMenu();shareJPG(e);}],
+    ["link","SensCritique",function(){closeMenu();window.open("https://www.senscritique.com/recherche?query="+encodeURIComponent(e.titre),"_blank");}],
+    ["trash","Supprimer",function(){closeMenu();if(confirm("Supprimer \u00AB"+e.titre+"\u00BB ?")){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});}},"danger"]
+  ];
   items.forEach(function(it){var m=el("div","mitem"+(it[3]?" "+it[3]:""));m.innerHTML='<span class="ic">'+ic(it[0])+"</span><span>"+it[1]+"</span>";m.addEventListener("click",it[2]);b.appendChild(m);});
   showOverlay("menu-overlay");
 }
