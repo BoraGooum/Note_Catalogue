@@ -61,14 +61,16 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
       <button class="btn icon" id="bilan-prev"><span class="ic" data-ic="chevL"></span></button>
       <strong id="bilan-title"></strong>
       <button class="btn icon" id="bilan-next"><span class="ic" data-ic="chevR"></span></button>
-      <div class="bilan-line" id="bilan-body"></div>
     </div>
     <button class="btn wide" id="j-cal-btn"><span class="ic" data-ic="calendar"></span>Calendrier</button>
     <div id="j-cal" class="card hidden"></div>
+    <h3 style="margin:16px 0 10px;">Flux</h3>
     <div id="j-feed"></div>
   </section>
 
-  <section id="view-options" class="view"><div id="opt-container"></div></section>
+  <section id="view-options" class="view">
+    <div class="opt-grid" id="opt-grid"></div>
+  </section>
 </main>
 
 <div class="toast" id="toast"></div>
