@@ -1,6 +1,3 @@
-// ============================================================
-// PATCH ICÔNES LUCIDE (remplace l'ancien bloc var I = {...})
-// ============================================================
 var I={
 search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
 library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
@@ -58,7 +55,6 @@ pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>'
 };
 function ic(n){return I[n]||'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';}
-// ============================================================
 
 var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
 var BUILD="2026-09-28T03:00:00+02:00";
