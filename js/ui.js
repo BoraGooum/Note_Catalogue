@@ -1,4 +1,4 @@
-var ST={entries:[],view:"search",colQuery:"",calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",qnEditIdx:null,recent:[],menuEntry:null,filterType:"all",filterSupport:"all",filterSort:"date-desc",isInCollection:false,advFields:{plateforme:"",dateAchat:"",edition:"",bonus:[],support:"",packaging:"",ean:"",url:""},draft:{titre:"",date:"",comment:"",sub:""},subBackFn:null,currentReaderEntry:null,currentReaderJournalIdx:null};
+var ST={entries:[],view:"search",colQuery:"",calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",qnEditIdx:null,recent:[],menuEntry:null,filterType:"all",filterSupport:"all",filterSort:"date-desc",isInCollection:false,advFields:{plateforme:"",dateAchat:"",edition:"",bonus:[],support:"",packaging:"",ean:"",url:""},draft:{titre:"",date:"",comment:"",sub:""},subBackFn:null,currentReaderEntry:null,currentReaderJournalIdx:null,lastJournalCount:0};
 var overlayStack=[];
 var FOOT_IC={"Modifier":"edit","Fermer":"x","Enregistrer":"save","Annuler":"x","Ajouter":"plus","Supprimer":"trash-2","Valider":"save","Remplacer":"save","Vider":"trash","Réinitialiser":"rotate-ccw"};
 function el(t,c,h){var d=document.createElement(t);if(c)d.className=c;if(h!=null)d.innerHTML=h;return d;}
@@ -36,7 +36,14 @@ var yesBtn=el("button","primary",yesLabel||"Confirmer");yesBtn.addEventListener(
 f.appendChild(noBtn);f.appendChild(yesBtn);
 showOverlay("confirm-overlay");
 }
-async function refreshAll(){ST.entries=await dbAll();renderCollection();renderJournal();scheduleGitHubBackup();}
+async function refreshAll(){ST.entries=await dbAll();renderCollection();renderJournal();updateJournalBadge();scheduleGitHubBackup();}
+function updateJournalBadge(){
+var total=0;ST.entries.forEach(function(e){total+=(e.journal||[]).length;});
+var badge=$("journal-badge");if(!badge)return;
+if(total>ST.lastJournalCount&&ST.view!=="journal"){badge.style.display="block";}
+else{badge.style.display="none";}
+ST.lastJournalCount=total;
+}
 function neonClass(e){if(e.aVoir)return "n-voir";if(e.enCours)return "n-enc";return "n-fini";}
 function statIcon(e){if(e.aVoir)return ic("eye");if(e.enCours)return ic("hourglass");return ic("check");}
 function fmtWhen(v){if(!v)return nowStamp();var p=v.split("T");var d=p[0].split("-");var t=(p[1]||"00:00").split(":");return d[2]+"/"+d[1]+" a "+t[0]+"h"+t[1];}
@@ -55,7 +62,7 @@ showOverlay("reader-overlay");
 function renderPoster(e,withMenu){
 var p=el("div","poster "+neonClass(e));
 var img=el("img","art");img.src=e.posterThumb||e.posterUrl||NO_POSTER;img.alt="";img.loading="lazy";
-img.addEventListener("click",function(ev){ev.stopPropagation();openPosterZoom(img.src);});
+img.addEventListener("click",function(ev){ev.stopPropagation();showCollectionDetail(e);});
 p.appendChild(img);
 if(e.note!=null)p.appendChild(el("div","pnote",e.note+"/10"));
 var st=el("div","pstat");st.innerHTML=statIcon(e);p.appendChild(st);
@@ -94,10 +101,12 @@ return cell;
 function showCollectionDetail(e){
 var body=el("div");
 var head=el("div");head.style.cssText="display:flex;gap:16px;margin-bottom:20px;";
-var posterWrap=el("div");posterWrap.style.cssText="width:100px;flex-shrink:0;cursor:pointer;";
-var pImg=el("img");pImg.src=e.posterThumb||e.posterUrl||NO_POSTER;pImg.style.cssText="width:100%;border-radius:12px;";
-pImg.addEventListener("click",function(){openPosterZoom(pImg.src);});
+var posterWrap=el("div","detail-poster");
+var pImg=el("img");pImg.src=e.posterThumb||e.posterUrl||NO_POSTER;pImg.style.cssText="width:100%;border-radius:12px;border:1px solid var(--bd);";
 posterWrap.appendChild(pImg);
+var zoomBtn=el("div","zoom-btn","Agrandir");
+zoomBtn.addEventListener("click",function(){openPosterZoom(pImg.src);});
+posterWrap.appendChild(zoomBtn);
 head.appendChild(posterWrap);
 var info=el("div");info.style.cssText="flex:1;min-width:0;";
 var h2=el("h2","",esc(e.titre));h2.style.cssText="font-family:var(--ft);font-size:20px;margin-bottom:8px;";info.appendChild(h2);
@@ -225,7 +234,7 @@ var dIn=field("Date",el("input"));dIn.id="p-date";dIn.type="date";dIn.value=ST.d
 var cIn=field("Commentaire",el("textarea"));cIn.id="p-comment";cIn.value=ST.draft.comment;
 var aw=el("div");aw.style.marginBottom="20px";aw.appendChild(el("label","","Affiche"));
 var ar=el("div");ar.style.display="flex";ar.style.gap="8px";ar.style.alignItems="center";
-var prev=el("img");prev.id="p-prev";prev.src=ST.panelPoster||NO_POSTER;prev.style.cssText="width:58px;border-radius:6px;cursor:pointer;";
+var prev=el("img");prev.id="p-prev";prev.src=ST.panelPoster||NO_POSTER;prev.style.cssText="width:58px;border-radius:6px;cursor:pointer;border:1px solid var(--bd);";
 prev.addEventListener("click",function(){openPosterZoom(prev.src);});
 var bU=el("button","icon");bU.innerHTML=ic("link");
 var bI=el("button","icon");bI.innerHTML=ic("folder");
@@ -426,7 +435,7 @@ if(!feed.length)f.appendChild(emptyBox("book-open","Aucune entree ce mois-ci."))
 feed.slice(0,60).forEach(function(it){
 var item=el("div","journal-entry");
 var posterDiv=el("div","poster");var pImg=el("img");pImg.src=it.e.posterThumb||it.e.posterUrl||NO_POSTER;posterDiv.appendChild(pImg);
-posterDiv.addEventListener("click",function(ev){ev.stopPropagation();openPosterZoom(pImg.src);});
+posterDiv.addEventListener("click",function(ev){ev.stopPropagation();showCollectionDetail(it.e);});
 item.appendChild(posterDiv);
 var b=el("div","content");
 var tag=it.x.kind==="time"?it.x.ts:(it.x.kind==="ep"?("S"+pad2(it.x.s)+"E"+pad2(it.x.e)+(it.x.note!=null?" . "+it.x.note+"/10":"")):"libre");
@@ -494,7 +503,7 @@ function openOptStats(){var body=el("div");var entries=ST.entries;var total=entr
 function openOptTypes(){var body=el("div");var ct=loadCustomTypes();if(ct.length){ct.forEach(function(t,i){var row=el("div");row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd);";row.appendChild(el("span","",esc(t.name)));var delBtn=el("button","icon");delBtn.innerHTML=ic("trash");delBtn.addEventListener("click",function(){ct.splice(i,1);saveCustomTypes(ct);closeModal();openOptTypes();buildTypeDropdown();});row.appendChild(delBtn);body.appendChild(row);});}else{body.appendChild(el("div","empty","Aucun type personnalise."));}var nt=el("input");nt.placeholder="Nouveau type...";body.appendChild(nt);var addBtn=el("button","primary");addBtn.innerHTML='<span class="ic">'+ic("plus")+"</span>Ajouter";addBtn.addEventListener("click",function(){var v=nt.value.trim();if(!v)return;if(allTypes().indexOf(v)>=0){toast("Existe deja.");return;}ct.push({name:v});saveCustomTypes(ct);closeModal();openOptTypes();buildTypeDropdown();});body.appendChild(addBtn);setModal("Types",body,[["Fermer","",closeModal]]);}
 function openOptSearch(){var s=settingsLoad();var body=el("div");body.appendChild(el("label","","Type par defaut"));var tPill=el("div","pill-sel");tPill.style.cssText="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;";allTypes().forEach(function(t){var b=el("button","chip"+(t===s.defaultType?" on":""),t);b.addEventListener("click",function(){s.defaultType=t;settingsSave(s);ST.currentType=t;closeModal();openOptSearch();buildTypeDropdown();});tPill.appendChild(b);});body.appendChild(tPill);setModal("Recherche",body,[["Fermer","",closeModal]]);}
 function openOptApp(){var body=el("div");var instBtn=el("button");instBtn.innerHTML='<span class="ic">'+ic("download")+"</span>Installer l'appli";instBtn.addEventListener("click",function(){triggerInstall();});body.appendChild(instBtn);var cacheBtn=el("button");cacheBtn.innerHTML='<span class="ic">'+ic("trash")+"</span>Vider cache offline";cacheBtn.addEventListener("click",function(){if("caches"in window)caches.keys().then(function(k){k.forEach(function(x){caches.delete(x);});});toast("Cache vide");});body.appendChild(cacheBtn);body.appendChild(el("div","","Reseau : <b>"+(navigator.onLine?"connecte":"hors-ligne")+"</b>"));setModal("Application",body,[["Fermer","",closeModal]]);}
-function openOptAbout(){var body=el("div");body.appendChild(el("div","","Version : <b>V10.2</b>"));body.appendChild(el("div","","Build : <b>"+new Date(BUILD).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})+"</b>"));var cred=el("a","","Cree par Gooumbora");cred.href="https://www.senscritique.com/Gooumbora";cred.target="_blank";cred.style.color="var(--acc)";body.appendChild(cred);setModal("A propos",body,[["Fermer","",closeModal]]);}
+function openOptAbout(){var body=el("div");body.appendChild(el("div","","Version : <b>V10.3</b>"));body.appendChild(el("div","","Build : <b>"+new Date(BUILD).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})+"</b>"));var cred=el("a","","Cree par Gooumbora");cred.href="https://www.senscritique.com/Gooumbora";cred.target="_blank";cred.style.color="var(--acc)";body.appendChild(cred);setModal("A propos",body,[["Fermer","",closeModal]]);}
 function openOptDanger(){var body=el("div");var clearBtn=el("button");clearBtn.innerHTML='<span class="ic">'+ic("trash")+"</span>Vider la collection";clearBtn.addEventListener("click",function(){showConfirm("Effacer TOUTES tes oeuvres ?","Cette action est irreversible.",function(){(async function(){for(var i=0;i<ST.entries.length;i++)await dbDelete(ST.entries[i].id);refreshAll();toast("Vide");})();},"Vider");});body.appendChild(clearBtn);var resetBtn=el("button");resetBtn.innerHTML='<span class="ic">'+ic("rotate-ccw")+"</span>Reinitialiser reglages";resetBtn.addEventListener("click",function(){showConfirm("Remettre les reglages par defaut ?","",function(){localStorage.removeItem("settings");settingsSave(Object.assign({},SETTINGS_DEFAULTS));applySettings();toast("Reglages reinitialises");},"Reinitialiser");});body.appendChild(resetBtn);setModal("Danger",body,[["Fermer","",closeModal]]);}
 function ghConfig(){return{owner:(localStorage.getItem("gh_owner")||"").trim(),repo:(localStorage.getItem("gh_repo")||"").trim(),token:(localStorage.getItem("gh_token")||"").trim()};}
 function ghB64encode(s){return btoa(unescape(encodeURIComponent(s)));}
