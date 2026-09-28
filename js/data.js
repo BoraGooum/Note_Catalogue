@@ -57,63 +57,27 @@ smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 function ic(n){return I[n]||'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';}
 
 var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
-var BUILD="2026-09-28T03:00:00+02:00";
+var BUILD="2026-09-29T18:00:00+02:00";
 var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var OE="\u0153",OEC="\u0152";
 var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#121216'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#9C93B8' text-anchor='middle'>pas d'affiche</text></svg>");
 
 var CORE_TYPES=[
-  {name:"Film",icon:"film"},
-  {name:"S\u00e9rie",icon:"tv"},
-  {name:"Jeu",icon:"gamepad-2"},
-  {name:"Livre",icon:"book-open"},
-  {name:"Manga",icon:"book-open"},
-  {name:"BD",icon:"image"},
-  {name:"Roman",icon:"scroll"},
-  {name:"Musique",icon:"disc"}
+{name:"Film",icon:"film"},{name:"S\u00e9rie",icon:"tv"},{name:"Jeu",icon:"gamepad-2"},
+{name:"Livre",icon:"book-open"},{name:"Manga",icon:"book-open"},{name:"BD",icon:"image"},
+{name:"Roman",icon:"scroll"},{name:"Musique",icon:"disc"}
 ];
 var PLATFORMS=[
-  {name:"PC",icon:"monitor"},
-  {name:"PlayStation 5",icon:"gamepad-2"},
-  {name:"PlayStation 4",icon:"gamepad-2"},
-  {name:"Xbox Series",icon:"gamepad-2"},
-  {name:"Xbox One",icon:"gamepad-2"},
-  {name:"Nintendo Switch",icon:"gamepad-2"},
-  {name:"Nintendo Switch 2",icon:"gamepad-2"},
-  {name:"Steam Deck",icon:"gamepad-2"},
-  {name:"R\u00e9tro",icon:"gamepad-2"}
+{name:"PC",icon:"monitor"},{name:"PlayStation 5",icon:"gamepad-2"},{name:"PlayStation 4",icon:"gamepad-2"},
+{name:"Xbox Series",icon:"gamepad-2"},{name:"Xbox One",icon:"gamepad-2"},{name:"Nintendo Switch",icon:"gamepad-2"},
+{name:"Nintendo Switch 2",icon:"gamepad-2"},{name:"Steam Deck",icon:"gamepad-2"},{name:"R\u00e9tro",icon:"gamepad-2"}
 ];
 var BONUSES=[
-  {name:"Artbook",icon:"image"},
-  {name:"OST (CD)",icon:"disc"},
-  {name:"Making-of",icon:"film"},
-  {name:"Carte du monde",icon:"image"},
-  {name:"Figurine",icon:"gift"},
-  {name:"DLC code",icon:"hash"},
-  {name:"Autre",icon:"plus"}
+{name:"Artbook",icon:"image"},{name:"OST (CD)",icon:"disc"},{name:"Making-of",icon:"film"},
+{name:"Carte du monde",icon:"image"},{name:"Figurine",icon:"gift"},{name:"DLC code",icon:"hash"},{name:"Autre",icon:"plus"}
 ];
 var SUPPORT_CHOICES=["Physique","D\u00e9mat\u00e9rialis\u00e9"];
 var PACKAGING_CHOICES=["Boite","Amaray","Fourreau","Steelbook","Coffret","Collector","Mediabook","Digipack","Limit\u00e9e"];
-var SUPPORTS={
-"Film":["DVD","Blu-ray","4K UHD","VHS","D\u00e9mat\u00e9rialis\u00e9"],
-"S\u00e9rie":["Coffret","Int\u00e9grale","DVD","Blu-ray","D\u00e9mat\u00e9rialis\u00e9"],
-"Jeu":["Cartouche","Bo\u00eete","Steelbook","Collector","D\u00e9mat\u00e9rialis\u00e9"],
-"Livre":["Reli\u00e9","Broch\u00e9","Poche","Num\u00e9rique"],
-"Manga":["Tank\u00f4bon","Int\u00e9grale","Num\u00e9rique"],
-"BD":["Album","Int\u00e9grale","Num\u00e9rique"],
-"Roman":["Reli\u00e9","Broch\u00e9","Poche","Num\u00e9rique"],
-"Musique":["CD","Vinyle","Cassette","Streaming"]
-};
-var PACKAGINGS={
-"Film":["Amaray","Steelbook","Coffret","Digipack","Collector"],
-"S\u00e9rie":["Coffret","Int\u00e9grale","Digipack"],
-"Jeu":["Bo\u00eete","Steelbook","Collector","Digipack"],
-"Livre":["Standard","Coffret","Tirage de t\u00eate"],
-"Manga":["Standard","Coffret","\u00c9dition limit\u00e9e"],
-"BD":["Standard","Coffret","Tirage de t\u00eate"],
-"Roman":["Standard","Coffret","Tirage de t\u00eate"],
-"Musique":["Jewel case","Digipack","Vinyle gatefold","Coffret"]
-};
 
 function loadCustomTypes(){try{return JSON.parse(localStorage.getItem("custom_types")||"[]");}catch(e){return[];}}
 function saveCustomTypes(l){localStorage.setItem("custom_types",JSON.stringify(l));}
@@ -128,7 +92,7 @@ function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g
 function truncate(s,n){s=s||"";return s.length>n? s.slice(0,n)+"\u2026":s;}
 function formatDate(s){if(!s)return "";if(s.indexOf("/")>=0)return s;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+"/"+m[2]+"/"+m[1]:s;}
 function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return{y:+m[1],mo:+m[2],d:+m[3]};m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(m)return{y:+m[3],mo:+m[2],d:+m[1]};return null;}
-function statutStr(e){return (e.isFavorite?"\u{1F49C}":"")+(e.enCours?"\u23F3":"")+(e.aVoir?"\u{1F440}":"");}
+function statutStr(e){var s=[];if(e.isFavorite)s.push("Coup de coeur");if(e.enCours)s.push("En cours");if(e.aVoir)s.push("A voir");return s.length?s.join(" / "):"Fini";}
 function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");return x.text;});}
 function descriptionOf(e){return journalLines(e).join(" | ");}
 
@@ -136,18 +100,18 @@ var db=null,USE_LS=false;
 function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
 function lsSave(l){try{localStorage.setItem("entries_ls",JSON.stringify(l));}catch(e){}}
 function openDB(){
-  return new Promise(function(res){
-    if(!("indexedDB" in window)){USE_LS=true;res(null);return;}
-    var done=false;
-    var to=setTimeout(function(){if(!done){done=true;USE_LS=true;res(null);}},3000);
-    try{
-      var r=indexedDB.open("catalogue-db",2);
-      r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("entries"))d.createObjectStore("entries",{keyPath:"id"});if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"k"});};
-      r.onsuccess=function(e){if(done)return;done=true;clearTimeout(to);db=e.target.result;res(db);};
-      r.onerror=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;res(null);};
-      r.onblocked=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;res(null);};
-    }catch(e){if(!done){done=true;clearTimeout(to);USE_LS=true;res(null);}}
-  });
+return new Promise(function(res){
+if(!("indexedDB" in window)){USE_LS=true;res(null);return;}
+var done=false;
+var to=setTimeout(function(){if(!done){done=true;USE_LS=true;res(null);}},3000);
+try{
+var r=indexedDB.open("catalogue-db",2);
+r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("entries"))d.createObjectStore("entries",{keyPath:"id"});if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"k"});};
+r.onsuccess=function(e){if(done)return;done=true;clearTimeout(to);db=e.target.result;res(db);};
+r.onerror=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;res(null);};
+r.onblocked=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;res(null);};
+}catch(e){if(!done){done=true;clearTimeout(to);USE_LS=true;res(null);}}
+});
 }
 function dbAll(){if(USE_LS)return Promise.resolve(lsAll());return new Promise(function(res,rej){var q=db.transaction("entries","readonly").objectStore("entries").getAll();q.onsuccess=function(){res(q.result||[]);};q.onerror=function(e){rej(e);};});}
 function dbPut(en){if(USE_LS){var l=lsAll();var i=-1;for(var k=0;k<l.length;k++){if(l[k].id===en.id){i=k;break;}}if(i>=0)l[i]=en;else l.push(en);lsSave(l);return Promise.resolve();}return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
