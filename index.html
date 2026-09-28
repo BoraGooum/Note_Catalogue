@@ -23,6 +23,7 @@
 <div class="sbar">
 <input type="search" id="search-input" placeholder="Chercher un titre..." enterkeyhint="search" autocomplete="off">
 <button class="loupe-btn" id="search-loupe"><span class="ic" data-ic="search"></span></button>
+<button class="loupe-btn" id="search-menu-btn"><span class="ic" data-ic="more-horizontal"></span></button>
 </div>
 <div class="type-dropdown">
 <div class="type-dropdown-btn" id="type-btn">
@@ -53,10 +54,11 @@
 </section>
 
 <section id="view-journal" class="view">
-<button class="primary wide" id="journal-add-btn" style="margin-bottom:16px;"><span class="ic" data-ic="plus"></span>Note rapide</button>
-<div class="bilan-mini" id="bilan-mini">
-<span class="ic" data-ic="calendar"></span>
-<strong id="bilan-date"></strong>
+<div class="jhead">
+<button class="nav-btn" id="bilan-prev"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="jtitle" id="bilan-title">Journal</div>
+<button class="nav-btn" id="bilan-next"><span class="ic" data-ic="chevron-right"></span></button>
+<button class="pen-btn" id="journal-pen"><span class="ic" data-ic="pen"></span></button>
 </div>
 <div class="hrow" id="j-encours"></div>
 <div class="section-title">
@@ -104,9 +106,11 @@
 <div style="width:36px;"></div>
 </div>
 <div class="m-body">
+<div class="row2 hidden" id="qn-entry-row"><label>Oeuvre<select id="qn-entry-select"></select></label></div>
 <div class="chips small" id="qn-kind"></div>
-<div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label></div>
-<div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><label>/10<input type="number" id="qn-note" inputmode="numeric" min="1" max="10"></label></div>
+<div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label><button class="icon" id="qn-clock" title="Choisir date et heure"><span class="ic" data-ic="clock"></span></button></div>
+<div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><button class="icon" id="qn-ep-plus" title="Episodes autour"><span class="ic" data-ic="plus"></span></button></div>
+<div class="row2 hidden" id="qn-session-row"><label>Durée<input type="text" id="qn-dur" placeholder="2h30..."></label></div>
 <textarea id="qn-text" placeholder="Ta note libre..."></textarea>
 </div>
 <div class="m-foot"><button class="primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
@@ -157,19 +161,20 @@
 <div class="filter-actions"><button id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span>Réinitialiser</button></div>
 </div></div>
 
-<div class="overlay" id="calendar-overlay">
-<div class="calendar-modal">
-<div class="head">
-<button class="back-btn" id="cal-back"><span class="ic" data-ic="chevron-left"></span></button>
-<h3 id="cal-month-title"></h3>
-<div class="cal-nav">
-<button class="nav-btn" id="cal-prev"><span class="ic" data-ic="chevron-left"></span></button>
-<button class="nav-btn" id="cal-next"><span class="ic" data-ic="chevron-right"></span></button>
+<div class="overlay" id="month-overlay"><div class="sheet low">
+<div class="m-head">
+<button class="back-btn" id="month-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="month-year-title"></div>
+<div style="width:36px;"></div>
 </div>
+<div class="m-body">
+<div class="row2" style="margin-bottom:14px;">
+<button id="month-prev-year"><span class="ic" data-ic="chevron-left"></span>Année</button>
+<button id="month-next-year">Année<span class="ic" data-ic="chevron-right"></span></button>
 </div>
-<div class="cal-grid" id="cal-grid"></div>
+<div class="month-grid" id="month-grid"></div>
 </div>
-</div>
+</div></div>
 
 <nav class="tabbar">
 <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
