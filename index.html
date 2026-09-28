@@ -14,6 +14,13 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<script>
+window.__dbgLines=[];
+window.__dbg=function(m){window.__dbgLines.push(m);var d=document.getElementById("dbg");if(!d){d=document.createElement("div");d.id="dbg";d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:9999;background:#7a1020;color:#fff;font:11px monospace;padding:8px;white-space:pre-wrap;max-height:45vh;overflow:auto;";document.body.appendChild(d);}d.textContent=window.__dbgLines.join("\n");};
+window.addEventListener("error",function(e){__dbg("ERR: "+e.message+" @"+(e.filename||"").split("/").pop()+":"+e.lineno);});
+window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.reason&&e.reason.message)||e.reason));});
+setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.children.length===0){__dbg("DIAG: data.js="+(typeof window.ic)+" ui.js="+(typeof window.ST)+" app.js="+(typeof window.init)+" idb="+("indexedDB" in window));}},4000);
+</script>
 <header><h1>Ma Collection</h1></header>
 <main>
   <section id="view-search" class="view active">
