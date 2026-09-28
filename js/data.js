@@ -2,7 +2,7 @@ var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
 var BUILD="2026-09-28T03:00:00+02:00";
 var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var OE="\u0153",OEC="\u0152";
-var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#17112E'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8B83A8' text-anchor='middle'>pas d'affiche</text></svg>");
+var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#17112E'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>");
 var I={
 search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
 library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
@@ -77,13 +77,37 @@ function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2}
 function statutStr(e){return (e.isFavorite?"\u{1F49C}":"")+(e.enCours?"\u23F3":"")+(e.aVoir?"\u{1F440}":"");}
 function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");return x.text;});}
 function descriptionOf(e){return journalLines(e).join(" | ");}
-var db;
-function openDB(){return new Promise(function(res,rej){var r=indexedDB.open("catalogue-db",2);
-r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("entries"))d.createObjectStore("entries",{keyPath:"id"});if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"k"});};
-r.onsuccess=function(e){db=e.target.result;res(db);};r.onerror=function(e){rej(e);};});}
-function dbAll(){return new Promise(function(res,rej){var q=db.transaction("entries","readonly").objectStore("entries").getAll();q.onsuccess=function(){res(q.result||[]);};q.onerror=function(e){rej(e);};});}
-function dbPut(en){return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
-function dbDelete(id){return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").delete(id);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
+
+/* ===== STOCKAGE : IndexedDB avec repli localStorage ===== */
+var db=null, USE_LS=false;
+function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
+function lsSave(l){try{localStorage.setItem("entries_ls",JSON.stringify(l));}catch(e){}}
+function openDB(){
+  return new Promise(function(res){
+    if(!("indexedDB" in window)){USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (pas d'IndexedDB)");res(null);return;}
+    var done=false;
+    var to=setTimeout(function(){if(!done){done=true;USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB ne r\u00e9pond pas)");res(null);}},3000);
+    try{
+      var r=indexedDB.open("catalogue-db",2);
+      r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("entries"))d.createObjectStore("entries",{keyPath:"id"});if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"k"});};
+      r.onsuccess=function(e){if(done)return;done=true;clearTimeout(to);db=e.target.result;res(db);};
+      r.onerror=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB erreur)");res(null);};
+      r.onblocked=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB bloqu\u00e9)");res(null);};
+    }catch(e){if(!done){done=true;clearTimeout(to);USE_LS=true;res(null);}}
+  });
+}
+function dbAll(){
+  if(USE_LS)return Promise.resolve(lsAll());
+  return new Promise(function(res,rej){var q=db.transaction("entries","readonly").objectStore("entries").getAll();q.onsuccess=function(){res(q.result||[]);};q.onerror=function(e){rej(e);};});
+}
+function dbPut(en){
+  if(USE_LS){var l=lsAll();var i=-1;for(var k=0;k<l.length;k++){if(l[k].id===en.id){i=k;break;}}if(i>=0)l[i]=en;else l.push(en);lsSave(l);return Promise.resolve();}
+  return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});
+}
+function dbDelete(id){
+  if(USE_LS){lsSave(lsAll().filter(function(x){return x.id!==id;}));return Promise.resolve();}
+  return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").delete(id);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});
+}
 var SETTINGS_DEFAULTS={amoled:true,density:"comfort",fontSize:"m",animOn:true,hcMode:false,searchMode:"simple",defaultType:"Film",panelMode:"simple",colView:"grid",alertBackupDays:14,fuzzy:true};
 function settingsLoad(){try{return Object.assign({},SETTINGS_DEFAULTS,JSON.parse(localStorage.getItem("settings")||"{}"));}catch(e){return Object.assign({},SETTINGS_DEFAULTS);}}
 function settingsSave(s){localStorage.setItem("settings",JSON.stringify(s));}
