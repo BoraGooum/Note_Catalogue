@@ -64,10 +64,10 @@ button.icon{padding:10px;width:44px;}
 .gcell{min-width:0;}
 .gtitle{font-size:11.5px;font-weight:600;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-/* FLUX JOURNAL - POINT ROND CORRIGÉ */
+/* FLUX JOURNAL - AFFICHE AU LIEU DU POINT */
 .fitem{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd);cursor:pointer;align-items:flex-start;}
 .fitem:last-child{border-bottom:none;}
-.fdot{width:8px;height:8px;min-width:8px;border-radius:50%;background:var(--acc);margin-top:6px;flex:none;}
+.fitem .poster{width:60px;padding-top:90px;margin-right:10px;flex-shrink:0;}
 .fitem>div{min-width:0;flex:1;}
 .ftime{font-size:10.5px;color:var(--dim);font-family:var(--fm);}
 .ftext{font-size:13.5px;}
@@ -146,11 +146,13 @@ nav.tabbar button .ic svg{width:20px;height:20px;}
   </div>
 </div>
 
-<!-- FLUX JOURNAL -->
+<!-- FLUX JOURNAL AVEC AFFICHES -->
 <h3 style="margin:20px 0 10px;">Flux journal</h3>
 <div class="card">
   <div class="fitem">
-    <div class="fdot"></div>
+    <div class="poster n-enc">
+      <div class="art" style="background:linear-gradient(135deg,#123c52,#0a1e2e)"></div>
+    </div>
     <div>
       <div class="ftime">28/09 à 08h34</div>
       <div class="ftext">Kfkfkfkf</div>
@@ -158,7 +160,10 @@ nav.tabbar button .ic svg{width:20px;height:20px;}
     </div>
   </div>
   <div class="fitem">
-    <div class="fdot"></div>
+    <div class="poster n-fini">
+      <div class="art" style="background:linear-gradient(135deg,#7a2f1f,#241436)"></div>
+      <div class="pnote">8.5</div>
+    </div>
     <div>
       <div class="ftime">27/09 à 23h15</div>
       <div class="ftext">1h deja, j'adore !</div>
@@ -262,7 +267,6 @@ function buildCustomSelect(selectId,listId,labelId,values){
   var label=document.getElementById(labelId);
   var selected=null;
   
-  // Construire la liste
   values.forEach(function(v){
     var item=document.createElement("div");
     item.className="custom-select-item";
@@ -277,12 +281,10 @@ function buildCustomSelect(selectId,listId,labelId,values){
     list.appendChild(item);
   });
   
-  // Toggle liste
   btn.addEventListener("click",function(){
     list.classList.toggle("open");
   });
   
-  // Fermer si clic ailleurs
   document.addEventListener("click",function(e){
     if(!document.getElementById(selectId).contains(e.target)){
       list.classList.remove("open");
