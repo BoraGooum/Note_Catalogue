@@ -196,6 +196,8 @@ button.wide{width:100%;}
 /* ─────────── 10. OVERLAYS / SHEET ─────────── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;z-index:200;}
 .overlay.on{display:flex;}
+/* Modale générique TOUJOURS au-dessus des autres overlays */
+#modal-overlay{z-index:300;}
 .overlay.dark{background:rgba(0,0,0,.95);flex-direction:column;align-items:stretch;}
 @media(min-width:600px),(orientation:landscape){.overlay{align-items:center;padding:16px;}.sheet{border-radius:18px;max-height:85vh;}}
 .sheet{width:100%;max-width:560px;max-height:88vh;max-height:88dvh;display:flex;flex-direction:column;background:var(--s2);border:1px solid var(--bd);border-bottom:none;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));overscroll-behavior:contain;}
