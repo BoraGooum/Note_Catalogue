@@ -185,7 +185,6 @@ async function init(){
   document.getElementById("m-close").addEventListener("click",closeModal);
   document.getElementById("modal-overlay").addEventListener("click",function(e){if(e.target.id==="modal-overlay")closeModal();});
   document.getElementById("r-close").addEventListener("click",closeReader);
-  document.getElementById("r-close2").addEventListener("click",closeReader);
   document.getElementById("r-delete").addEventListener("click",function(){
     if(ST.currentReaderEntry&&ST.currentReaderJournalIdx!=null){
       var entry=ST.currentReaderEntry;
