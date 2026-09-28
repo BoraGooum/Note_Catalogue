@@ -16,6 +16,7 @@ link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2
 folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>',
 calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>',
 clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+timer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>',
 x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
 'chevron-left':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>',
 'chevron-right':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>',
@@ -35,7 +36,6 @@ duplicate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
 alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
 save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
-sheet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>',
 palette:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
 tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
 'bar-chart-3':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>',
@@ -52,12 +52,13 @@ disc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2
 scroll:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/></svg>',
 image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
 pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
-smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>'
+smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>',
+'maximize-2':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>'
 };
 function ic(n){return I[n]||'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';}
 
 var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
-var BUILD="2026-09-29T21:00:00+02:00";
+var BUILD="2026-09-30T03:00:00+02:00";
 var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var OE="\u0153",OEC="\u0152";
 var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#121216'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#9C93B8' text-anchor='middle'>pas d'affiche</text></svg>");
@@ -78,6 +79,8 @@ var BONUSES=[
 ];
 var SUPPORT_CHOICES=["Physique","D\u00e9mat\u00e9rialis\u00e9"];
 var PACKAGING_CHOICES=["Boite","Amaray","Fourreau","Steelbook","Coffret","Collector","Mediabook","Digipack","Limit\u00e9e"];
+var MONTHS=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
+var MONTHS_MIN=["janvier","f\u00e9vrier","mars","avril","mai","juin","juillet","ao\u00fbt","septembre","octobre","novembre","d\u00e9cembre"];
 
 function loadCustomTypes(){try{return JSON.parse(localStorage.getItem("custom_types")||"[]");}catch(e){return[];}}
 function saveCustomTypes(l){localStorage.setItem("custom_types",JSON.stringify(l));}
@@ -93,8 +96,16 @@ function truncate(s,n){s=s||"";return s.length>n? s.slice(0,n)+"\u2026":s;}
 function formatDate(s){if(!s)return "";if(s.indexOf("/")>=0)return s;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+"/"+m[2]+"/"+m[1]:s;}
 function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return{y:+m[1],mo:+m[2],d:+m[3]};m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(m)return{y:+m[3],mo:+m[2],d:+m[1]};return null;}
 function statutStr(e){var s=[];if(e.isFavorite)s.push("Coup de coeur");if(e.enCours)s.push("En cours");if(e.aVoir)s.push("A voir");return s.length?s.join(" / "):"Fini";}
-function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");return x.text;});}
+function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");if(x.kind==="session")return "Session "+(x.dur||"")+(x.text?" : "+x.text:"");return x.text;});}
 function descriptionOf(e){return journalLines(e).join(" | ");}
+function noteColors(n){
+if(n==null)return null;
+if(n===10)return["linear-gradient(135deg,#FFD700,#B8860B)","#1a1400"];
+if(n===9)return["linear-gradient(135deg,#F2F2F2,#9E9E9E)","#111111"];
+if(n>=7)return["linear-gradient(135deg,#46A758,#2CB67D)","#ffffff"];
+if(n>=5)return["linear-gradient(135deg,#FFB224,#F76B15)","#1a1200"];
+return["linear-gradient(135deg,#E5484D,#B23B3B)","#ffffff"];
+}
 
 var db=null,USE_LS=false;
 function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
