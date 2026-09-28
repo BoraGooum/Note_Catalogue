@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ma Collection — Vision finale</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D0A1F; --s1:#17112E; --s2:#1F1738; --bd:#2A1F4A;
+  --acc:#B24BF3; --acc2:#7F5AF0; --fav:#FF5DA2; --enc:#2CB67D; --voir:#F2E527;
+  --tx:#EFECE6; --dim:#8B83A8; --r:10px;
+  --fs:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --ft:'Fraunces',Georgia,serif;
+  --fm:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--tx);font-family:var(--fs);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5;}
+body{min-height:100vh;padding-bottom:80px;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(178,75,243,0.08), transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(127,90,240,0.06), transparent 50%);
+}
+h1,h2,h3{font-family:var(--ft);font-weight:600;letter-spacing:-0.01em;}
+.mono{font-family:var(--fm);}
+.dim{color:var(--dim);}
+
+/* ===== TOP ===== */
+header{padding:20px 16px 14px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+header h1{font-size:26px;color:var(--tx);}
+header .sub{font-size:12px;color:var(--dim);}
+header .date{font-size:11px;color:var(--dim);font-family:var(--fm);}
+
+main{padding:0 14px 30px;}
+
+/* ===== SECTION TITLES ===== */
+.stitle{font-family:var(--ft);font-size:15px;color:var(--tx);margin:22px 0 10px;display:flex;align-items:center;gap:8px;}
+.stitle .ic{color:var(--acc);}
+.stitle .c{color:var(--dim);font-family:var(--fm);font-size:11px;margin-left:auto;}
+
+/* ===== CHIPS ===== */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.chip{padding:7px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--bd);background:var(--s1);color:var(--dim);cursor:pointer;transition:all .15s;}
+.chip.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(178,75,243,.3);}
+.chip svg{width:13px;height:13px;vertical-align:-2px;margin-right:3px;}
+
+/* ===== SEARCH BAR ===== */
+.sbar{display:flex;gap:8px;margin-bottom:12px;align-items:center;}
+.sbar .field{flex:1;position:relative;}
+.sbar input{width:100%;padding:11px 11px 11px 38px;background:var(--s1);border:1px solid var(--bd);color:var(--tx);border-radius:var(--r);font-family:var(--fs);font-size:14px;}
+.sbar input:focus{outline:none;border-color:var(--acc);}
+.sbar .field svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--dim);}
+.btn{padding:10px 14px;background:var(--s1);border:1px solid var(--bd);color:var(--tx);border-radius:var(--r);cursor:pointer;font-family:var(--fs);font-size:13px;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
+.btn svg{width:16px;height:16px;}
+.btn:active{transform:translateY(1px);}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(178,75,243,.3);}
+.btn.icon{padding:10px;}
+
+/* ===== PILL SEGMENT ===== */
+.seg{display:inline-flex;background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:3px;}
+.seg button{background:transparent;border:none;color:var(--dim);padding:6px 16px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;}
+.seg button.on{background:var(--acc);color:#fff;}
+
+/* ===== GRID (3 colonnes) ===== */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media (min-width:600px){ .grid{grid-template-columns:repeat(4,1fr);} }
+
+/* ===== CARTE AFFICHE + NÉONS ===== */
+.poster{position:relative;aspect-ratio:2/3;border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s;}
+.poster:active{transform:scale(0.97);}
+.poster .img{position:absolute;inset:0;width:100%;height:100%;border-radius:8px;}
+.poster .ttl{position:absolute;left:0;right:0;bottom:0;padding:16px 10px 10px;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;font-family:var(--ft);font-size:13px;font-weight:600;line-height:1.2;}
+
+/* Néon FINI (liseré fixe + halo doux) */
+.poster.n-fini{box-shadow:0 0 0 1.5px var(--acc), 0 0 14px rgba(178,75,243,.35);}
+/* Néon EN COURS (anneau qui tourne) */
+.poster.n-enc::before{content:'';position:absolute;inset:-3px;border-radius:11px;background:conic-gradient(from 0deg,transparent 0deg,transparent 270deg,var(--acc) 360deg);animation:spin 4s linear infinite;z-index:-1;}
+.poster.n-enc::after{content:'';position:absolute;inset:0;border-radius:8px;background:var(--s1);z-index:-1;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Néon À VOIR (pulse lent) */
+.poster.n-voir{animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 1px rgba(178,75,243,.3), 0 0 6px rgba(178,75,243,.15);}
+  50%{box-shadow:0 0 0 1.5px rgba(178,75,243,.9), 0 0 18px rgba(178,75,243,.5);}
+}
+/* Badge statut (coin haut-droite) */
+.poster .badge{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(13,10,31,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.poster .badge svg{width:12px;height:12px;color:var(--acc);}
+/* Pastille note (coin bas-gauche) */
+.poster .note{position:absolute;bottom:6px;left:6px;background:rgba(13,10,31,.85);backdrop-filter:blur(4px);padding:2px 7px;border-radius:4px;font-family:var(--fm);font-size:10px;font-weight:600;color:var(--tx);border:1px solid rgba(178,75,243,.4);}
+
+/* ===== DÉTAIL (hero sobre) ===== */
+.detail{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-top:8px;display:flex;gap:14px;}
+.detail .p{width:92px;flex-shrink:0;}
+.detail .p .poster{width:92px;}
+.detail .info{flex:1;min-width:0;}
+.detail h2{font-size:20px;line-height:1.2;margin-bottom:6px;}
+.detail .meta{font-size:12px;color:var(--dim);margin-bottom:8px;display:flex;flex-wrap:wrap;gap:6px;}
+.detail .meta .tag{background:var(--s2);padding:3px 9px;border-radius:12px;font-family:var(--fm);font-size:11px;}
+.detail .meta .tag.note{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-weight:600;}
+.detail .meta .tag.enc{background:rgba(44,182,125,.15);color:var(--enc);border:1px solid rgba(44,182,125,.3);}
+.detail .meta .tag.voir{background:rgba(242,229,39,.1);color:var(--voir);border:1px solid rgba(242,229,39,.3);}
+.detail .meta .tag.fav{background:rgba(255,93,162,.12);color:var(--fav);border:1px solid rgba(255,93,162,.3);}
+.detail .phys{margin-top:6px;padding:8px 10px;background:var(--s2);border-radius:8px;font-family:var(--fm);font-size:11px;color:var(--dim);display:flex;align-items:center;gap:8px;}
+.detail .phys svg{width:14px;height:14px;color:var(--acc);}
+
+/* ===== TIMELINE JOURNAL ===== */
+.timeline{border-left:2px solid var(--bd);margin-left:8px;padding-left:14px;margin-top:10px;}
+.tl-entry{position:relative;padding:6px 0 14px;}
+.tl-entry::before{content:'';position:absolute;left:-19px;top:10px;width:10px;height:10px;border-radius:50%;background:var(--acc);}
+.tl-entry .when{font-family:var(--fm);font-size:10px;color:var(--dim);}
+.tl-entry .what{font-size:13px;line-height:1.5;margin-top:2px;cursor:pointer;}
+.tl-entry .what.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* ===== READER DIALOG ===== */
+.overlay{position:fixed;inset:0;background:rgba(5,4,12,.85);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px;z-index:1000;}
+.overlay.on{display:flex;}
+.reader{background:var(--s2);border:1px solid var(--bd);border-radius:16px;padding:22px;max-width:480px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.reader h3{font-size:17px;color:var(--acc);margin-bottom:4px;}
+.reader .sub{font-size:11px;color:var(--dim);font-family:var(--fm);margin-bottom:14px;}
+.reader .body{flex:1;overflow-y:auto;font-size:14px;line-height:1.7;padding-right:4px;}
+.reader .body p{margin-bottom:12px;}
+.reader .foot{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--bd);}
+.reader .foot .btn{flex:1;justify-content:center;}
+
+/* ===== CALENDRIER (corrigé, stable) ===== */
+.cal{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px;}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cal-head .t{font-family:var(--ft);font-size:15px;}
+.cal-head button{background:transparent;border:none;color:var(--dim);cursor:pointer;padding:4px 8px;}
+.cal-head svg{width:16px;height:16px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;min-width:0;}
+.cal .dn{font-size:10px;color:var(--dim);text-align:center;padding:4px 0;font-family:var(--fm);overflow:hidden;text-overflow:ellipsis;}
+.cal .d{aspect-ratio:1;background:var(--s2);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid transparent;overflow:hidden;}
+.cal .d.em{background:transparent;cursor:default;}
+.cal .d.has{border-color:var(--acc);background:rgba(178,75,243,.12);}
+.cal .d .dot{width:4px;height:4px;border-radius:50%;background:var(--acc);margin-top:2px;}
+
+/* ===== OPTIONS (pills maison) ===== */
+.opt-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px;}
+.opt-card h3{font-size:13px;color:var(--acc);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.opt-card h3 svg{width:14px;height:14px;}
+.opt-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;gap:10px;}
+.opt-row .lbl{font-size:13px;}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--bd);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--acc);}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;}
+.toggle.on::after{left:20px;}
+.pill-sel{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:16px;padding:2px;}
+.pill-sel button{padding:5px 11px;background:transparent;border:none;color:var(--dim);font-size:11px;border-radius:12px;cursor:pointer;}
+.pill-sel button.on{background:var(--acc);color:#fff;}
+
+/* ===== TABBAR ===== */
+.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(23,17,46,.92);backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:100;}
+.tabbar button{flex:1;background:none;border:none;color:var(--dim);font-size:10px;padding:6px 2px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.tabbar button svg{width:20px;height:20px;}
+.tabbar button.on{color:var(--acc);}
+
+/* ===== LABELS ===== */
+.lbl{position:absolute;top:-22px;left:0;font-size:10px;color:var(--acc);font-family:var(--fm);text-transform:uppercase;letter-spacing:.1em;pointer-events:none;}
+.demo-block{position:relative;padding-top:26px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Ma Collection</h1>
+    <div class="sub">Journal & étagère personnels</div>
+  </div>
+  <div class="date">28.09.2026</div>
+</header>
+
+<main>
+
+<!-- ============ RECHERCHE ============ -->
+<div class="stitle">Recherche</div>
+<div class="chips">
+  <div class="chip on">Film</div>
+  <div class="chip">Série</div>
+  <div class="chip">Jeu</div>
+  <div class="chip">Livre</div>
+  <div class="chip">Manga</div>
+  <div class="chip">BD</div>
+  <div class="chip">Roman</div>
+  <div class="chip">Musique</div>
+  <div class="chip">+</div>
+</div>
+<div class="sbar">
+  <div class="field">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input placeholder="Chercher un titre…">
+  </div>
+  <button class="btn primary">Go</button>
+  <button class="btn icon" title="Récentes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  </button>
+</div>
+<div class="seg" style="margin-bottom:14px;">
+  <button class="on">Simple</button>
+  <button>Avancé</button>
+</div>
+
+<!-- ============ COLLECTION : 3 NÉONS ============ -->
+<div class="stitle">Collection <span class="c">142 œuvres · 3 néons</span></div>
+<div class="demo-block">
+  <span class="lbl">Fini / Vu / Lu</span>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="poster n-fini" onclick="openReader('Dune 2','Film · 2024','8/10 · Fini','Après la destruction de Caladan, Paul Atreides s\'allie aux Fremen pour venger sa famille. Visuellement spectaculaire, le film tient ses promesses épiques. Villeneuve signe une suite à la hauteur, portée par un Zendaya plus présent et un Austin Butler glaçant en Feyd-Rautha.')">
+      <div class="img" style="background:linear-gradient(135deg,#d4a574,#8a4f2a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="note">8.5</div>
+      <div class="ttl">Dune 2</div>
+    </div>
+    <div class="poster n-fini" onclick="openReader('Blade Runner 2049','Film · 2017','9/10 · Fini','Une œuvre visuelle exceptionnelle. Villeneuve honore l\'original tout en créant quelque chose de nouveau. Ryan Gosling en K est parfait. La photographie de Deakins est à couper le souffle.')">
+      <div class="img" style="background:linear-gradient(135deg,#1a3a5a,#0a1a2a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="note">9.0</div>
+      <div class="ttl">Blade Runner 2049</div>
+    </div>
+    <div class="poster n-fini" onclick="openReader('Le Nom de la Rose','Roman · 1980','9/10 · Lu','Un roman policier médiéval qui mêle théologie, philosophie et enquête. Eco tisse une œuvre dense qui se relit avec plaisir. Le cadre de l\'abbaye est fascinant.')">
+      <div class="img" style="background:linear-gradient(135deg,#5a3a1a,#241408)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="note">9.0</div>
+      <div class="ttl">Le Nom de la Rose</div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-block" style="margin-top:30px;">
+  <span class="lbl">En cours (anneau qui tourne)</span>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="poster n-enc" onclick="openReader('Severance','Série · S2E4','En cours','La saison 2 confirme le génie de la série. Les flashbacks sur la vie extérieure enrichissent l\'intrigue. Adam Scott est toujours parfait en Mark. La tension monte épisode après épisode.')">
+      <div class="img" style="background:linear-gradient(135deg,#123c52,#0a1e2e)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+      <div class="ttl">Severance S2</div>
+    </div>
+    <div class="poster n-enc" onclick="openReader('Baldur\'s Gate 3','Jeu · Acte 2','En cours','L\'acte 2 est un bijou de narration. Les choix ont des conséquences réelles et surprenantes. Le système de combat D&D 5e est parfaitement traduit. Shadowheart est mon perso préféré.')">
+      <div class="img" style="background:linear-gradient(135deg,#3a2352,#1a1030)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+      <div class="ttl">Baldur's Gate 3</div>
+    </div>
+    <div class="poster n-enc" onclick="openReader('Berserk','Manga · Tome 14','En cours','L\'arc du Millénaire Faucon est d\'une intensité rare. Miura maîtrise parfaitement le rythme. Les planches sont d\'une beauté absolue. La violence et la poésie se marient parfaitement.')">
+      <div class="img" style="background:linear-gradient(135deg,#d8c39a,#6d4f2a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+      <div class="ttl">Berserk T.14</div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-block" style="margin-top:30px;">
+  <span class="lbl">À voir (pulse lent)</span>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="poster n-voir" onclick="openReader('The Substance','Film · 2024','À voir','Film de Coralie Fargeat avec Demi Moore. Prix du scénario à Cannes. On me l\'a beaucoup recommandé.')">
+      <div class="img" style="background:linear-gradient(135deg,#e0483a,#5a0a08)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="ttl">The Substance</div>
+    </div>
+    <div class="poster n-voir" onclick="openReader('Shōgun','Série · 2024','À voir','Adaptation du roman de James Clavell. 10 épisodes. Critiques élogieuses partout.')">
+      <div class="img" style="background:linear-gradient(135deg,#8a1e1e,#3a0a0a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="ttl">Shōgun</div>
+    </div>
+    <div class="poster n-voir" onclick="openReader('Final Fantasy VII Rebirth','Jeu · 2024','À voir','Suite du remake. Sortie prévue. Hâte de retrouver Cloud et son équipe.')">
+      <div class="img" style="background:linear-gradient(135deg,#2a4a6a,#0a1a3a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="ttl">FF7 Rebirth</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DÉTAIL SOBRE ============ -->
+<div class="stitle">Détail sobre</div>
+<div class="detail">
+  <div class="p">
+    <div class="poster n-fini">
+      <div class="img" style="background:linear-gradient(135deg,#d4a574,#8a4f2a)"></div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="note">8.5</div>
+    </div>
+  </div>
+  <div class="info">
+    <h2>Dune : Deuxième Partie</h2>
+    <div class="meta">
+      <span class="tag note">8.5/10</span>
+      <span class="tag">Film</span>
+      <span class="tag">2024</span>
+      <span class="tag fav">❤ Coup de cœur</span>
+    </div>
+    <div class="phys">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-3a2 2 0 0 1-2-2V2"/><path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z"/><path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8"/></svg>
+      Steelbook · Blu-ray · EAN 5051892264409
+    </div>
+    <div class="stitle" style="margin:14px 0 4px;font-size:13px;">Journal <span class="c">3 entrées</span></div>
+    <div class="timeline">
+      <div class="tl-entry">
+        <div class="when mono">27.09 · 23h15</div>
+        <div class="what clamp" onclick="openReader('Dune 2','Film · 2024','Après la destruction de Caladan, Paul Atreides s\'allie aux Fremen pour venger sa famille. Visuellement spectaculaire, le film tient ses promesses épiques. Villeneuve signe une suite à la hauteur, portée par un Zendaya plus présent et un Austin Butler glaçant en Feyd-Rautha.')">Après la destruction de Caladan, Paul Atreides s'allie aux Fremen pour venger sa famille. Visuellement spectaculaire, le film tient ses promesses épiques…</div>
+      </div>
+      <div class="tl-entry">
+        <div class="when mono">20.09 · 19h00</div>
+        <div class="what clamp" onclick="openReader('Dune 2','Film · 2024','Deuxième vision en IMAX, toujours aussi impressionnant. La scène du ver des sables reste un sommet de cinéma.')">Deuxième vision en IMAX, toujours aussi impressionnant. La scène du ver des sables reste un sommet de cinéma…</div>
+      </div>
+      <div class="tl-entry">
+        <div class="when mono">15.09 · 21h30</div>
+        <div class="what clamp" onclick="openReader('Dune 2','Film · 2024','Première vision. Époustouflant visuellement, mais j\'ai trouvé le rythme un peu long au milieu. À revoir.')">Première vision. Époustouflant visuellement, mais j'ai trouvé le rythme un peu long au milieu. À revoir…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CALENDRIER ============ -->
+<div class="stitle">Septembre 2026</div>
+<div class="cal">
+  <div class="cal-head">
+    <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="t">Septembre 2026</div>
+    <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+  <div class="cal-grid">
+    <div class="dn">L</div><div class="dn">M</div><div class="dn">M</div><div class="dn">J</div><div class="dn">V</div><div class="dn">S</div><div class="dn">D</div>
+    <div class="d em"></div>
+    <div class="d">1</div><div class="d">2</div><div class="d">3</div><div class="d">4</div><div class="d">5</div><div class="d has">6<div class="dot"></div></div>
+    <div class="d">7</div><div class="d">8</div><div class="d">9</div><div class="d">10</div><div class="d">11</div><div class="d">12</div><div class="d">13</div>
+    <div class="d">14</div><div class="d has">15<div class="dot"></div></div><div class="d">16</div><div class="d">17</div><div class="d">18</div><div class="d">19</div><div class="d has">20<div class="dot"></div></div>
+    <div class="d">21</div><div class="d">22</div><div class="d">23</div><div class="d">24</div><div class="d">25</div><div class="d">26</div><div class="d has">27<div class="dot"></div></div>
+    <div class="d has">28<div class="dot"></div></div><div class="d">29</div><div class="d">30</div><div class="d em"></div><div class="d em"></div><div class="d em"></div><div class="d em"></div>
+  </div>
+</div>
+
+<!-- ============ OPTIONS ============ -->
+<div class="stitle">Options (sans select natif)</div>
+<div class="opt-card">
+  <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Sauvegarde</h3>
+  <div class="opt-row">
+    <div class="lbl">Export JSON</div>
+    <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter</button>
+  </div>
+  <div class="opt-row">
+    <div class="lbl">Dernier backup</div>
+    <div class="mono dim" style="font-size:11px;">28.09.2026</div>
+  </div>
+  <div class="opt-row">
+    <div class="lbl">Alerte backup</div>
+    <div class="pill-sel">
+      <button>7j</button>
+      <button class="on">14j</button>
+      <button>30j</button>
+      <button>Off</button>
+    </div>
+  </div>
+</div>
+
+<div class="opt-card">
+  <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m9.66-15.66-5.2 3m-8.66 5-5.2 3M1.34 8.34l5.2 3m8.66 5 5.2 3"/></svg>Apparence</h3>
+  <div class="opt-row">
+    <div class="lbl">Animations</div>
+    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="opt-row">
+    <div class="lbl">Taille texte</div>
+    <div class="pill-sel">
+      <button>Petit</button>
+      <button class="on">Moyen</button>
+      <button>Grand</button>
+    </div>
+  </div>
+  <div class="opt-row">
+    <div class="lbl">Densité</div>
+    <div class="pill-sel">
+      <button class="on">Confort</button>
+      <button>Compact</button>
+    </div>
+  </div>
+  <div class="opt-row">
+    <div class="lbl">Contraste élevé</div>
+    <div class="toggle" onclick="this.classList.toggle('on')"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- ============ TABBAR ============ -->
+<nav class="tabbar">
+  <button>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    Recherche
+  </button>
+  <button class="on">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>
+    Collection
+  </button>
+  <button>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+    Journal
+  </button>
+  <button>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+  </button>
+</nav>
+
+<!-- ============ READER DIALOG ============ -->
+<div class="overlay" id="reader" onclick="if(event.target.id==='reader')closeReader()">
+  <div class="reader">
+    <h3 id="r-title">Titre</h3>
+    <div class="sub mono" id="r-sub">meta</div>
+    <div class="body" id="r-body"></div>
+    <div class="foot">
+      <button class="btn" onclick="copyReader()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        Copier
+      </button>
+      <button class="btn primary" onclick="closeReader()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openReader(title, sub, text){
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent = sub;
+  document.getElementById('r-body').innerHTML = '<p>'+text+'</p>';
+  document.getElementById('reader').classList.add('on');
+}
+function closeReader(){
+  document.getElementById('reader').classList.remove('on');
+}
+function copyReader(){
+  var t = document.getElementById('r-body').innerText;
+  navigator.clipboard.writeText(t).then(function(){
+    var btn = event.target.closest('.btn');
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>Copié';
+    setTimeout(function(){ btn.innerHTML = orig; }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
