@@ -2,7 +2,7 @@ var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
 var BUILD="2026-09-28T03:00:00+02:00";
 var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var OE="\u0153",OEC="\u0152";
-var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#17112E'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#8FA0A6' text-anchor='middle'>pas d'affiche</text></svg>");
+var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#121216'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#9C93B8' text-anchor='middle'>pas d'affiche</text></svg>");
 var I={
 search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
 library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
@@ -40,10 +40,27 @@ alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="
 save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
 sheet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>',
 palette:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
-tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>'
+tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
+film:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>',
+tv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>',
+gamepad2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/></svg>',
+bookOpen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+scroll:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/></svg>',
+disc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
 };
 function ic(n){return I[n]||'';}
-var CORE_TYPES=["Film","S\u00e9rie","Jeu","Livre","Manga","BD","Roman","Musique"];
+var CORE_TYPES=[
+  {name:"Film",icon:"film"},
+  {name:"S\u00e9rie",icon:"tv"},
+  {name:"Jeu",icon:"gamepad2"},
+  {name:"Livre",icon:"book"},
+  {name:"Manga",icon:"bookOpen"},
+  {name:"BD",icon:"image"},
+  {name:"Roman",icon:"scroll"},
+  {name:"Musique",icon:"disc"}
+];
 var SUPPORTS={
 "Film":["DVD","Blu-ray","4K UHD","VHS","D\u00e9mat\u00e9rialis\u00e9"],
 "S\u00e9rie":["Coffret","Int\u00e9grale","DVD","Blu-ray","D\u00e9mat\u00e9rialis\u00e9"],
@@ -67,6 +84,7 @@ var PACKAGINGS={
 function loadCustomTypes(){try{return JSON.parse(localStorage.getItem("custom_types")||"[]");}catch(e){return[];}}
 function saveCustomTypes(l){localStorage.setItem("custom_types",JSON.stringify(l));}
 function allTypes(){return CORE_TYPES.concat(loadCustomTypes().map(function(t){return t.name;}));}
+function allTypesWithIcons(){return CORE_TYPES.concat(loadCustomTypes().map(function(t){return {name:t.name,icon:"tag"};}));}
 var pad2=function(n){return String(n).padStart(2,"0");};
 function nowStamp(){var d=new Date();return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+" \u00e0 "+pad2(d.getHours())+"h"+pad2(d.getMinutes());}
 function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9]/g,"");}
@@ -77,40 +95,29 @@ function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2}
 function statutStr(e){return (e.isFavorite?"\u{1F49C}":"")+(e.enCours?"\u23F3":"")+(e.aVoir?"\u{1F440}":"");}
 function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");return x.text;});}
 function descriptionOf(e){return journalLines(e).join(" | ");}
-
-/* ===== STOCKAGE : IndexedDB avec repli localStorage ===== */
-var db=null, USE_LS=false;
+var db=null,USE_LS=false;
 function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
 function lsSave(l){try{localStorage.setItem("entries_ls",JSON.stringify(l));}catch(e){}}
 function openDB(){
   return new Promise(function(res){
-    if(!("indexedDB" in window)){USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (pas d'IndexedDB)");res(null);return;}
+    if(!("indexedDB" in window)){USE_LS=true;if(window.__dbg)__dbg("storage: localStorage");res(null);return;}
     var done=false;
-    var to=setTimeout(function(){if(!done){done=true;USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB ne r\u00e9pond pas)");res(null);}},3000);
+    var to=setTimeout(function(){if(!done){done=true;USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (timeout)");res(null);}},3000);
     try{
       var r=indexedDB.open("catalogue-db",2);
       r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("entries"))d.createObjectStore("entries",{keyPath:"id"});if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"k"});};
       r.onsuccess=function(e){if(done)return;done=true;clearTimeout(to);db=e.target.result;res(db);};
-      r.onerror=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB erreur)");res(null);};
-      r.onblocked=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (IndexedDB bloqu\u00e9)");res(null);};
+      r.onerror=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (error)");res(null);};
+      r.onblocked=function(){if(done)return;done=true;clearTimeout(to);USE_LS=true;if(window.__dbg)__dbg("storage: localStorage (blocked)");res(null);};
     }catch(e){if(!done){done=true;clearTimeout(to);USE_LS=true;res(null);}}
   });
 }
-function dbAll(){
-  if(USE_LS)return Promise.resolve(lsAll());
-  return new Promise(function(res,rej){var q=db.transaction("entries","readonly").objectStore("entries").getAll();q.onsuccess=function(){res(q.result||[]);};q.onerror=function(e){rej(e);};});
-}
-function dbPut(en){
-  if(USE_LS){var l=lsAll();var i=-1;for(var k=0;k<l.length;k++){if(l[k].id===en.id){i=k;break;}}if(i>=0)l[i]=en;else l.push(en);lsSave(l);return Promise.resolve();}
-  return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});
-}
-function dbDelete(id){
-  if(USE_LS){lsSave(lsAll().filter(function(x){return x.id!==id;}));return Promise.resolve();}
-  return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").delete(id);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});
-}
-var SETTINGS_DEFAULTS={amoled:true,density:"comfort",fontSize:"m",animOn:true,hcMode:false,searchMode:"simple",defaultType:"Film",panelMode:"simple",colView:"grid",alertBackupDays:14,fuzzy:true};
+function dbAll(){if(USE_LS)return Promise.resolve(lsAll());return new Promise(function(res,rej){var q=db.transaction("entries","readonly").objectStore("entries").getAll();q.onsuccess=function(){res(q.result||[]);};q.onerror=function(e){rej(e);};});}
+function dbPut(en){if(USE_LS){var l=lsAll();var i=-1;for(var k=0;k<l.length;k++){if(l[k].id===en.id){i=k;break;}}if(i>=0)l[i]=en;else l.push(en);lsSave(l);return Promise.resolve();}return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
+function dbDelete(id){if(USE_LS){lsSave(lsAll().filter(function(x){return x.id!==id;}));return Promise.resolve();}return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").delete(id);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
+var SETTINGS_DEFAULTS={density:"comfort",fontSize:"m",animOn:true,hcMode:false,searchMode:"simple",defaultType:"Film",panelMode:"simple",colView:"grid",alertBackupDays:14,fuzzy:true};
 function settingsLoad(){try{return Object.assign({},SETTINGS_DEFAULTS,JSON.parse(localStorage.getItem("settings")||"{}"));}catch(e){return Object.assign({},SETTINGS_DEFAULTS);}}
 function settingsSave(s){localStorage.setItem("settings",JSON.stringify(s));}
-function applySettings(){var s=settingsLoad();document.body.dataset.amoled=s.amoled?"1":"0";document.body.dataset.density=s.density;document.body.dataset.fs=s.fontSize;document.body.dataset.anim=s.animOn?"on":"off";document.body.dataset.hc=s.hcMode?"1":"0";var m=document.querySelector('meta[name=theme-color]');if(m)m.content=s.amoled?"#000000":"#0D0A1F";}
+function applySettings(){var s=settingsLoad();document.body.dataset.density=s.density;document.body.dataset.fs=s.fontSize;document.body.dataset.anim=s.animOn?"on":"off";document.body.dataset.hc=s.hcMode?"1":"0";var m=document.querySelector('meta[name=theme-color]');if(m)m.content="#000000";}
 function fileToResized(file,maxW){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var sc=Math.min(1,maxW/img.width);var c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",0.82));};img.onerror=rej;img.src=r.result;};r.onerror=rej;r.readAsDataURL(file);});}
 function makeThumb(url){return new Promise(function(res){if(!url||url.indexOf("data:")===0){res(url||"");return;}var img=new Image();img.crossOrigin="anonymous";var done=false;var t=setTimeout(function(){if(!done){done=true;res("");}},4000);img.onload=function(){if(done)return;done=true;clearTimeout(t);try{var c=document.createElement("canvas");var sc=Math.min(1,300/img.width);c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",0.7));}catch(e){res("");}};img.onerror=function(){if(done)return;done=true;clearTimeout(t);res("");};img.src=url;});}
