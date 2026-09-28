@@ -19,6 +19,8 @@
 <h1>Ma Collection</h1>
 </header>
 <main>
+
+<!-- ═══════ VUE RECHERCHE ═══════ -->
 <section id="view-search" class="view active">
 <div class="sbar">
 <input type="search" id="search-input" placeholder="Chercher un titre..." enterkeyhint="search" autocomplete="off">
@@ -34,7 +36,7 @@
 <div class="type-dropdown-list" id="type-list"></div>
 </div>
 <div id="adv-panel" class="card hidden">
-<div class="row2"><label>Année min<input type="number" id="adv-year-min" inputmode="numeric" placeholder="1900"></label><label>Année max<input type="number" id="adv-year-max" inputmode="numeric" placeholder="2026"></label></div>
+<div class="row2"><label>Annee min<input type="number" id="adv-year-min" inputmode="numeric" placeholder="1900"></label><label>Annee max<input type="number" id="adv-year-max" inputmode="numeric" placeholder="2026"></label></div>
 <div class="row2"><label>Note min<input type="number" id="adv-note-min" inputmode="numeric" min="0" max="10" placeholder="0"></label><label>Plateforme<input type="text" id="adv-platform" placeholder="PS5, Switch..."></label></div>
 </div>
 <div class="status" id="search-status"></div>
@@ -42,6 +44,7 @@
 <div class="result-list" id="results"></div>
 </section>
 
+<!-- ═══════ VUE BIBLIOTHEQUE ═══════ -->
 <section id="view-collection" class="view">
 <div class="sbar">
 <input type="search" id="col-search" placeholder="Chercher dans ma bibliotheque..." autocomplete="off">
@@ -53,6 +56,7 @@
 <div class="grid" id="col-grid"></div>
 </section>
 
+<!-- ═══════ VUE JOURNAL ═══════ -->
 <section id="view-journal" class="view">
 <div class="jhead">
 <button class="nav-btn" id="bilan-prev"><span class="ic" data-ic="chevron-left"></span></button>
@@ -68,6 +72,7 @@
 <div id="j-feed"></div>
 </section>
 
+<!-- ═══════ VUE OPTIONS ═══════ -->
 <section id="view-options" class="view">
 <div class="opt-grid" id="opt-grid"></div>
 </section>
@@ -75,21 +80,23 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- Modale générique (formulaires, détails) -->
 <div class="overlay" id="modal-overlay"><div class="sheet">
 <div class="m-head">
 <button class="back-btn" id="m-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="m-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body" id="m-body"></div>
 <div class="m-foot" id="m-foot"></div>
 </div></div>
 
+<!-- Lecteur d'entrée de journal -->
 <div class="overlay" id="reader-overlay"><div class="sheet reader">
 <div class="m-head">
 <button class="back-btn" id="r-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="r-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="r-sub mono" id="r-sub"></div>
 <div class="m-body" id="r-body"></div>
@@ -99,56 +106,78 @@
 </div>
 </div></div>
 
+<!-- Note rapide / édition d'entrée -->
 <div class="overlay" id="qn-overlay"><div class="sheet low">
 <div class="m-head">
 <button class="back-btn" id="qn-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="qn-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body">
-<div class="row2 hidden" id="qn-entry-row"><label>Oeuvre<select id="qn-entry-select"></select></label></div>
+<div class="field-box hidden" id="qn-entry-row">
+<label>Oeuvre</label>
+<button class="wide" id="qn-entry-btn"><span class="ic" data-ic="box"></span><span id="qn-entry-label">Choisir une oeuvre...</span></button>
+</div>
 <div class="chips small" id="qn-kind"></div>
-<div class="row2 hidden" id="qn-when-row"><label>Date & heure<input type="datetime-local" id="qn-when"></label><button class="icon" id="qn-clock" title="Choisir date et heure"><span class="ic" data-ic="clock"></span></button></div>
-<div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><button class="icon" id="qn-ep-plus" title="Episodes autour"><span class="ic" data-ic="plus"></span></button></div>
-<div class="row2 hidden" id="qn-session-row"><label>Durée<input type="text" id="qn-dur" placeholder="2h30..."></label></div>
+<div class="field-box hidden" id="qn-when-row">
+<label>Date & heure</label>
+<button class="wide" id="qn-when-btn"><span class="ic" data-ic="clock"></span><span id="qn-when-label">Maintenant</span></button>
+</div>
+<div class="field-box hidden" id="qn-ep-row">
+<label>Saison / Episode</label>
+<div class="row2">
+<label>Saison<input type="number" id="qn-s" inputmode="numeric" min="0" placeholder="1"></label>
+<label>Episode<input type="number" id="qn-e" inputmode="numeric" min="0" placeholder="1"></label>
+<button class="icon" id="qn-ep-plus" title="Episodes autour"><span class="ic" data-ic="plus"></span></button>
+</div>
+</div>
+<div class="field-box hidden" id="qn-session-row">
+<label>Duree de session</label>
+<input type="text" id="qn-dur" placeholder="ex : 2h30">
+</div>
 <textarea id="qn-text" placeholder="Ta note libre..."></textarea>
 </div>
 <div class="m-foot"><button class="primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
 
+<!-- Menu contextuel oeuvre -->
 <div class="overlay" id="menu-overlay"><div class="sheet low">
 <div class="m-head">
 <button class="back-btn" id="menu-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="menu-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body" id="menu-body"></div>
 </div></div>
 
+<!-- Menu recherche (recentes, manuel, avance) -->
 <div class="overlay" id="search-menu-overlay"><div class="sheet low">
 <div class="m-head">
 <button class="back-btn" id="search-menu-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title">Plus...</div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body" id="search-menu-body"></div>
 </div></div>
 
+<!-- Confirmation -->
 <div class="overlay" id="confirm-overlay"><div class="sheet low">
 <div class="m-head">
 <button class="back-btn" id="confirm-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="confirm-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body" id="confirm-body"></div>
 <div class="m-foot" id="confirm-foot"></div>
 </div></div>
 
+<!-- Zoom affiche plein écran -->
 <div class="overlay dark" id="poster-overlay">
 <img id="poster-img" alt="">
 <div class="bar"><button id="poster-close"><span class="ic" data-ic="chevron-left"></span>Fermer</button></div>
 </div>
 
+<!-- Panneau filtres collection -->
 <div class="overlay" id="filter-panel-overlay"><div class="filter-panel" id="filter-panel">
 <div class="head">
 <button class="back-btn" id="filter-back"><span class="ic" data-ic="chevron-left"></span></button>
@@ -158,22 +187,52 @@
 <div class="filter-section"><h4>Type</h4><div class="chips" id="filter-type-chips"></div></div>
 <div class="filter-section"><h4>Support</h4><div class="chips" id="filter-support-chips"></div></div>
 <div class="filter-section"><h4>Trier par</h4><div class="chips" id="filter-sort-chips"></div></div>
-<div class="filter-actions"><button id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span>Réinitialiser</button></div>
+<div class="filter-actions"><button id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span>Reinitialiser</button></div>
 </div></div>
 
+<!-- Calendrier complet (jours cliquables) -->
+<div class="overlay" id="calendar-overlay">
+<div class="calendar-modal">
+<div class="head">
+<button class="back-btn" id="cal-back"><span class="ic" data-ic="chevron-left"></span></button>
+<h3 id="cal-month-title"></h3>
+<div class="cal-nav">
+<button class="nav-btn" id="cal-prev"><span class="ic" data-ic="chevron-left"></span></button>
+<button class="nav-btn" id="cal-next"><span class="ic" data-ic="chevron-right"></span></button>
+</div>
+</div>
+<div class="cal-grid" id="cal-grid"></div>
+</div>
+</div>
+
+<!-- Sélecteur de mois (grille 12 mois + année) -->
 <div class="overlay" id="month-overlay"><div class="sheet low">
 <div class="m-head">
 <button class="back-btn" id="month-back"><span class="ic" data-ic="chevron-left"></span></button>
 <div class="m-title" id="month-year-title"></div>
-<div style="width:36px;"></div>
+<div style="width:38px;"></div>
 </div>
 <div class="m-body">
-<div class="row2" style="margin-bottom:14px;">
-<button id="month-prev-year"><span class="ic" data-ic="chevron-left"></span>Année</button>
-<button id="month-next-year">Année<span class="ic" data-ic="chevron-right"></span></button>
+<div class="row2" style="margin-bottom:16px;">
+<button id="month-prev-year"><span class="ic" data-ic="chevron-left"></span>Annee</button>
+<button id="month-next-year">Annee<span class="ic" data-ic="chevron-right"></span></button>
 </div>
 <div class="month-grid" id="month-grid"></div>
 </div>
+</div></div>
+
+<!-- Picker date/heure MAISON (colonnes scrollables) -->
+<div class="overlay" id="picker-overlay"><div class="sheet low">
+<div class="m-head">
+<button class="back-btn" id="picker-back"><span class="ic" data-ic="chevron-left"></span></button>
+<div class="m-title" id="picker-title">Date & heure</div>
+<div style="width:38px;"></div>
+</div>
+<div class="m-body">
+<div class="picker-cols" id="picker-date"></div>
+<div class="picker-time" id="picker-hour"></div>
+</div>
+<div class="m-foot"><button class="primary" id="picker-ok"><span class="ic" data-ic="check"></span>Definir</button><button id="picker-clear"><span class="ic" data-ic="x"></span>Effacer</button></div>
 </div></div>
 
 <nav class="tabbar">
