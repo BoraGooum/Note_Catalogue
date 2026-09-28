@@ -48,8 +48,6 @@ function renderPoster(e,withMenu){
   p.appendChild(img);
   if(e.note!=null)p.appendChild(el("div","pnote",e.note+"/10"));
   var st=el("div","pstat");st.innerHTML=statIcon(e);p.appendChild(st);
-  var reviews=countReviews(e);
-  if(reviews>1){var badge=el("div","pbadge","\u2713\u00d7"+reviews);p.appendChild(badge);}
   if(e.sousTitre){var prog=el("div","pprog",esc(e.sousTitre));p.appendChild(prog);}
   if(withMenu!==false){var mb=el("button","pmenu");mb.innerHTML=ic("more");mb.addEventListener("click",function(ev){ev.stopPropagation();openMenu(e);});p.appendChild(mb);}
   return p;
@@ -583,6 +581,44 @@ function getFluxEntries(){
   else if(f.sort==="titre-asc")feed.sort(function(a,b){return a.e.titre.localeCompare(b.e.titre,"fr");});
   return feed;
 }
+function renderFluxItem(it){
+  var item=el("div","fitem");
+  var posterDiv=renderPoster(it.e,false);
+  posterDiv.addEventListener("click",function(ev){ev.stopPropagation();openReaderForEntry(it.e,it.idx);});
+  item.appendChild(posterDiv);
+  var b=el("div","ftext-area");
+  var tag=it.x.kind==="time"?it.x.ts:(it.x.kind==="ep"?("S"+pad2(it.x.s)+"E"+pad2(it.x.e)+(it.x.note!=null?" \u2022 "+it.x.note+"/10":"")):"libre");
+  var hasText=it.x.text&&it.x.text.trim().length>0;
+  if(hasText){
+    if(it.x.note!=null){
+      b.appendChild(el("div","ftime",esc(tag)+" \u2022 "+it.x.note+"/10"));
+    }else{
+      b.appendChild(el("div","ftime",esc(tag)));
+    }
+    b.appendChild(el("div","ftext",esc(it.x.text)));
+    var delBtn=el("button","icon flux-delete");
+    delBtn.innerHTML=ic("trash-2");
+    delBtn.addEventListener("click",function(ev){
+      ev.stopPropagation();
+      showConfirm("Supprimer cette entr\u00e9e ?","Cette action est irr\u00e9versible.",function(){
+        it.e.journal.splice(it.idx,1);
+        dbPut(it.e).then(function(){toast("Entr\u00e9e supprim\u00e9e");refreshAll();});
+      });
+    });
+    b.appendChild(delBtn);
+  }else{
+    if(it.x.note!=null){
+      b.appendChild(el("div","ftime",esc(tag)));
+      b.appendChild(el("div","fnote-big",it.x.note+"/10"));
+    }else{
+      b.appendChild(el("div","ftime",esc(tag)));
+      b.appendChild(el("div","ftext","(sans texte)"));
+    }
+  }
+  b.appendChild(el("div","fwork",esc(it.e.titre)));
+  item.appendChild(b);
+  return item;
+}
 async function renderJournal(){
   var enc=ST.entries.filter(function(e){return e.enCours;});
   var row=document.getElementById("j-encours");row.innerHTML="";
@@ -605,21 +641,7 @@ async function renderJournal(){
   var feed=getFluxEntries();
   var f=document.getElementById("j-feed");f.innerHTML="";
   if(!feed.length)f.appendChild(emptyBox("book","Aucune entr\u00e9e ce mois-ci."));
-  feed.slice(0,60).forEach(function(it){
-    var item=el("div","fitem");
-    var posterDiv=renderPoster(it.e,false);
-    posterDiv.addEventListener("click",function(ev){ev.stopPropagation();openReaderForEntry(it.e,it.idx);});
-    item.appendChild(posterDiv);
-    var b=el("div","ftext-area");
-    var tag=it.x.kind==="time"?it.x.ts:(it.x.kind==="ep"?("S"+pad2(it.x.s)+"E"+pad2(it.x.e)+(it.x.note!=null?" \u2022 "+it.x.note+"/10":"")):"libre");
-    b.appendChild(el("div","ftime",esc(tag)));
-    var textEl=el("div","ftext",esc(it.x.text||""));
-    textEl.addEventListener("click",function(ev){ev.stopPropagation();quickNoteOpen(it.e,it.x.text||"");});
-    b.appendChild(textEl);
-    b.appendChild(el("div","fwork",esc(it.e.titre)));
-    item.appendChild(b);
-    f.appendChild(item);
-  });
+  feed.slice(0,60).forEach(function(it){f.appendChild(renderFluxItem(it));});
   if(ST.calOpen)renderCalendar();
 }
 function renderCalendar(){
@@ -801,7 +823,6 @@ function openOptStats(){
   var notes=[],sum=0,cnt=0;
   var totalEntries=0;
   var monthCount={};
-  var reviewCount={};
   entries.forEach(function(e){
     byType[e.type]=(byType[e.type]||0)+1;
     if(e.enCours)byStatus.enc++;
@@ -812,9 +833,8 @@ function openOptStats(){
       else byColl.phys++;
     }else byColl.no++;
     if(e.note!=null){notes.push(e.note);sum+=e.note;cnt++;}
-    var rev=countReviews(e);
+    var rev=(e.journal||[]).filter(function(x){return x.text&&x.text.trim().length>0;}).length;
     totalEntries+=rev;
-    if(rev>1)reviewCount[e.titre]=rev;
     var p=parseDateFR(e.dateFin);
     if(p){
       var key=p.y+"-"+pad2(p.mo);
@@ -832,8 +852,6 @@ function openOptStats(){
     for(var n in freq){if(freq[n]>maxFreq){maxFreq=freq[n];modeNote=n;}}
   }
   var mostActiveMonth=Object.keys(monthCount).sort(function(a,b){return monthCount[b]-monthCount[a];})[0]||"\u2014";
-  var mostReviewed=Object.keys(reviewCount).sort(function(a,b){return reviewCount[b]-reviewCount[a];})[0]||"\u2014";
-  var mostReviewedCount=reviewCount[mostReviewed]||0;
   var sec1=el("div","stats-section");
   sec1.appendChild(el("h4","","Par type"));
   CORE_TYPES.forEach(function(t){
@@ -873,7 +891,7 @@ function openOptStats(){
   body.appendChild(sec4);
   var sec5=el("div","stats-section");
   sec5.appendChild(el("h4","","Activit\u00e9"));
-  [["Total entr\u00e9es",totalEntries],["Mois le plus actif",mostActiveMonth.replace("-","/ ")+" ("+(monthCount[mostActiveMonth]||0)+")"],["\u0152uvre la plus revue",mostReviewed+(mostReviewedCount>1?" (\u2713\u00d7"+mostReviewedCount+")":"")]].forEach(function(s){
+  [["Total entr\u00e9es",totalEntries],["Mois le plus actif",mostActiveMonth.replace("-","/ ")+" ("+(monthCount[mostActiveMonth]||0)+")"]].forEach(function(s){
     var row=el("div","stats-row");
     row.innerHTML='<span>'+s[0]+'</span><b>'+s[1]+'</b>';
     sec5.appendChild(row);
