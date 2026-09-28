@@ -1,4 +1,4 @@
-var ST={entries:[],view:"search",colFilter:"all",colQuery:"",colSort:"date-desc",colNoteMin:0,recapDate:new Date(),calOpen:false,calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",recent:[],menuEntry:null,fluxFilter:{types:[],status:[],noteRange:null,ownedOnly:false,search:"",sort:"date-desc"},currentReaderEntry:null,currentReaderJournalIdx:null};
+var ST={entries:[],view:"search",colFilter:"all",colQuery:"",colSort:"date-desc",colNoteMin:0,recapDate:new Date(),calOpen:false,calDate:new Date(),editing:null,selectedItem:null,currentType:"Film",panelType:"Film",currentNote:null,isFav:false,isEnc:false,isVoir:false,draftJournal:[],panelPoster:"",panelThumb:"",qnEntry:null,qnKind:"time",recent:[],menuEntry:null,fluxFilter:{types:[],status:[],noteRange:null,ownedOnly:false,search:"",sort:"date-desc"},currentReaderEntry:null,currentReaderJournalIdx:null,isInCollection:false};
 var overlayStack=[];
 var FOOT_IC={"Modifier":"edit","Noter":"plus","Fermer":"x","Enregistrer":"save","Annuler":"x","Ajouter":"plus","Copier":"clipboard-copy","Supprimer":"trash-2"};
 function el(t,c,h){var d=document.createElement(t);if(c)d.className=c;if(h!=null)d.innerHTML=h;return d;}
@@ -214,6 +214,7 @@ function renderPanel(entry){
     ST.isFav=!!entry.isFavorite;
     ST.isEnc=!!entry.enCours;
     ST.isVoir=!!entry.aVoir;
+    ST.isInCollection=!!entry.inCollection;
     ST.panelPoster=entry.posterUrl||"";
     ST.panelThumb=entry.posterThumb||"";
     var srcJ=entry.journal||(entry.comment?[{kind:"free",text:entry.comment}]:[]);
@@ -224,6 +225,7 @@ function renderPanel(entry){
     ST.isFav=false;
     ST.isEnc=false;
     ST.isVoir=false;
+    ST.isInCollection=false;
     ST.panelPoster=(ST.selectedItem&&ST.selectedItem.poster)||"";
     ST.panelThumb="";
     ST.draftJournal=[];
@@ -231,15 +233,16 @@ function renderPanel(entry){
   var s=settingsLoad();var mode=s.panelMode||"simple";
   var body=el("div");
   var seg=el("div","seg");
+  seg.style.marginBottom="12px";
   ["simple","avance"].forEach(function(m){
     var b=el("button",mode===m?"on":"",m==="simple"?"Simple":"Avanc\u00e9");
     b.addEventListener("click",function(){s.panelMode=m;settingsSave(s);renderPanel(ST.editing);});
     seg.appendChild(b);
   });
   body.appendChild(seg);
-  function field(label,node){var w=el("div");w.style.marginBottom="12px";w.appendChild(el("label","",label));w.appendChild(node);body.appendChild(w);return node;}
+  function field(label,node){var w=el("div");w.style.marginBottom="16px";w.appendChild(el("label","",label));w.appendChild(node);body.appendChild(w);return node;}
   var tIn=field("Titre",el("input"));tIn.id="p-title";tIn.value=entry?entry.titre:((ST.selectedItem&&ST.selectedItem.title)||"");
-  var tw=el("div");tw.style.marginBottom="12px";tw.appendChild(el("label","","Type"));
+  var tw=el("div");tw.style.marginBottom="16px";tw.appendChild(el("label","","Type"));
   var tch=el("div","chips small");
   allTypesWithIcons().forEach(function(t){
     var c=el("div","chip"+(t.name===ST.panelType?" on":""),'<span class="ic">'+ic(t.icon||"tag")+"</span>"+esc(t.name));
@@ -247,7 +250,7 @@ function renderPanel(entry){
     tch.appendChild(c);
   });
   tw.appendChild(tch);body.appendChild(tw);
-  var nw=el("div");nw.style.marginBottom="12px";nw.appendChild(el("label","","Note /10 (re-cliquer pour enlever)"));
+  var nw=el("div");nw.style.marginBottom="16px";nw.appendChild(el("label","","Note /10 (re-cliquer pour enlever)"));
   var nch=el("div","note-grid");
   for(var n=1;n<=10;n++){
     (function(n){
@@ -260,7 +263,7 @@ function renderPanel(entry){
     })(n);
   }
   nw.appendChild(nch);body.appendChild(nw);
-  var sw=el("div","chips small");sw.style.marginBottom="12px";
+  var sw=el("div","chips small");sw.style.marginBottom="16px";
   function sc(get,set,label,icn){
     var c=el("div","chip"+(get()?" on":""),'<span class="ic">'+ic(icn)+"</span>"+label);
     c.addEventListener("click",function(){set(!get());c.classList.toggle("on",get());});
@@ -272,7 +275,7 @@ function renderPanel(entry){
   body.appendChild(sw);
   var dIn=field("Date",el("input"));dIn.id="p-date";dIn.type="date";dIn.value=entry?(entry.dateFin||""):todayFR();
   var cIn=field("Commentaire rapide",el("textarea"));cIn.id="p-comment";cIn.value=entry?(entry.comment||""):"";
-  var aw=el("div");aw.style.marginBottom="12px";aw.appendChild(el("label","","Affiche"));
+  var aw=el("div");aw.style.marginBottom="16px";aw.appendChild(el("label","","Affiche"));
   var ar=el("div");ar.style.display="flex";ar.style.gap="8px";ar.style.alignItems="center";
   var prev=el("img");prev.id="p-prev";prev.src=ST.panelPoster||NO_POSTER;prev.style.width="58px";prev.style.borderRadius="6px";
   var bU=el("button","icon");bU.innerHTML=ic("link");bU.title="Changer l'URL";
@@ -286,7 +289,7 @@ function renderPanel(entry){
   function setPoster(u){ST.panelPoster=u;makeThumb(u).then(function(t){ST.panelThumb=t;});prev.src=u;}
   if(mode==="avance"){
     var sIn=field("D\u00e9tail (saison / tome / piste\u2026)",el("input"));sIn.id="p-sub";sIn.value=entry?(entry.sousTitre||""):"";
-    var jw=el("div");jw.style.marginBottom="12px";jw.appendChild(el("label","","Journal de bord"));
+    var jw=el("div");jw.style.marginBottom="16px";jw.appendChild(el("label","","Journal de bord"));
     var jb=el("div","chips small");
     [["time","horodat\u00e9","clock"],["free","libre","pen"],["ep","saison/\u00e9pis.","tv"]].forEach(function(k){
       var c=el("div","chip",'<span class="ic">'+ic(k[2])+"</span>"+k[1]);
@@ -296,12 +299,17 @@ function renderPanel(entry){
     jw.appendChild(jb);
     var jlist=el("div");jlist.id="p-jlist";
     jw.appendChild(jlist);body.appendChild(jw);renderJList(jlist);
-    var pw=el("div");pw.style.marginBottom="12px";pw.appendChild(el("label","","Collection"));
-    var pOn=!!(entry&&entry.inCollection);
-    var pchk=el("div","chip"+(pOn?" on":""),'<span class="ic">'+ic("box")+"</span>dans ma collection");
-    var pbox=el("div");pbox.style.display=pOn?"block":"none";pbox.style.marginTop="8px";
-    pchk.addEventListener("click",function(){pOn=!pOn;pchk.classList.toggle("on",pOn);pbox.style.display=pOn?"block":"none";});
-    pw.appendChild(pchk);
+    // Bloc Collection avec fond distinct
+    var collBlock=el("div");collBlock.style.marginBottom="16px";collBlock.style.padding="12px";collBlock.style.background="var(--s1)";collBlock.style.borderRadius="var(--r)";collBlock.style.border="1px solid var(--bd)";
+    // Ligne Collection : label à gauche, bouton toggle à droite
+    var collRow=el("div");collRow.style.display="flex";collRow.style.justifyContent="space-between";collRow.style.alignItems="center";collRow.style.marginBottom="12px";
+    collRow.appendChild(el("span","","Collection"));
+    var collBtn=el("button","toggle-btn"+(ST.isInCollection?" on":""));
+    collBtn.innerHTML='<span class="ic">'+ic("box")+'</span><span>Collection</span>';
+    collBtn.addEventListener("click",function(){ST.isInCollection=!ST.isInCollection;collBtn.classList.toggle("on",ST.isInCollection);pbox.style.display=ST.isInCollection?"block":"none";});
+    collRow.appendChild(collBtn);
+    collBlock.appendChild(collRow);
+    var pbox=el("div");pbox.style.display=ST.isInCollection?"block":"none";pbox.style.marginTop="8px";
     var quoiSel=el("div","custom-select");quoiSel.id="p-quoi-select";
     var quoiBtn=el("div","custom-select-btn");quoiBtn.innerHTML='<span class="ic">'+ic("box")+'</span><span id="p-quoi-label">'+(entry&&entry.support?entry.support:"Quoi ?")+'</span><span class="chev ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>';
     var quoiList=el("div","custom-select-list");quoiList.id="p-quoi-list";
@@ -311,12 +319,17 @@ function renderPanel(entry){
     var commentList=el("div","custom-select-list");commentList.id="p-comment-list";
     commentSel.appendChild(commentBtn);commentSel.appendChild(commentList);
     pbox.appendChild(quoiSel);pbox.appendChild(commentSel);
-    var ean=el("input");ean.id="p-ean";ean.placeholder="EAN";ean.inputMode="numeric";ean.value=entry?(entry.ean||""):"";
-    var escan=el("button");escan.innerHTML='<span class="ic">'+ic("camera")+"</span>Scanner";
+    // EAN + Scanner inline
+    var eanRow=el("div");eanRow.style.display="flex";eanRow.style.gap="8px";eanRow.style.marginTop="10px";eanRow.style.alignItems="center";
+    var ean=el("input");ean.id="p-ean";ean.placeholder="EAN";ean.inputMode="numeric";ean.value=entry?(entry.ean||""):"";ean.style.flex="1";
+    var escan=el("button","icon");escan.innerHTML=ic("camera");escan.title="Scanner";
     escan.addEventListener("click",function(){startEAN(function(code){ean.value=code;toast("EAN : "+code);});});
-    var url=el("input");url.id="p-url";url.placeholder="URL de la fiche";url.value=entry?(entry.url||""):"";
-    pbox.appendChild(ean);pbox.appendChild(escan);pbox.appendChild(url);
-    pw.appendChild(pbox);body.appendChild(pw);
+    eanRow.appendChild(ean);eanRow.appendChild(escan);
+    pbox.appendChild(eanRow);
+    var url=el("input");url.id="p-url";url.placeholder="URL de la fiche";url.value=entry?(entry.url||""):"";url.style.marginTop="10px";
+    pbox.appendChild(url);
+    collBlock.appendChild(pbox);
+    body.appendChild(collBlock);
     setTimeout(function(){
       buildCustomSelect("p-quoi-select","p-quoi-list","p-quoi-label",SUPPORTS[ST.panelType]||SUPPORTS["Film"],entry?entry.support:null);
       buildCustomSelect("p-comment-select","p-comment-list","p-comment-label",PACKAGINGS[ST.panelType]||PACKAGINGS["Film"],entry?entry.packaging:null);
@@ -459,20 +472,19 @@ async function saveCurrentEntry(){
   e.id=entryId;e.type=type;e.titre=title;
   var subEl=document.getElementById("p-sub");
   e.sousTitre=subEl?subEl.value.trim():"";
-  e.note=ST.currentNote;e.isFavorite=ST.isFav;e.enCours=ST.isEnc;e.aVoir=ST.isVoir;
+  e.note=ST.currentNote;e.isFavorite=ST.isFav;e.enCours=ST.isEnc;e.aVoir=ST.isVoir;e.inCollection=ST.isInCollection;
   var dateVal=document.getElementById("p-date").value;
   e.dateFin=dateVal?formatDate(dateVal):"";
   e.comment=document.getElementById("p-comment").value.trim();
   e.journal=ST.draftJournal;
   e.posterUrl=ST.panelPoster;
   e.posterThumb=ST.panelThumb||(await makeThumb(ST.panelPoster));
-  var quoiLabel=document.getElementById("p-quoi-label");
-  var commentLabel=document.getElementById("p-comment-label");
-  if(quoiLabel&&commentLabel){
-    var quoiVal=quoiLabel.textContent;
-    var commentVal=commentLabel.textContent;
-    e.inCollection=(quoiVal!=="Quoi ?"||commentVal!=="Comment ?");
-    if(e.inCollection){
+  if(ST.isInCollection){
+    var quoiLabel=document.getElementById("p-quoi-label");
+    var commentLabel=document.getElementById("p-comment-label");
+    if(quoiLabel&&commentLabel){
+      var quoiVal=quoiLabel.textContent;
+      var commentVal=commentLabel.textContent;
       e.support=(quoiVal!=="Quoi ?")?quoiVal:null;
       e.packaging=(commentVal!=="Comment ?")?commentVal:null;
       var eanEl=document.getElementById("p-ean");
@@ -480,6 +492,8 @@ async function saveCurrentEntry(){
       e.ean=eanEl?eanEl.value.trim():"";
       e.url=urlEl?urlEl.value.trim():"";
     }
+  }else{
+    e.support=null;e.packaging=null;e.ean="";e.url="";
   }
   e.dateAjout=dateAjout;
   await dbPut(e);
@@ -588,16 +602,19 @@ function renderFluxItem(it){
   item.appendChild(posterDiv);
   var b=el("div","ftext-area");
   var tag=it.x.kind==="time"?it.x.ts:(it.x.kind==="ep"?("S"+pad2(it.x.s)+"E"+pad2(it.x.e)+(it.x.note!=null?" \u2022 "+it.x.note+"/10":"")):"libre");
+  b.appendChild(el("div","ftime",esc(tag)));
   var hasText=it.x.text&&it.x.text.trim().length>0;
   if(hasText){
-    if(it.x.note!=null){
-      b.appendChild(el("div","ftime",esc(tag)+" \u2022 "+it.x.note+"/10"));
-    }else{
-      b.appendChild(el("div","ftime",esc(tag)));
-    }
-    b.appendChild(el("div","ftext",esc(it.x.text)));
-    var delBtn=el("button","icon flux-delete");
-    delBtn.innerHTML=ic("trash-2");
+    var textRow=el("div");
+    textRow.style.display="flex";
+    textRow.style.justifyContent="space-between";
+    textRow.style.alignItems="flex-start";
+    textRow.style.gap="8px";
+    var textEl=el("div","ftext",esc(it.x.text));
+    textEl.style.flex="1";
+    textRow.appendChild(textEl);
+    var delBtn=el("button","flux-delete");
+    delBtn.innerHTML='<span class="ic">'+ic("trash-2")+'</span>';
     delBtn.addEventListener("click",function(ev){
       ev.stopPropagation();
       showConfirm("Supprimer cette entr\u00e9e ?","Cette action est irr\u00e9versible.",function(){
@@ -605,13 +622,12 @@ function renderFluxItem(it){
         dbPut(it.e).then(function(){toast("Entr\u00e9e supprim\u00e9e");refreshAll();});
       });
     });
-    b.appendChild(delBtn);
+    textRow.appendChild(delBtn);
+    b.appendChild(textRow);
   }else{
     if(it.x.note!=null){
-      b.appendChild(el("div","ftime",esc(tag)));
       b.appendChild(el("div","fnote-big",it.x.note+"/10"));
     }else{
-      b.appendChild(el("div","ftime",esc(tag)));
       b.appendChild(el("div","ftext","(sans texte)"));
     }
   }
