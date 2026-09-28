@@ -108,7 +108,6 @@ function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2}
 function statutStr(e){return (e.isFavorite?"\u{1F49C}":"")+(e.enCours?"\u23F3":"")+(e.aVoir?"\u{1F440}":"");}
 function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");return x.text;});}
 function descriptionOf(e){return journalLines(e).join(" | ");}
-function countReviews(e){return (e.journal||[]).length;}
 var db=null,USE_LS=false;
 function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
 function lsSave(l){try{localStorage.setItem("entries_ls",JSON.stringify(l));}catch(e){}}
