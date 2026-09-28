@@ -10,7 +10,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -63,7 +63,7 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
       <button class="btn icon" id="bilan-next"><span class="ic" data-ic="chevR"></span></button>
       <div class="bilan-line" id="bilan-body"></div>
     </div>
-    <button class="btn wide" id="j-cal-btn">Calendrier</button>
+    <button class="btn wide" id="j-cal-btn"><span class="ic" data-ic="calendar"></span>Calendrier</button>
     <div id="j-cal" class="card hidden"></div>
     <div id="j-feed"></div>
   </section>
@@ -83,17 +83,18 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
   <div class="m-head"><div class="m-title" id="r-title"></div><button class="btn icon" id="r-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="r-sub mono" id="r-sub"></div>
   <div class="m-body" id="r-body"></div>
-  <div class="m-foot"><button class="btn" id="r-copy"><span class="ic" data-ic="copy"></span>Copier</button><button class="btn primary" id="r-close2">Fermer</button></div>
+  <div class="m-foot"><button class="btn" id="r-copy"><span class="ic" data-ic="copy"></span>Copier</button><button class="btn primary" id="r-close2"><span class="ic" data-ic="x"></span>Fermer</button></div>
 </div></div>
 
 <div class="overlay" id="qn-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="qn-title"></div><button class="btn icon" id="qn-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body">
     <div class="chips small" id="qn-kind"></div>
+    <div class="row2 hidden" id="qn-when-row"><label>Date &amp; heure (optionnel)<input type="datetime-local" id="qn-when"></label></div>
     <div class="row2 hidden" id="qn-ep-row"><label>S<input type="number" id="qn-s" inputmode="numeric" min="0"></label><label>E<input type="number" id="qn-e" inputmode="numeric" min="0"></label><label>/10<input type="number" id="qn-note" inputmode="numeric" min="1" max="10"></label></div>
     <textarea id="qn-text" placeholder="Ton entr&eacute;e&hellip;"></textarea>
   </div>
-  <div class="m-foot"><button class="btn primary" id="qn-save">Ajouter</button><button class="btn" id="qn-cancel">Annuler</button></div>
+  <div class="m-foot"><button class="btn primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button class="btn" id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
 
 <div class="overlay" id="menu-overlay"><div class="sheet low">
@@ -103,7 +104,7 @@ setTimeout(function(){var c=document.getElementById("type-chips");if(c&&c.childr
 
 <div class="overlay dark" id="poster-overlay">
   <img id="poster-img" alt="">
-  <div class="bar"><button class="btn" id="poster-close">Fermer</button></div>
+  <div class="bar"><button class="btn" id="poster-close"><span class="ic" data-ic="x"></span>Fermer</button></div>
 </div>
 
 <nav class="tabbar">
