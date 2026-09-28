@@ -89,7 +89,7 @@ function flatten(e){return{titre:e.titre,description:descriptionOf(e),type:e.typ
 function flattenTSV(e){var status="Fini";if(e.enCours)status="En cours";else if(e.aVoir)status="À voir";return{titre:e.titre||"",type:e.type||"",note:e.note!=null?String(e.note):"",description:descriptionOf(e),collection:e.inCollection?"✓":"",support:e.support||"",statut:status,dateFin:e.dateFin||"",id:e.id||""};}
 
 async function copyTSV(){var clean=function(v){return String(v==null?"":v).replace(/[\t\r\n]+/g," ");};var rows=[["Œuvre","Type","Note","Entrée","Collection","Support","Statut","Date","ID"]];ST.entries.forEach(function(e){var f=flattenTSV(e);rows.push([clean(f.titre),clean(f.type),clean(f.note),clean(f.description),clean(f.collection),clean(f.support),clean(f.statut),clean(f.dateFin),clean(f.id)]);});var text=rows.map(function(r){return r.join("\t");}).join("\n");try{await navigator.clipboard.writeText(text);toast("Copié ! Colle en A1.");}catch(e){var ta=el("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Copié !");}}
-function copyTSVMonth(y,m){var clean=function(v){return String(v==null?"":v).replace(/[\t\r\n]+/g," ");};var rows=[["Œuvre","Type","Note","Entrée","Collection","Support","Statut","Date","ID"]];ST.entries.forEach(function(e){var p=parseDateFR(e.dateFin);if(p&&p.y===y&&p.mo===m){(e.journal||[]).forEach(function(x){var f=flattenTSV(e);var entryText=x.kind==="time"?x.ts+" : "+x.text:(x.kind==="ep"?("S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" • "+x.note+"/10":"")+(x.text?" : "+x.text:"")):x.text);rows.push([clean(f.titre),clean(f.type),clean(f.note),clean(entryText),clean(f.collection),clean(f.support),clean(f.statut),clean(f.dateFin),clean(f.id)]);});}});var text=rows.map(function(r){return r.join("\t");}).join("\n");try{navigator.clipboard.writeText(text).then(function(){toast("Journal du mois copié !");});}catch(e){var ta=el("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Copié !");}}
+function copyTSVMonth(y,m){var clean=function(v){return String(v==null?"":v).replace(/[\t\r\n]+/g," ");};var rows=[["uvre","Type","Note","Entrée","Collection","Support","Statut","Date","ID"]];ST.entries.forEach(function(e){var p=parseDateFR(e.dateFin);if(p&&p.y===y&&p.mo===m){(e.journal||[]).forEach(function(x){var f=flattenTSV(e);var entryText=x.kind==="time"?x.ts+" : "+x.text:(x.kind==="ep"?("S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" • "+x.note+"/10":"")+(x.text?" : "+x.text:"")):x.text);rows.push([clean(f.titre),clean(f.type),clean(f.note),clean(entryText),clean(f.collection),clean(f.support),clean(f.statut),clean(f.dateFin),clean(f.id)]);});}});var text=rows.map(function(r){return r.join("\t");}).join("\n");try{navigator.clipboard.writeText(text).then(function(){toast("Journal du mois copié !");});}catch(e){var ta=el("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Copié !");}}
 function copyTSVAll(){copyTSV();}
 async function syncSheet(){var url=localStorage.getItem("sheet_url");if(!url){toast("Configure l'URL dans Option.");switchView("options");return;}toast("Envoi…",2500);try{var res=await fetch(url,{method:"POST",body:JSON.stringify({action:"sync_all",entries:ST.entries.map(flatten)})});if(res.ok)toast("Sheet mis à jour");else toast("Erreur webhook "+res.status,3000);}catch(err){toast("Erreur sync. Utilise Copier.",3000);}}
 
@@ -179,7 +179,7 @@ async function shareJPG(e){
 
 var deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;});
-function triggerInstall(){if(deferredPrompt)deferredPrompt.prompt();else toast("Menu  → Installer l'application.");}
+function triggerInstall(){if(deferredPrompt)deferredPrompt.prompt();else toast("Menu → Installer l'application.");}
 
 async function init(){
   await openDB();
@@ -230,8 +230,8 @@ async function init(){
   var colSearch=$("col-search");
   if(colSearch)colSearch.addEventListener("input",function(e){ST.colQuery=e.target.value;renderCollection();});
 
-  var colFilterFab=$("col-filter-fab");
-  if(colFilterFab)colFilterFab.addEventListener("click",function(){
+  var colFilterBtn=$("col-filter-btn");
+  if(colFilterBtn)colFilterBtn.addEventListener("click",function(){
     var fp=$("filter-panel-overlay");if(fp)fp.classList.add("on");
     var fpInner=$("filter-panel");if(fpInner)fpInner.classList.add("on");
     renderFilterChips();
@@ -255,9 +255,6 @@ async function init(){
     ST.filterType="all";ST.filterSupport="all";ST.filterSort="date-desc";
     renderFilterChips();renderCollection();
   });
-
-  var journalAddFab=$("journal-add-fab");
-  if(journalAddFab)journalAddFab.addEventListener("click",function(){openAddEntryModal();});
 
   var bilanMini=$("bilan-mini");
   if(bilanMini)bilanMini.addEventListener("click",function(){
