@@ -47,9 +47,9 @@ button.icon{padding:10px;width:44px;}
 .custom-select-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;}
 .custom-select-item:hover{background:rgba(178,75,243,.1);}
 .custom-select-item.active{background:rgba(178,75,243,.15);color:var(--acc);font-weight:600;}
-.custom-select-item.libre{border-top:1px solid var(--bd);margin-top:4px;padding-top:12px;font-style:italic;color:var(--dim);}
+.custom-select-item.libre{border-bottom:1px solid var(--bd);margin-bottom:4px;padding-bottom:12px;font-style:italic;color:var(--dim);}
 .custom-select-item.libre:hover{color:var(--acc);}
-.libre-input{display:flex;gap:6px;padding:8px 12px;margin-top:4px;}
+.libre-input{display:flex;gap:6px;padding:8px 12px;margin-bottom:4px;}
 .libre-input input{flex:1;padding:8px 10px;font-size:13px;border-radius:8px;}
 .libre-input button{padding:8px 12px;font-size:12px;min-height:auto;}
 
@@ -77,10 +77,20 @@ button.icon{padding:10px;width:44px;}
 .ftext{font-size:13.5px;}
 .fwork{font-size:11.5px;font-weight:600;color:var(--acc);margin-top:2px;}
 
-/* NOTES */
+/* NOTES - COULEURS DYNAMIQUES */
 .note-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;}
-.note-btn{padding:12px;font-size:16px;font-weight:700;}
-.note-btn.on{background:var(--acc);color:#fff;}
+.note-btn{padding:14px;font-size:16px;font-weight:700;border:1px solid var(--bd);background:var(--s2);color:var(--tx);transition:all .15s;}
+.note-btn.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc);}
+.note-btn.note-1.on{background:#dc2626;color:#fff;}
+.note-btn.note-2.on{background:#ea580c;color:#fff;}
+.note-btn.note-3.on{background:#f97316;color:#fff;}
+.note-btn.note-4.on{background:#fb923c;color:#fff;}
+.note-btn.note-5.on{background:#a3e635;color:#000;}
+.note-btn.note-6.on{background:#65a30d;color:#fff;}
+.note-btn.note-7.on{background:#16a34a;color:#fff;}
+.note-btn.note-8.on{background:#15803d;color:#fff;}
+.note-btn.note-9.on{background:linear-gradient(135deg,#e5e7eb,#9ca3af);color:#000;}
+.note-btn.note-10.on{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000;}
 
 /* OPTION */
 .orow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;font-size:13.5px;font-weight:500;border-bottom:1px solid var(--bd);}
@@ -108,8 +118,8 @@ nav.tabbar button .ic svg{width:20px;height:20px;}
 <h3 style="margin-bottom:10px;">Types (chips avec icônes)</h3>
 <div class="chips" id="type-chips"></div>
 
-<!-- NOTES MODIFIABLES -->
-<h3 style="margin:20px 0 10px;">Notes modifiables</h3>
+<!-- NOTES MODIFIABLES AVEC COULEURS -->
+<h3 style="margin:20px 0 10px;">Notes modifiables (couleurs dynamiques)</h3>
 <div class="note-grid" id="note-grid"></div>
 
 <!-- NÉONS -->
@@ -130,7 +140,7 @@ nav.tabbar button .ic svg{width:20px;height:20px;}
 </div>
 
 <!-- COLLECTION PHYSIQUE : QUOI / COMMENT EN LISTE DÉROULANTE -->
-<h3 style="margin:20px 0 10px;">Collection physique (liste déroulante + entrée libre)</h3>
+<h3 style="margin:20px 0 10px;">Collection physique (entrée libre en haut)</h3>
 <div class="card">
   <div class="custom-select" id="quoi-select">
     <div class="custom-select-btn">
@@ -248,7 +258,7 @@ types.forEach(function(t,i){
   tc.appendChild(c);
 });
 
-// Notes modifiables
+// Notes modifiables avec couleurs dynamiques
 var noteGrid=document.getElementById("note-grid");
 var currentNote=null;
 for(var n=1;n<=10;n++){
@@ -257,14 +267,22 @@ for(var n=1;n<=10;n++){
     b.className="note-btn";
     b.textContent=n;
     b.addEventListener("click",function(){
-      if(currentNote===n){currentNote=null;b.classList.remove("on");}
-      else{currentNote=n;noteGrid.querySelectorAll(".note-btn").forEach(function(x){x.classList.remove("on");});b.classList.add("on");}
+      if(currentNote===n){
+        currentNote=null;
+        b.classList.remove("on","note-1","note-2","note-3","note-4","note-5","note-6","note-7","note-8","note-9","note-10");
+      }else{
+        currentNote=n;
+        noteGrid.querySelectorAll(".note-btn").forEach(function(x){
+          x.classList.remove("on","note-1","note-2","note-3","note-4","note-5","note-6","note-7","note-8","note-9","note-10");
+        });
+        b.classList.add("on","note-"+n);
+      }
     });
     noteGrid.appendChild(b);
   })(n);
 }
 
-// Sélecteurs custom Quoi/Comment avec entrée libre
+// Sélecteurs custom Quoi/Comment avec entrée libre EN HAUT
 function buildCustomSelect(selectId,listId,labelId,values){
   var btn=document.querySelector("#"+selectId+" .custom-select-btn");
   var list=document.getElementById(listId);
@@ -273,27 +291,13 @@ function buildCustomSelect(selectId,listId,labelId,values){
   
   function renderList(){
     list.innerHTML="";
-    values.forEach(function(v){
-      var item=document.createElement("div");
-      item.className="custom-select-item"+(selected===v?" active":"");
-      item.textContent=v;
-      item.addEventListener("click",function(){
-        selected=v;
-        label.textContent=v;
-        list.querySelectorAll(".custom-select-item").forEach(function(x){x.classList.remove("active");});
-        item.classList.add("active");
-        list.classList.remove("open");
-      });
-      list.appendChild(item);
-    });
     
-    // Item "Entrée libre..."
+    // Entrée libre EN HAUT
     var libre=document.createElement("div");
     libre.className="custom-select-item libre";
     libre.textContent="+ Entrée libre...";
     libre.addEventListener("click",function(e){
       e.stopPropagation();
-      // Créer le champ de saisie
       var inputRow=document.createElement("div");
       inputRow.className="libre-input";
       var input=document.createElement("input");
@@ -320,6 +324,21 @@ function buildCustomSelect(selectId,listId,labelId,values){
       input.focus();
     });
     list.appendChild(libre);
+    
+    // Valeurs prédéfinies
+    values.forEach(function(v){
+      var item=document.createElement("div");
+      item.className="custom-select-item"+(selected===v?" active":"");
+      item.textContent=v;
+      item.addEventListener("click",function(){
+        selected=v;
+        label.textContent=v;
+        list.querySelectorAll(".custom-select-item").forEach(function(x){x.classList.remove("active");});
+        item.classList.add("active");
+        list.classList.remove("open");
+      });
+      list.appendChild(item);
+    });
   }
   
   renderList();
