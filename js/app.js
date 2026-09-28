@@ -5,7 +5,7 @@ document.querySelectorAll("nav.tabbar button").forEach(function(b){b.classList.t
 document.querySelectorAll(".view").forEach(function(x){x.classList.remove("active");});
 var el=document.getElementById("view-"+v);if(el)el.classList.add("active");
 if(v==="collection")renderCollection();
-if(v==="journal")renderJournal();
+if(v==="journal"){renderJournal();updateJournalBadge();}
 if(v==="options")renderOptions();
 window.scrollTo(0,0);
 }
@@ -214,6 +214,49 @@ grid.innerHTML="";
 if(!list.length){grid.appendChild(emptyBox("library","Aucune oeuvre dans ta bibliotheque."));return;}
 list.forEach(function(e){grid.appendChild(collectionCard(e));});
 }
+function openQuickNoteModal(){
+var body=el("div");
+body.appendChild(el("div","","Choisis une oeuvre ou laisse vide pour une note libre."));
+var sel=el("select");sel.id="qn-select";
+var optEmpty=el("option","","Note libre (sans oeuvre)");optEmpty.value="";sel.appendChild(optEmpty);
+ST.entries.forEach(function(e){
+var o=el("option","",esc(e.titre));o.value=e.id;sel.appendChild(o);
+});
+body.appendChild(sel);
+var kindChips=el("div","chips small");kindChips.style.marginTop="16px";
+var selectedKind="free";
+[["time","Horodate","clock"],["free","Libre","pen"],["ep","Saison/Episode","tv"]].forEach(function(x){
+var c=el("div","chip"+(x[0]==="free"?" on":""),'<span class="ic">'+ic(x[2])+"</span>"+x[1]);
+c.addEventListener("click",function(){
+selectedKind=x[0];
+kindChips.querySelectorAll(".chip").forEach(function(y){y.classList.remove("on");});
+c.classList.add("on");
+});
+kindChips.appendChild(c);
+});
+body.appendChild(kindChips);
+var ta=el("textarea");ta.id="qn-free-text";ta.placeholder="Ta note libre...";ta.rows=4;body.appendChild(ta);
+setModal("Nouvelle note",body,[["Enregistrer","primary",function(){
+var entryId=sel.value;
+var text=ta.value.trim();
+if(!text){toast("Entre un texte.");return;}
+if(entryId){
+var entry=ST.entries.find(function(e){return e.id===entryId;});
+if(entry){
+if(!entry.journal)entry.journal=[];
+var obj;
+if(selectedKind==="time"){obj={kind:"time",ts:nowStamp(),text:text,at:Date.now()};}
+else if(selectedKind==="ep"){obj={kind:"ep",s:0,e:0,note:null,text:text,at:Date.now()};}
+else{obj={kind:"free",text:text,at:Date.now()};}
+entry.journal.push(obj);
+dbPut(entry).then(function(){toast("Note ajoutee");closeModal();refreshAll();});
+}
+}else{
+var fakeEntry={id:"libre_"+Date.now(),titre:"Note libre",type:"Livre",journal:[{kind:selectedKind==="time"?"time":"free",ts:selectedKind==="time"?nowStamp():undefined,text:text,at:Date.now()}],dateFin:todayFR(),dateAjout:new Date().toISOString()};
+dbPut(fakeEntry).then(function(){toast("Note libre ajoutee");closeModal();refreshAll();});
+}
+}],["Annuler","",closeModal]]);
+}
 async function init(){
 await openDB();
 ST.entries=await dbAll();
@@ -230,6 +273,8 @@ var searchInput=$("search-input");
 if(searchInput)searchInput.addEventListener("keydown",function(e){if(e.key==="Enter")runSearch();});
 var loupe=$("search-loupe");
 if(loupe)loupe.addEventListener("click",runSearch);
+var colLoupe=$("col-loupe");
+if(colLoupe)colLoupe.addEventListener("click",function(){ST.colQuery=$("col-search").value;renderCollection();});
 var menuBtn=$("search-menu-btn");
 if(menuBtn)menuBtn.addEventListener("click",function(){
 var body=$("search-menu-body");if(!body)return;
@@ -268,6 +313,8 @@ var filterApply=$("filter-apply");
 if(filterApply)filterApply.addEventListener("click",function(){var fp=$("filter-panel-overlay");if(fp)fp.classList.remove("on");renderCollection();});
 var filterReset=$("filter-reset");
 if(filterReset)filterReset.addEventListener("click",function(){ST.filterType="all";ST.filterSupport="all";ST.filterSort="date-desc";renderFilterChips();renderCollection();});
+var journalAddBtn=$("journal-add-btn");
+if(journalAddBtn)journalAddBtn.addEventListener("click",openQuickNoteModal);
 var bilanMini=$("bilan-mini");
 if(bilanMini)bilanMini.addEventListener("click",function(){var co=$("calendar-overlay");if(co)co.classList.add("on");renderCalendar();});
 var calBack=$("cal-back");
