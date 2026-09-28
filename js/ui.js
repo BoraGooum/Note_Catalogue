@@ -64,7 +64,7 @@ function openMenu(e){
   items.push(["duplicate","Dupliquer",function(){closeMenu();duplicateEntry(e);}]);
   items.push(["share","Partager en image",function(){closeMenu();shareJPG(e);}]);
   items.push(["link","SensCritique",function(){closeMenu();window.open("https://www.senscritique.com/recherche?query="+encodeURIComponent(e.titre),"_blank");}]);
-  items.push(["trash","Supprimer",function(){closeMenu();showConfirm("Supprimer","Supprimer \u00ab"+e.titre+"\u00bb et toutes ses entr\u00e9es ?",function(){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});});}},"danger"]);
+  items.push(["trash","Supprimer",function(){closeMenu();showConfirm("Supprimer","Supprimer \u00ab"+e.titre+"\u00bb et toutes ses entr\u00e9es ?",function(){dbDelete(e.id).then(function(){toast("Supprim\u00e9");refreshAll();});});},"danger"]);
   for(var i=0;i<items.length;i++){
     var it=items[i];
     var m=el("div","mitem"+(it[3]?" "+it[3]:""));
@@ -822,9 +822,15 @@ function openOptStats(){
     }
   });
   var avg=cnt?(sum/cnt).toFixed(1):"\u2014";
-  var maxNote=Math.max.apply(null,notes.concat([0]));
-  var minNote=cnt?Math.min.apply(null,notes):0;
-  var modeNote=notes.length?notes.sort(function(a,b){return notes.filter(function(v){return v===a;}).length-notes.filter(function(v){return v===b;}).length;})[notes.length-1]:"\u2014";
+  var maxNote=notes.length?Math.max.apply(null,notes):0;
+  var minNote=notes.length?Math.min.apply(null,notes):0;
+  var modeNote="\u2014";
+  if(notes.length){
+    var freq={};
+    notes.forEach(function(n){freq[n]=(freq[n]||0)+1;});
+    var maxFreq=0;
+    for(var n in freq){if(freq[n]>maxFreq){maxFreq=freq[n];modeNote=n;}}
+  }
   var mostActiveMonth=Object.keys(monthCount).sort(function(a,b){return monthCount[b]-monthCount[a];})[0]||"\u2014";
   var mostReviewed=Object.keys(reviewCount).sort(function(a,b){return reviewCount[b]-reviewCount[a];})[0]||"\u2014";
   var mostReviewedCount=reviewCount[mostReviewed]||0;
