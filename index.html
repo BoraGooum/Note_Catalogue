@@ -49,6 +49,7 @@ window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.re
     <div id="fallback"></div>
     <div class="result-list" id="results"></div>
   </section>
+
   <section id="view-collection" class="view">
     <input type="search" id="col-search" placeholder="Chercher dans ma biblioth&egrave;que&hellip;" autocomplete="off">
     <div class="chips small" id="col-support-filter"></div>
@@ -58,6 +59,7 @@ window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.re
     </div>
     <div id="col-grid" class="grid"></div>
   </section>
+
   <section id="view-journal" class="view">
     <div class="hrow" id="j-encours"></div>
     <div class="card bilan" id="j-bilan">
@@ -77,16 +79,20 @@ window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.re
     </div>
     <div id="j-feed"></div>
   </section>
+
   <section id="view-options" class="view">
     <div class="opt-grid" id="opt-grid"></div>
   </section>
 </main>
+
 <div class="toast" id="toast"></div>
+
 <div class="overlay" id="modal-overlay"><div class="sheet">
   <div class="m-head"><div class="m-title" id="m-title"></div><button class="btn icon" id="m-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="m-body"></div>
   <div class="m-foot" id="m-foot"></div>
 </div></div>
+
 <div class="overlay" id="reader-overlay"><div class="sheet reader">
   <div class="m-head"><div class="m-title" id="r-title"></div><button class="btn icon" id="r-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="r-sub mono" id="r-sub"></div>
@@ -96,6 +102,7 @@ window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.re
     <button class="btn" id="r-edit"><span class="ic" data-ic="pen"></span>Modifier</button>
   </div>
 </div></div>
+
 <div class="overlay" id="qn-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="qn-title"></div><button class="btn icon" id="qn-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body">
@@ -106,29 +113,35 @@ window.addEventListener("unhandledrejection",function(e){__dbg("REJECT: "+((e.re
   </div>
   <div class="m-foot"><button class="btn primary" id="qn-save"><span class="ic" data-ic="plus"></span>Ajouter</button><button class="btn" id="qn-cancel"><span class="ic" data-ic="x"></span>Annuler</button></div>
 </div></div>
+
 <div class="overlay" id="menu-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="menu-title"></div><button class="btn icon" id="menu-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="menu-body"></div>
 </div></div>
+
 <div class="overlay" id="search-menu-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title">Menu</div><button class="btn icon" id="search-menu-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="search-menu-body"></div>
 </div></div>
+
 <div class="overlay" id="confirm-overlay"><div class="sheet low">
   <div class="m-head"><div class="m-title" id="confirm-title"></div><button class="btn icon" id="confirm-close"><span class="ic" data-ic="x"></span></button></div>
   <div class="m-body" id="confirm-body"></div>
   <div class="m-foot" id="confirm-foot"></div>
 </div></div>
+
 <div class="overlay dark" id="poster-overlay">
   <img id="poster-img" alt="">
   <div class="bar"><button class="btn" id="poster-close"><span class="ic" data-ic="x"></span>Fermer</button></div>
 </div>
+
 <nav class="tabbar">
   <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
   <button data-view="collection"><span class="ic" data-ic="library"></span><span>Collection</span></button>
   <button data-view="journal"><span class="ic" data-ic="book"></span><span>Journal</span></button>
   <button data-view="options"><span class="ic" data-ic="settings"></span><span>Option</span></button>
 </nav>
+
 <script src="js/data.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/app.js"></script>
