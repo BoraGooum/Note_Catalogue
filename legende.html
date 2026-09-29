@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<!-- Fichier : legende.html — Rôle : dictionnaire visuel du site. Version : V0.9.1. Autonome, sans JavaScript. -->
+<!-- legende.html — dictionnaire visuel V0.9.3 — Mon Univers — sans JavaScript -->
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>Légende — Ma Collection</title>
+<title>Légende — Mon Univers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#000;--s1:#121216;--s2:#1A1A20;--bd:#4A3B7A;--acc:#B24BF3;--acc2:#7F5AF0;--accr:178,75,243;--fav:#FF5DA2;--enc:#2CB67D;--voir:#F2E527;--tx:#F2EFF8;--dim:#B4AAC9;--r:14px;--gap:16px;--gap-in:12px;--fs:'Manrope',system-ui,sans-serif;--ft:'Fraunces',Georgia,serif;--fm:'IBM Plex Mono',monospace;}
+:root{--bg:#000;--s1:#121216;--s2:#1A1A20;--s3:#20202a;--bd:#4A3B7A;--acc:#B24BF3;--acc2:#7F5AF0;--accr:178,75,243;--fav:#FF5DA2;--enc:#2CB67D;--voir:#F2E527;--tx:#F2EFF8;--dim:#B4AAC9;--r:14px;--gap:16px;--gap-in:12px;--fs:'Manrope',system-ui,sans-serif;--ft:'Fraunces',Georgia,serif;--fm:'IBM Plex Mono',monospace;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);color:var(--tx);font-family:var(--fs);font-size:16px;line-height:1.6;padding-bottom:40px;}
 header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 16px;background:rgba(0,0,0,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);}
@@ -37,45 +37,47 @@ button.rnd{width:46px;height:46px;border-radius:50%;padding:0;}
 .sep{height:1px;background:var(--bd);}
 .note{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:28px;padding:0 8px;border-radius:8px;font-family:var(--fm);font-size:13px;font-weight:700;}
 .poster{position:relative;width:84px;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:linear-gradient(160deg,#2a1f4a,#120a24);aspect-ratio:2/3;}
+.poster.has-note{border-width:2px;}
 .poster .pn{position:absolute;bottom:6px;left:6px;}
-.poster .pp{position:absolute;bottom:6px;right:6px;font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.72);border:1px solid var(--bd);border-radius:6px;padding:2px 6px;}
+.poster .pp{position:absolute;bottom:6px;right:6px;font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.72);border:1px solid var(--bd);border-radius:8px;padding:2px 6px;}
 .poster .ps{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;}
-.poster .pm{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;}
+.poster .ph{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;color:var(--fav);}
+.poster .ph svg{width:12px;height:12px;fill:currentColor;}
 .rcard{display:flex;gap:12px;align-items:center;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:10px;}
-.rcard .rp{width:42px;height:63px;border-radius:6px;background:linear-gradient(160deg,#2a1f4a,#120a24);flex:none;}
+.rcard .rp{width:42px;height:63px;border-radius:10px;background:linear-gradient(160deg,#2a1f4a,#120a24);flex:none;}
 .new-entry{display:flex;gap:12px;align-items:center;background:var(--s1);border:1px dashed var(--acc);border-radius:var(--r);padding:10px;}
-.new-entry .ne-art{width:42px;height:63px;border-radius:6px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--acc);flex:none;}
+.new-entry .ne-art{width:42px;height:63px;border-radius:10px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--acc);flex:none;}
 .new-entry .ne-label{font-family:var(--ft);font-weight:600;}
 .new-entry .ne-sub{font-size:11px;color:var(--dim);}
 .jline{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--bd);}
 .jline .jt{font-size:12px;color:var(--dim);font-family:var(--fm);margin-bottom:4px;}
 .jline .jx{font-size:14px;}
 .jline .acts{display:flex;gap:6px;margin-left:auto;}
-.jline .acts button{width:36px;height:36px;min-height:0;padding:0;border-radius:10px;}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.jline .acts button{width:36px;height:36px;min-height:0;padding:0;border-radius:12px;}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
 .mini{flex:0 0 84px;}
 .tabbar{display:flex;background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:8px;gap:4px;}
-.tabbar button{flex:1;background:none;border:none;color:var(--dim);font-size:11px;font-weight:600;flex-direction:column;gap:4px;min-height:0;padding:8px 4px;border-radius:8px;position:relative;}
+.tabbar button{flex:1;background:none;border:none;color:var(--dim);font-size:11px;font-weight:600;flex-direction:column;gap:4px;min-height:0;padding:8px 4px;border-radius:10px;position:relative;}
 .tabbar button.on{color:var(--acc);background:rgba(var(--accr),.12);}
 .badge-dot{position:absolute;top:4px;right:calc(50% - 16px);width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 6px var(--acc);}
 .season-pill{padding:10px 16px;min-height:44px;border-radius:22px;font-size:14px;font-weight:700;border:1px solid var(--bd);background:var(--s2);color:var(--dim);font-family:var(--fm);}
 .season-pill.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;}
 .ep-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
-.ep-cell{aspect-ratio:1;background:var(--s2);border:1px solid var(--bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:14px;font-weight:600;}
+.ep-cell{aspect-ratio:1;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:14px;font-weight:600;}
 .ep-cell.seen{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;}
-.qbtn{padding:10px 14px;min-height:44px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid var(--bd);background:var(--s2);color:var(--dim);display:inline-flex;align-items:center;gap:6px;}
+.qbtn{padding:10px 14px;min-height:44px;border-radius:22px;font-size:13px;font-weight:600;border:1px solid var(--bd);background:var(--s2);color:var(--dim);display:inline-flex;align-items:center;gap:6px;}
 .next-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;min-height:46px;border-radius:22px;font-size:14px;font-weight:700;border:1px solid var(--acc);background:rgba(var(--accr),.12);color:var(--acc);font-family:var(--fm);}
 .poster-row{display:flex;align-items:center;gap:var(--gap-in);}
-.poster-row>img{width:54px;border-radius:8px;border:1px solid var(--bd);flex:none;background:linear-gradient(160deg,#2a1f4a,#120a24);height:81px;}
+.poster-row>img{width:54px;height:81px;border-radius:12px;border:1px solid var(--bd);flex:none;background:linear-gradient(160deg,#2a1f4a,#120a24);}
 .poster-btns{margin-left:auto;display:flex;gap:10px;}
 .poster-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;min-height:44px;border-radius:22px;border:1px solid var(--acc);background:rgba(var(--accr),.12);color:var(--acc);font-size:13px;font-weight:700;}
-.zoom-btn{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.8);border:1px solid var(--bd);border-radius:8px;padding:5px 9px;font-size:11px;font-weight:600;color:var(--acc);display:flex;align-items:center;gap:4px;}
+.zoom-btn{position:relative;background:rgba(0,0,0,.8);border:1px solid var(--bd);border-radius:10px;padding:5px 9px;font-size:11px;font-weight:600;color:var(--acc);display:inline-flex;align-items:center;gap:4px;}
 .sort-btn{padding:12px 16px;min-height:46px;border-radius:24px;font-size:14px;font-weight:600;border:1px solid var(--bd);background:var(--s1);color:var(--dim);display:inline-flex;align-items:center;gap:6px;}
 .sort-btn.on{border-color:var(--acc);color:var(--acc);background:rgba(var(--accr),.1);}
 .apply-btn{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border:none;padding:10px 18px;border-radius:var(--r);font-weight:700;min-height:40px;}
 .swatch{width:46px;height:46px;border-radius:14px;border:2px solid var(--bd);position:relative;}
 .swatch.on{border-color:#fff;box-shadow:0 0 0 2px var(--acc);}
-.radio-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;font-size:15px;font-weight:600;min-height:48px;}
+.radio-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;font-size:15px;font-weight:600;min-height:48px;}
 .radio-opt.sel{border-color:var(--acc);background:rgba(var(--accr),.1);}
 .radio-opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--bd);flex:none;display:flex;align-items:center;justify-content:center;}
 .radio-opt.sel .dot{border-color:var(--acc);}
@@ -85,22 +87,46 @@ button.rnd{width:46px;height:46px;border-radius:50%;padding:0;}
 .backup-banner{display:flex;align-items:center;gap:10px;background:rgba(var(--accr),.12);border:1px solid var(--acc);border-radius:14px;padding:12px 14px;font-size:13px;}
 .backup-banner>span{flex:1;min-width:0;}
 .backup-banner button{min-height:40px;padding:8px 14px;font-size:13px;}
+.fab-note{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(var(--accr),.35);}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 .cal .dow{font-size:11px;font-weight:700;color:var(--dim);text-align:center;}
-.cal .day{aspect-ratio:1;background:var(--s1);border:1px solid var(--bd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+.cal .day{height:38px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
 .cal .day.today{border-color:var(--acc);color:var(--acc);}
 .cal .day.sel{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;}
-.cal .day.empty{background:transparent;border-color:transparent;}
-.pick{display:flex;gap:8px;}
-.pick .col{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:10px;overflow:hidden;}
-.pick .col .ph{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;text-align:center;padding:6px 0;border-bottom:1px solid var(--bd);}
-.pick .col .it{height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--dim);border-bottom:1px solid rgba(var(--accr),.18);}
-.pick .col .it.on{color:var(--acc);font-weight:700;background:rgba(var(--accr),.08);}
+.cal .day.muted{opacity:.32;}
+.cal-picker{display:flex;gap:8px;margin-bottom:10px;}
+.cal-pick-btn{flex:1;min-width:0;padding:10px 14px;min-height:44px;border-radius:18px;border:1px solid var(--bd);background:var(--s1);color:var(--tx);font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;}
 .dropdown{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
 .dropdown .top{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:15px;font-weight:600;}
 .dropdown .top .chev{margin-left:auto;color:var(--dim);}
 .dropdown .row{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:14px;border-top:1px solid var(--bd);}
 .dropdown .row.active{background:rgba(var(--accr),.15);color:var(--acc);font-weight:600;}
+.adv-btn{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:82px;justify-content:center;}
+.adv-btn.on{border-color:var(--acc);background:rgba(var(--accr),.1);}
+.adv-btn .ic svg{width:22px;height:22px;color:var(--acc);}
+.adv-btn span:nth-child(2){font-size:12px;font-weight:600;color:var(--dim);}
+.adv-btn .adv-val{font-size:11px;font-weight:700;color:var(--acc);}
+.heart-btn{position:relative;width:52px;height:52px;border-radius:50%;border:1px solid var(--bd);background:var(--s2);color:var(--dim);display:inline-flex;align-items:center;justify-content:center;overflow:visible;}
+.heart-btn .ic svg{width:22px;height:22px;}
+.heart-btn.on{color:var(--fav);border-color:var(--fav);background:rgba(255,93,162,.12);}
+.heart-btn.on .ic svg{fill:currentColor;}
+.heart-demo{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.heart-demo .hb{position:absolute;left:50%;top:50%;width:12px;height:12px;color:var(--fav);opacity:.85;transform:translate(-50%,-50%);}
+.heart-demo .hb:nth-child(2){transform:translate(calc(-50% + 18px),calc(-50% - 14px));}
+.heart-demo .hb:nth-child(3){transform:translate(calc(-50% - 18px),calc(-50% - 12px));}
+.heart-demo .hb:nth-child(4){transform:translate(calc(-50% + 10px),calc(-50% + 18px));}
+.heart-demo .hb svg{width:12px;height:12px;fill:currentColor;}
+.mylist-row{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 12px;flex-wrap:wrap;}
+.ml-name{flex:1 1 120px;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ml-used{font-size:11px;color:var(--dim);}
+.ml-base{font-size:10px;text-transform:uppercase;color:var(--dim);border:1px solid var(--bd);border-radius:10px;padding:2px 7px;}
+.ml-btn{width:40px;height:40px;min-width:40px;border-radius:12px;}
+.icon-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.icon-cell{aspect-ratio:1;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--tx);}
+.icon-cell.on{border-color:var(--acc);color:var(--acc);background:rgba(var(--accr),.12);}
+.color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+.color-cell{aspect-ratio:1;border-radius:14px;border:2px solid var(--bd);}
+.color-cell.on{border-color:#fff;box-shadow:0 0 0 2px var(--acc);}
 .carte{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:var(--gap);}
 .carte>details>summary{display:flex;align-items:center;gap:14px;list-style:none;cursor:pointer;}
 .carte>details>summary::-webkit-details-marker{display:none;}
@@ -123,7 +149,8 @@ button.rnd{width:46px;height:46px;border-radius:50%;padding:0;}
 .rowbad{display:flex;gap:12px;}
 .rowbad .col{flex:1;}
 .tagbad{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block;}
-.tagbad.no{color:var(--fav);}.tagbad.ok{color:var(--enc);}
+.tagbad.no{color:var(--fav);}
+.tagbad.ok{color:var(--enc);}
 .collant{max-height:140px;overflow-y:auto;border:1px solid var(--bd);border-radius:14px;background:var(--s1);}
 .collant .ct{position:sticky;top:0;background:var(--s1);border-bottom:1px solid var(--bd);padding:12px 14px;font-family:var(--ft);font-size:16px;font-weight:600;color:var(--acc);z-index:2;}
 .collant .cb{padding:6px 14px;}
@@ -132,435 +159,329 @@ button.rnd{width:46px;height:46px;border-radius:50%;padding:0;}
 </head>
 <body>
 <header>
-<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg></span>
-<h1>Légende du site</h1>
+<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/><path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/></svg></span>
+<h1>Légende — Mon Univers</h1>
 </header>
 <main>
 
 <div class="intro">
 <h2>Comment on se parle</h2>
-<p>Chaque élément a sa carte : l'<b>échantillon</b> à gauche, un bouton <b>L</b> à droite. Clique le L → la fiche se déplie avec <b>4 vocabulaires</b> : ce que tu vois, le nom du métier, le nom dans le code, à quoi ça sert. Recliquer replie.</p>
-<p>Sur cette page chaque nom désigne une seule chose. Sur ton site il y aura plusieurs boîtes ou boutons : là tu ajoutes le contexte, comme à l'oral — <code>la boîte du Journal</code>, <code>le bouton Enregistrer</code>, <code>la pastille de note sur l'affiche de Lost</code>.</p>
-<p>Cette page montre le site <b>tel qu'il est en V0.9.1</b>. Si un échantillon diffère de ce que tu vois, dis-le : c'est un bug. Les éléments à venir (V0.9.2 : tes icônes/couleurs perso, l'écran "Mes listes") ne sont pas encore ici, parce qu'ils ne sont pas encore dans le code.</p>
+<p>Chaque élément a sa carte : l’échantillon à gauche, un bouton <b>L</b> à droite.</p>
+<p>Tu cliques le <b>L</b> → la fiche se déplie avec 4 vocabulaires : ce que tu vois, le nom du métier, le nom dans le code, à quoi ça sert.</p>
+<p>Cette page décrit le site en <b>V0.9.3</b>. Le site s’appelle maintenant <b>Mon Univers</b>.</p>
 </div>
 
 <div class="rule">
 <span class="flabel">Règle — rien de collé</span>
-<p>Toujours de l'espace entre deux éléments. Jamais bord à bord.</p>
+<p>Toujours de l’espace entre deux éléments.</p>
 <div class="rowbad">
-<div class="col"><span class="tagbad no">Mauvais (collé)</span><div style="display:flex;flex-direction:column;"><button style="border-radius:14px 14px 0 0;">Un bouton</button><button style="border-radius:0;border-top:none;">Un autre</button><button style="border-radius:0 0 14px 14px;border-top:none;">Un troisième</button></div></div>
-<div class="col"><span class="tagbad ok">Bon (espacé)</span><div style="display:flex;flex-direction:column;gap:12px;"><button>Un bouton</button><button>Un autre</button><button>Un troisième</button></div></div>
+<div class="col"><span class="tagbad no">Mauvais</span><div style="display:flex;flex-direction:column;"><button style="border-radius:14px 14px 0 0;">Un bouton</button><button style="border-radius:0;border-top:none;">Un autre</button></div></div>
+<div class="col"><span class="tagbad ok">Bon</span><div style="display:flex;flex-direction:column;gap:12px;"><button>Un bouton</button><button>Un autre</button></div></div>
 </div>
 </div>
 
 <div class="rule">
-<span class="flabel">Règle — titre collant (ce que tu appelles « fixe »)</span>
-<p>Quand une liste est longue, son titre reste en haut et ne part pas avec le contenu. Fais défiler la zone pour voir.</p>
-<div class="collant"><div class="ct">Notes du mois</div><div class="cb"><div>Contrôle — S01E01</div><div>Lost — S02E19</div><div>Control Resonant — session 2h30</div><div>Titane — 4/10</div><div>Monsieur Flap — p.120/320</div><div>Take Control — instantané</div><div>Lost — S02E20</div><div>Contrôle — session 1h</div></div></div>
+<span class="flabel">Règle — titre collant</span>
+<p>Le titre reste en haut pendant que la liste défile.</p>
+<div class="collant"><div class="ct">Notes de septembre</div><div class="cb"><div>30/09 — Contrôle</div><div>29/09 — Lost S02E19</div><div>28/09 — Monsieur Flap p.120/320</div><div>27/09 — Take Control</div><div>26/09 — Titane 4/10</div></div></div>
 </div>
 
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg></span>Conteneurs</div>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/></svg></span>Conteneurs</div>
 
 <div class="carte"><details><summary><div class="ech"><div class="box" style="margin:0;width:100%;min-height:42px;">&nbsp;</div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le cadre sombre qui regroupe des éléments liés.</p>
-<p class="voc"><b>Nom du métier :</b> carte / conteneur (angl. <i>card</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.box</code>.</p>
-<p class="voc"><b>Sert à :</b> ranger ensemble ce qui va ensemble.</p>
+<p class="voc"><b>Ce que tu vois :</b> le cadre sombre qui regroupe des éléments.</p>
+<p class="voc"><b>Nom du métier :</b> carte / conteneur.</p>
+<p class="voc"><b>Dans le code :</b> <code>.box</code>.</p>
+<p class="voc"><b>Sert à :</b> ranger un groupe.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><div class="field" style="margin:0;width:100%;"><span class="flabel">Titre</span><input placeholder="Champ"></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> une boîte avec une étiquette et un champ dedans.</p>
-<p class="voc"><b>Nom du métier :</b> champ de formulaire (angl. <i>field</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.field</code>, fonction <code>fieldBox()</code>.</p>
-<p class="voc"><b>Sert à :</b> présenter une saisie nommée.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech"><div style="font-family:var(--ft);font-size:17px;font-weight:600;color:var(--acc);">Titre de boîte</div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le mot en violet qui nomme une boîte.</p>
-<p class="voc"><b>Nom du métier :</b> titre de section (angl. <i>section title</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.sec-head</code>.</p>
-<p class="voc"><b>Sert à :</b> intituler un groupe ; il est collant.</p>
+<p class="voc"><b>Ce que tu vois :</b> une boîte avec étiquette et champ.</p>
+<p class="voc"><b>Nom du métier :</b> champ de formulaire.</p>
+<p class="voc"><b>Dans le code :</b> <code>.field</code>.</p>
+<p class="voc"><b>Sert à :</b> une saisie nommée.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><span class="flabel" style="margin:0;">Étiquette</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit mot gris en majuscules au-dessus d'un champ.</p>
-<p class="voc"><b>Nom du métier :</b> libellé (angl. <i>label</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.flabel</code>.</p>
+<p class="voc"><b>Ce que tu vois :</b> petit mot gris en majuscules.</p>
+<p class="voc"><b>Nom du métier :</b> libellé.</p>
+<p class="voc"><b>Dans le code :</b> <code>.flabel</code>.</p>
 <p class="voc"><b>Sert à :</b> dire quoi remplir.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sep" style="width:100%;"></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le trait fin horizontal.</p>
-<p class="voc"><b>Nom du métier :</b> séparateur (angl. <i>divider</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.sep</code>.</p>
-<p class="voc"><b>Sert à :</b> séparer deux choses dans une même boîte.</p>
-</div></details></div>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>Saisie</div>
 
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>Saisie</div>
-
-<div class="carte"><details><summary><div class="ech"><input placeholder="Champ de saisie" style="width:100%;"></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la ligne où tu tapes une seule valeur.</p>
-<p class="voc"><b>Nom du métier :</b> champ texte (angl. <i>input</i>).</p>
-<p class="voc"><b>Dans le code :</b> balise <code>&lt;input&gt;</code>.</p>
-<p class="voc"><b>Sert à :</b> un titre, une date, un nombre.</p>
+<div class="carte"><details><summary><div class="ech"><input placeholder="Champ une ligne" style="width:100%;"></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> ligne de saisie courte.</p>
+<p class="voc"><b>Nom du métier :</b> champ texte.</p>
+<p class="voc"><b>Dans le code :</b> <code>&lt;input&gt;</code>.</p>
+<p class="voc"><b>Sert à :</b> titre, EAN, URL.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><textarea placeholder="Zone de texte" style="width:100%;min-height:50px;"></textarea></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la grande boîte où tu écris sur plusieurs lignes.</p>
-<p class="voc"><b>Nom du métier :</b> zone de texte (angl. <i>textarea</i>).</p>
-<p class="voc"><b>Dans le code :</b> balise <code>&lt;textarea&gt;</code>.</p>
-<p class="voc"><b>Sert à :</b> ton avis, ta note libre.</p>
+<p class="voc"><b>Ce que tu vois :</b> grande boîte d’écriture.</p>
+<p class="voc"><b>Nom du métier :</b> zone de texte.</p>
+<p class="voc"><b>Dans le code :</b> <code>&lt;textarea&gt;</code>.</p>
+<p class="voc"><b>Sert à :</b> commentaire, avis.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="pick"><div class="col"><div class="ph">Jour</div><div class="it">28</div><div class="it on">29</div><div class="it">30</div></div><div class="col"><div class="ph">Mois</div><div class="it">août</div><div class="it on">sept.</div><div class="it">oct.</div></div><div class="col"><div class="ph">Heure</div><div class="it">16</div><div class="it on">17</div><div class="it">18</div></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> des colonnes qu'on fait défiler pour choisir date/heure.</p>
-<p class="voc"><b>Nom du métier :</b> sélecteur en roues (angl. <i>picker / wheel</i>).</p>
-<p class="voc"><b>Dans le code :</b> fonction <code>openDateTimePicker()</code>, classe <code>.picker-col</code>.</p>
-<p class="voc"><b>Sert à :</b> choisir un moment dans le site ; s'ouvre centré sur maintenant.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="cal-picker"><button class="cal-pick-btn"><span>Septembre</span></button><button class="cal-pick-btn"><span>2026</span></button></div><div class="cal"><span class="dow">L</span><span class="dow">M</span><span class="dow">M</span><span class="dow">J</span><span class="dow">V</span><span class="dow">S</span><span class="dow">D</span><span class="day muted">1</span><span class="day">2</span><span class="day muted">3</span><span class="day today sel">30</span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> grille mensuelle, avec mois et année cliquables.</p>
+<p class="voc"><b>Nom du métier :</b> calendrier.</p>
+<p class="voc"><b>Dans le code :</b> <code>.cal-day</code>, <code>.cal-pick-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir un jour ; dans le Journal, les jours sans note sont estompés mais restent cliquables.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="cal"><span class="dow">L</span><span class="dow">M</span><span class="dow">M</span><span class="dow">J</span><span class="dow">V</span><span class="dow">S</span><span class="dow">D</span><span class="day empty"></span><span class="day">1</span><span class="day">2</span><span class="day">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">28</span><span class="day today sel">29</span><span class="day">30</span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la grille des jours d'un mois, cliquables.</p>
-<p class="voc"><b>Nom du métier :</b> calendrier (angl. <i>calendar</i>).</p>
-<p class="voc"><b>Dans le code :</b> fonction <code>renderCalendar()</code>, classe <code>.cal-day</code>.</p>
-<p class="voc"><b>Sert à :</b> naviguer dans le Journal ou choisir une date ; pas de ligne vide.</p>
+<div class="carte"><details><summary><div class="ech"><span class="chip on">Note datée</span><span class="chip">Instantané</span><span class="chip">Épisode</span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> ovales de mode de note.</p>
+<p class="voc"><b>Nom du métier :</b> puces de mode.</p>
+<p class="voc"><b>Dans le code :</b> <code>#qn-kind</code>, <code>.chip</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir le type d’entrée.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="radio-opt sel"><span class="dot"></span><span>Note libre (sans œuvre)</span></div><div class="radio-opt"><span class="dot"></span><span>Lost</span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> une liste de choix, un seul est pris (point violet).</p>
-<p class="voc"><b>Nom du métier :</b> liste radio (angl. <i>radio list</i>).</p>
-<p class="voc"><b>Dans le code :</b> fonction <code>openEntryPicker()</code>, classe <code>.radio-opt</code>.</p>
-<p class="voc"><b>Sert à :</b> choisir une œuvre dans le site.</p>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/></svg></span>Boutons</div>
+
+<div class="carte"><details><summary><div class="ech"><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span>Modifier</span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> rectangle avec icône et mot.</p>
+<p class="voc"><b>Nom du métier :</b> bouton.</p>
+<p class="voc"><b>Dans le code :</b> <code>&lt;button&gt;</code>.</p>
+<p class="voc"><b>Sert à :</b> action.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="chip on">Note datée</span><span class="chip">Instantané</span><span class="chip">Épisode</span><span class="chip">Session</span><span class="chip">Pages</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les petits ovales qui choisissent le type de note.</p>
-<p class="voc"><b>Nom du métier :</b> puces de mode (angl. <i>mode chips</i>).</p>
-<p class="voc"><b>Dans le code :</b> conteneur <code>#qn-kind</code>, classe <code>.chip</code>.</p>
-<p class="voc"><b>Sert à :</b> dire comment tu notes (5 modes).</p>
+<div class="carte"><details><summary><div class="ech"><button class="primary"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg></span><span>Enregistrer</span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> bouton plein thème.</p>
+<p class="voc"><b>Nom du métier :</b> bouton principal.</p>
+<p class="voc"><b>Dans le code :</b> <code>.primary</code>.</p>
+<p class="voc"><b>Sert à :</b> action importante.</p>
 </div></details></div>
 
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="6" y1="10" x2="6" y2="10"/><line x1="10" y1="10" x2="10" y2="10"/></svg></span>Boutons</div>
-
-<div class="carte"><details><summary><div class="ech"><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>Modifier</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le rectangle gris avec icône + mot.</p>
-<p class="voc"><b>Nom du métier :</b> bouton (angl. <i>button</i>).</p>
-<p class="voc"><b>Dans le code :</b> balise <code>&lt;button&gt;</code>, fonction <code>btn()</code>.</p>
-<p class="voc"><b>Sert à :</b> déclencher une action ; porte une icône à gauche.</p>
+<div class="carte"><details><summary><div class="ech"><button class="sq"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span></button><button class="sq"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> carrés à icône seule.</p>
+<p class="voc"><b>Nom du métier :</b> bouton icône.</p>
+<p class="voc"><b>Dans le code :</b> <code>.sq-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> loupe, horloge des récentes.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="primary"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>Enregistrer</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le bouton plein de la couleur du thème.</p>
-<p class="voc"><b>Nom du métier :</b> bouton principal (angl. <i>primary button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.primary</code>.</p>
-<p class="voc"><b>Sert à :</b> l'action importante ; un seul par fenêtre.</p>
+<div class="carte"><details><summary><div class="ech"><button class="rnd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> rond avec flèche pleine.</p>
+<p class="voc"><b>Nom du métier :</b> bouton retour.</p>
+<p class="voc"><b>Dans le code :</b> <code>.rnd-btn</code>, <code>arrow-left</code>.</p>
+<p class="voc"><b>Sert à :</b> fermer / revenir.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="sq"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span></button><button class="sq"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> un carré avec seulement une icône (loupe, horloge…).</p>
-<p class="voc"><b>Nom du métier :</b> bouton icône (angl. <i>icon button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.sq-btn</code>.</p>
-<p class="voc"><b>Sert à :</b> la loupe lance la recherche ; l'horloge ouvre les récentes.</p>
+<div class="carte"><details><summary><div class="ech"><button class="rnd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> rond avec icône calendrier.</p>
+<p class="voc"><b>Nom du métier :</b> bouton calendrier.</p>
+<p class="voc"><b>Dans le code :</b> <code>#journal-cal-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> ouvrir le calendrier du Journal.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="rnd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le rond avec une flèche <b>pleine</b> vers la gauche.</p>
-<p class="voc"><b>Nom du métier :</b> bouton retour (angl. <i>back button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.rnd-btn</code>, icône <code>arrow-left</code>.</p>
-<p class="voc"><b>Sert à :</b> revenir / fermer ; sa flèche pleine le distingue des chevrons.</p>
+<div class="carte"><details><summary><div class="ech"><button class="fab-note"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M21.4 2.6a2 2 0 0 0-2.8-2.8L12 8.4V12h3.6z"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> gros rond flottant en bas à gauche.</p>
+<p class="voc"><b>Nom du métier :</b> bouton d’action flottant.</p>
+<p class="voc"><b>Dans le code :</b> <code>.fab-note</code>.</p>
+<p class="voc"><b>Sert à :</b> note rapide, seulement sur le Journal.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="wide"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Exporter en JSON</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> un bouton qui prend toute la largeur.</p>
-<p class="voc"><b>Nom du métier :</b> bouton large (angl. <i>block button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.wide</code>.</p>
-<p class="voc"><b>Sert à :</b> une action isolée, bien visible.</p>
+<div class="carte"><details><summary><div class="ech"><button class="adv-btn on"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/></svg></span><span>Plateforme</span><span class="adv-val">Xbox</span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> bouton carré avec nom de champ et valeur.</p>
+<p class="voc"><b>Nom du métier :</b> bouton valeur.</p>
+<p class="voc"><b>Dans le code :</b> <code>.adv-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> ouvrir une fenêtre de choix.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>Annuler</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le bouton gris du pied de fenêtre, à côté du principal.</p>
-<p class="voc"><b>Nom du métier :</b> bouton secondaire (angl. <i>secondary button</i>).</p>
-<p class="voc"><b>Dans le code :</b> <code>&lt;button&gt;</code> sans <code>.primary</code>, dans <code>.m-foot</code>.</p>
-<p class="voc"><b>Sert à :</b> annuler / fermer ; à droite du principal.</p>
+<div class="carte"><details><summary><div class="ech"><span class="heart-demo"><span class="hb"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></span><span class="hb"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></span><span class="hb"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></span><button class="heart-btn on"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></span></button></span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> bouton cœur avec mini-cœurs autour.</p>
+<p class="voc"><b>Nom du métier :</b> bouton coup de cœur.</p>
+<p class="voc"><b>Dans le code :</b> <code>.heart-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> marquer une œuvre aimée, avec animation discrète.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="apply-btn">Appliquer</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit bouton plein en haut du panneau filtres.</p>
-<p class="voc"><b>Nom du métier :</b> bouton valider (angl. <i>apply button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.apply-btn</code>.</p>
-<p class="voc"><b>Sert à :</b> fermer le panneau filtres en appliquant tri + filtres.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech"><div class="poster-row"><img src="" alt=""><div class="poster-btns"><button class="poster-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>URL</button><button class="poster-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span>Importer</button></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les deux petits ovales teintés à droite de la miniature d'affiche.</p>
-<p class="voc"><b>Nom du métier :</b> bouton d'affiche (angl. <i>poster action</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.poster-btn</code>, conteneur <code>.poster-btns</code>.</p>
-<p class="voc"><b>Sert à :</b> coller une URL d'image, ou importer une image du téléphone.</p>
-</div></details></div>
-
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>Choix &amp; état</div>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>Choix &amp; listes</div>
 
 <div class="carte"><details><summary><div class="ech"><span class="chip">Éteint</span><span class="chip on">Allumé</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit ovale qui se choisit (gris / couleur).</p>
-<p class="voc"><b>Nom du métier :</b> puce (angl. <i>chip</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.chip</code>, état <code>.on</code>.</p>
-<p class="voc"><b>Sert à :</b> filtres, statuts, modes de note.</p>
+<p class="voc"><b>Ce que tu vois :</b> ovale gris / coloré.</p>
+<p class="voc"><b>Nom du métier :</b> puce.</p>
+<p class="voc"><b>Dans le code :</b> <code>.chip</code>.</p>
+<p class="voc"><b>Sert à :</b> filtre, statut, mode.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><div class="pill"><b class="on">Simple</b><b>Avancé</b></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> deux/trois mots dans un ovale, l'actif est coloré.</p>
-<p class="voc"><b>Nom du métier :</b> sélecteur en pilules (angl. <i>segmented / pill</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pill-sel</code>.</p>
-<p class="voc"><b>Sert à :</b> basculer entre options exclusives (taille, densité…).</p>
+<p class="voc"><b>Ce que tu vois :</b> mots dans un ovale.</p>
+<p class="voc"><b>Nom du métier :</b> sélecteur en pilules.</p>
+<p class="voc"><b>Dans le code :</b> <code>.seg</code>, <code>.pill-sel</code>.</p>
+<p class="voc"><b>Sert à :</b> Simple / Avancé, taille, densité.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="pill" style="border-radius:22px;"><b class="on">Simple</b><b>Avancé</b></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le même ovale, en haut d'une fiche ou des Options.</p>
-<p class="voc"><b>Nom du métier :</b> interrupteur de mode (angl. <i>toggle</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.seg</code>.</p>
-<p class="voc"><b>Sert à :</b> passer de Simple (essentiel) à Avancé (tout).</p>
+<div class="carte"><details><summary><div class="ech"><span class="sort-btn on">Nom <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></span><span class="sort-btn">Date</span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> ovale de tri avec flèche.</p>
+<p class="voc"><b>Nom du métier :</b> bouton de tri.</p>
+<p class="voc"><b>Dans le code :</b> <code>.sort-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> trier la bibliothèque.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="sort-btn on">Nom <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></span><span class="sort-btn">Date</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les ovales de tri, avec une petite flèche sur celui actif.</p>
-<p class="voc"><b>Nom du métier :</b> bouton de tri (angl. <i>sort button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.sort-btn</code>, fonction <code>cycleSort()</code>.</p>
-<p class="voc"><b>Sert à :</b> trier la bibliothèque ; 1 tap = croissant, 2e = décroissant (jamais éteint).</p>
+<div class="carte"><details><summary><div class="ech"><div class="dropdown" style="width:100%;"><div class="top"><span class="ic" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 12h18"/><path d="M17 3v18"/></svg></span>Film<span class="ic chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="row active">Film</div><div class="row">Série</div></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> boîte qui s’ouvre pour choisir le type.</p>
+<p class="voc"><b>Nom du métier :</b> menu déroulant.</p>
+<p class="voc"><b>Dans le code :</b> <code>.type-dropdown</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir le rayon de recherche.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="season-pill">S01</span><span class="season-pill on">S02</span><span class="season-pill">S03</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les pastilles de saison en haut de la grille épisodes.</p>
-<p class="voc"><b>Nom du métier :</b> pastille de saison (angl. <i>season pill</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.season-pill</code>.</p>
-<p class="voc"><b>Sert à :</b> changer de saison.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sheetdemo"><div style="font-family:var(--ft);color:var(--acc);font-weight:600;margin-bottom:10px;">Plateforme</div><div class="radio-opt sel"><span class="dot"></span><span>Xbox</span></div><div class="radio-opt"><span class="dot"></span><span>PC</span></div><button class="wide" style="margin-top:10px;"><span>Autre… (libre)</span></button></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> fenêtre de choix par-dessus.</p>
+<p class="voc"><b>Nom du métier :</b> feuille de choix.</p>
+<p class="voc"><b>Dans le code :</b> <code>setSheet()</code>, <code>#menu-overlay</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir une valeur, en ajouter une libre, supprimer une perso.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="ep-grid"><span class="ep-cell seen">1</span><span class="ep-cell seen">2</span><span class="ep-cell">3</span><span class="ep-cell">4</span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les cases numérotées, cochées = vues.</p>
-<p class="voc"><b>Nom du métier :</b> case à cocher (angl. <i>checkbox cell</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.ep-cell</code>, état <code>.seen</code>.</p>
-<p class="voc"><b>Sert à :</b> marquer un épisode vu/non vu d'un tap.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="mylist-row"><span class="ic" style="color:#16A34A;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2 14.456 2 16 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/></svg></span><span class="ml-name">Xbox</span><span class="ml-used">utilisée (2)</span><button class="sq-btn ml-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></span></button><button class="sq-btn ml-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span></button></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> ligne de gestion dans Options → Mes listes.</p>
+<p class="voc"><b>Nom du métier :</b> ligne de liste personnalisable.</p>
+<p class="voc"><b>Dans le code :</b> <code>.mylist-row</code>.</p>
+<p class="voc"><b>Sert à :</b> icône, couleur, ordre, renommage, suppression.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="dropdown" style="width:100%;"><div class="top"><span class="ic" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></span>Film<span class="ic chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="row active">Film</div><div class="row">Série</div><div class="row">Jeu</div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la boîte qui s'ouvre pour choisir le type (Film, Série…).</p>
-<p class="voc"><b>Nom du métier :</b> menu déroulant (angl. <i>dropdown</i>).</p>
-<p class="voc"><b>Dans le code :</b> classes <code>.type-dropdown*</code>, fonction <code>buildTypeDropdown()</code>.</p>
-<p class="voc"><b>Sert à :</b> choisir le "rayon" de recherche ; le "+" en bas crée un type libre.</p>
+<div class="carte"><details><summary><div class="ech"><div class="icon-grid"><span class="icon-cell on"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2 14.456 2 16 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/></svg></span></span><span class="icon-cell"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/></svg></span></span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> grille de petites icônes.</p>
+<p class="voc"><b>Nom du métier :</b> sélecteur d’icônes.</p>
+<p class="voc"><b>Dans le code :</b> <code>.icon-cell</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir une icône Lucide, avec recherche.</p>
 </div></details></div>
 
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></span>Œuvre &amp; données</div>
-
-<div class="carte"><details><summary><div class="ech"><div class="poster"><span class="note pn" style="background:linear-gradient(135deg,#46B05A,#2E8C44);color:#fff;">7</span><span class="pp">S02 E19</span><span class="ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;color:var(--acc);"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;color:var(--tx);"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la couverture d'une œuvre, au format portrait.</p>
-<p class="voc"><b>Nom du métier :</b> affiche (angl. <i>poster</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.poster</code>, fonction <code>renderPoster()</code>.</p>
-<p class="voc"><b>Sert à :</b> représenter l'œuvre ; porte note, progression, statut, menu.</p>
+<div class="carte"><details><summary><div class="ech"><div class="color-grid"><span class="color-cell on" style="background:#16A34A;"></span><span class="color-cell" style="background:#3B82F6;"></span><span class="color-cell" style="background:#EC4899;"></span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> grille de couleurs.</p>
+<p class="voc"><b>Nom du métier :</b> sélecteur de couleurs.</p>
+<p class="voc"><b>Dans le code :</b> <code>.color-cell</code>.</p>
+<p class="voc"><b>Sert à :</b> colorer une icône de valeur.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="note" style="background:linear-gradient(135deg,#FF2D2D,#D11A1A);color:#fff;">1</span><span class="note" style="background:linear-gradient(135deg,#FFB300,#E09A00);color:#1a1200;">4</span><span class="note" style="background:linear-gradient(135deg,#46B05A,#2E8C44);color:#fff;">7</span><span class="note" style="background:linear-gradient(135deg,#F2F2F2,#9E9E9E);color:#111;">9</span><span class="note" style="background:linear-gradient(135deg,#FFD700,#B8860B);color:#1a1400;">10</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit carré qui affiche ta note /10.</p>
-<p class="voc"><b>Nom du métier :</b> badge de note (angl. <i>rating badge</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pnote</code>, fonction <code>noteColors()</code>.</p>
-<p class="voc"><b>Sert à :</b> 10 teintes : rouge (1) → vert (8) → argent (9) → or (10).</p>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></span>Œuvre &amp; données</div>
+
+<div class="carte"><details><summary><div class="ech"><div class="poster has-note" style="border-color:#46B05A;"><span class="ph"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></span><span class="note pn" style="background:linear-gradient(135deg,#46B05A,#2E8C44);color:#fff;">7</span><span class="pp">S02 E19</span><span class="ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;color:var(--acc);"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> couverture portrait, avec liseré couleur selon la note.</p>
+<p class="voc"><b>Nom du métier :</b> affiche.</p>
+<p class="voc"><b>Dans le code :</b> <code>.poster</code>, <code>.has-note</code>.</p>
+<p class="voc"><b>Sert à :</b> représenter l’œuvre ; note, cœur, progression, statut.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="poster" style="width:46px;"><span class="ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;color:var(--acc);"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span></span><span class="poster" style="width:46px;"><span class="ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;color:var(--acc);"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></span><span class="poster" style="width:46px;"><span class="ps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:12px;height:12px;color:var(--acc);"><polyline points="20 6 9 17 4 12"/></svg></span></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit rond en haut à droite de l'affiche (sablier / œil / coche).</p>
-<p class="voc"><b>Nom du métier :</b> indicateur de statut (angl. <i>status dot</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pstat</code>, fonction <code>statIcon()</code>.</p>
-<p class="voc"><b>Sert à :</b> en cours, à voir, ou fini.</p>
+<div class="carte"><details><summary><div class="ech"><span class="note" style="background:linear-gradient(135deg,#FF2D2D,#D11A1A);color:#fff;">1</span><span class="note" style="background:linear-gradient(135deg,#46B05A,#2E8C44);color:#fff;">7</span><span class="note" style="background:linear-gradient(135deg,#FFD700,#B8860B);color:#1a1400;">10</span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> petit carré de note.</p>
+<p class="voc"><b>Nom du métier :</b> badge de note.</p>
+<p class="voc"><b>Dans le code :</b> <code>.pnote</code>.</p>
+<p class="voc"><b>Sert à :</b> note /10 avec 10 teintes.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="poster" style="width:60px;"><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;color:var(--tx);"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les trois points <b>verticaux</b> en haut à gauche de l'affiche.</p>
-<p class="voc"><b>Nom du métier :</b> menu kebab (angl. <i>kebab / more-vertical</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pmenu</code>, icône <code>more-vertical</code>.</p>
-<p class="voc"><b>Sert à :</b> ouvrir le menu de l'œuvre (Modifier, Noter, Dupliquer, Supprimer).</p>
+<div class="carte"><details><summary><div class="ech"><span class="poster" style="width:60px;"><span class="pp">p.120/320</span></span><span class="poster" style="width:60px;"><span class="pp">3 sessions</span></span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> étiquette en bas à droite de l’affiche.</p>
+<p class="voc"><b>Nom du métier :</b> badge de progression.</p>
+<p class="voc"><b>Dans le code :</b> <code>.pp</code>.</p>
+<p class="voc"><b>Sert à :</b> où tu en es ; masqué sur les mini-affiches.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="poster" style="width:60px;"><span class="pp">S02 E19</span></span><span class="poster" style="width:60px;"><span class="pp">p.120/320</span></span><span class="poster" style="width:60px;"><span class="pp">3 sessions</span></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la petite étiquette en bas à droite de l'affiche.</p>
-<p class="voc"><b>Nom du métier :</b> badge de progression (angl. <i>progress badge</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pp</code>, fonction <code>progressBadge()</code>.</p>
-<p class="voc"><b>Sert à :</b> où t'en es : série → prochain ép., livre → pages, jeu → sessions. Masqué sur les mini-affiches.</p>
+<div class="carte"><details><summary><div class="ech"><span class="zoom-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg></span><span>Agrandir</span></span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> petit bouton sur l’affiche de fiche.</p>
+<p class="voc"><b>Nom du métier :</b> bouton zoom.</p>
+<p class="voc"><b>Dans le code :</b> <code>.zoom-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> voir l’affiche en grand.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="zoom-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg></span>Agrandir</div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit bouton en bas à droite de l'affiche d'une fiche.</p>
-<p class="voc"><b>Nom du métier :</b> bouton agrandir (angl. <i>zoom button</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.zoom-btn</code>, fonction <code>openPosterZoom()</code>.</p>
-<p class="voc"><b>Sert à :</b> voir l'affiche en plein écran.</p>
+<div class="carte"><details><summary><div class="ech"><div class="new-entry" style="width:100%;"><span class="ne-art"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span></span><div><div class="ne-label">Nouvelle entrée</div><div class="ne-sub">Créer en Série</div></div></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> première ligne pointillée avec crayon.</p>
+<p class="voc"><b>Nom du métier :</b> ligne de création.</p>
+<p class="voc"><b>Dans le code :</b> <code>.new-entry</code>.</p>
+<p class="voc"><b>Sert à :</b> créer une œuvre à la main.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="rcard" style="width:100%;"><span class="rp"></span><div style="flex:1;min-width:0;"><div style="font-family:var(--ft);font-weight:600;">Lost : Les Disparus</div><div style="font-size:12px;color:var(--dim);">2004 · Série</div></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> une ligne de résultat (mini-affiche + titre + méta).</p>
-<p class="voc"><b>Nom du métier :</b> ligne de résultat (angl. <i>result row</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.rcard</code>, fonction <code>renderResults()</code>.</p>
-<p class="voc"><b>Sert à :</b> cliquer pour ouvrir la fiche d'ajout.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="jline" style="border:none;padding:0;"><span class="poster" style="width:42px;flex:none;"></span><div style="flex:1;min-width:0;"><div class="jt">30/09</div><div class="jx">Superbe épisode…</div></div><div class="acts"><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span></button><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></button></div></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> ligne du Journal.</p>
+<p class="voc"><b>Nom du métier :</b> entrée de liste.</p>
+<p class="voc"><b>Dans le code :</b> <code>.jentry</code>.</p>
+<p class="voc"><b>Sert à :</b> lire, modifier, supprimer.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><div class="new-entry" style="width:100%;"><span class="ne-art"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span></span><div class="ne-ri"><div class="ne-label">Nouvelle entrée</div><div class="ne-sub">Créer « … » en Série</div></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la première ligne des résultats, en pointillés, avec un crayon.</p>
-<p class="voc"><b>Nom du métier :</b> ligne de création (angl. <i>create row</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.new-entry</code>, fonction <code>newEntryCard()</code>.</p>
-<p class="voc"><b>Sert à :</b> créer une œuvre à la main, dans le type recherché, titre pré-rempli.</p>
-</div></details></div>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></span>Navigation &amp; fenêtres</div>
 
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="jline" style="border:none;padding:0;"><span class="poster" style="width:42px;flex:none;"></span><div style="flex:1;min-width:0;"><div class="jt">S02E19</div><div class="jx">Superbe épisode, le twist final…</div></div><div class="acts"><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span></button><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> une ligne du Journal : affiche, titre+texte, crayon et poubelle.</p>
-<p class="voc"><b>Nom du métier :</b> entrée de liste (angl. <i>list item</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.jentry</code>, fonction <code>renderJournal()</code>.</p>
-<p class="voc"><b>Sert à :</b> lire, modifier (crayon), supprimer (poubelle).</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="grid"><span class="poster"></span><span class="poster"></span><span class="poster"></span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la mosaïque d'affiches de la Bibliothèque.</p>
-<p class="voc"><b>Nom du métier :</b> grille (angl. <i>grid</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.grid</code>, fonction <code>renderCollection()</code>.</p>
-<p class="voc"><b>Sert à :</b> parcourir ta collection d'un coup d'œil.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;overflow:hidden;"><div style="display:flex;gap:12px;"><span class="mini"><span class="poster"></span><div style="font-size:12px;font-weight:600;margin-top:6px;">Lost</div></span><span class="mini"><span class="poster"></span><div style="font-size:12px;font-weight:600;margin-top:6px;">Contrôle</div></span><span class="mini"><span class="poster"></span><div style="font-size:12px;font-weight:600;margin-top:6px;">Titane</div></span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le bandeau d'affiches qui défile horizontalement en haut du Journal.</p>
-<p class="voc"><b>Nom du métier :</b> carrousel (angl. <i>carousel</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.hrow</code> + <code>.mini</code>, fonction <code>renderEncours()</code>.</p>
-<p class="voc"><b>Sert à :</b> retrouver vite ce qui est "en cours".</p>
-</div></details></div>
-
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>Navigation</div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="tabbar"><button class="on"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>Recherche</button><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg></span>Biblio.</button><button><span class="badge-dot"></span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Journal</button><button><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Options</button></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les 4 boutons fixes en bas de l'écran.</p>
-<p class="voc"><b>Nom du métier :</b> barre d'onglets (angl. <i>tab bar</i>).</p>
-<p class="voc"><b>Dans le code :</b> <code>nav.tabbar</code>, fonction <code>switchView()</code>.</p>
-<p class="voc"><b>Sert à :</b> changer d'endroit ; l'onglet actif est coloré.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="tabbar"><button class="on"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span>Recherche</span></button><button><span class="badge-dot"></span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span>Journal</span></button></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> 4 boutons en bas.</p>
+<p class="voc"><b>Nom du métier :</b> barre d’onglets.</p>
+<p class="voc"><b>Dans le code :</b> <code>nav.tabbar</code>.</p>
+<p class="voc"><b>Sert à :</b> changer d’écran.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><span class="badge-dot" style="position:static;"></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit rond violet qui apparaît sur l'onglet Journal.</p>
-<p class="voc"><b>Nom du métier :</b> point de notification (angl. <i>badge dot</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.badge-dot</code>, fonction <code>updateJournalBadge()</code>.</p>
-<p class="voc"><b>Sert à :</b> signaler une nouvelle note ajoutée ailleurs que dans l'onglet Journal.</p>
+<p class="voc"><b>Ce que tu vois :</b> petit rond sur l’onglet Journal.</p>
+<p class="voc"><b>Nom du métier :</b> point de notification.</p>
+<p class="voc"><b>Dans le code :</b> <code>.badge-dot</code>.</p>
+<p class="voc"><b>Sert à :</b> signaler une nouvelle note.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><button class="rnd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></span></button><button class="rnd"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></span></button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les ronds avec un <b>chevron</b> (petit angle) gauche/droite.</p>
-<p class="voc"><b>Nom du métier :</b> chevrons de navigation (angl. <i>chevron</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.rnd-btn</code>, icônes <code>chevron-left/right</code>.</p>
-<p class="voc"><b>Sert à :</b> mois précédent / suivant. Différent du bouton retour (flèche pleine).</p>
-</div></details></div>
-
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></span>Fenêtres &amp; retours</div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sheetdemo"><div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--bd);"><button class="rnd" style="width:34px;height:34px;"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></span></button><div style="flex:1;text-align:center;font-family:var(--ft);color:var(--acc);font-weight:600;">Fenêtre</div></div><div style="padding-top:10px;font-size:14px;color:var(--dim);">Contenu…</div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le panneau qui monte du bas par-dessus le site.</p>
-<p class="voc"><b>Nom du métier :</b> fenêtre / feuille (angl. <i>sheet / modal</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.sheet</code>, fonction <code>setModal()</code>.</p>
-<p class="voc"><b>Sert à :</b> un formulaire ou un détail ; bouton rond pour fermer, titre au centre, actions en bas.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sheetdemo"><div style="font-family:var(--ft);color:var(--acc);font-weight:600;margin-bottom:8px;">Supprimer Lost ?</div><div style="font-size:14px;color:var(--dim);margin-bottom:12px;">Toutes les entrées de journal seront perdues.</div><div style="display:flex;gap:10px;"><button style="flex:1;">Annuler</button><button class="primary" style="flex:1;">Supprimer</button></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la petite fenêtre qui demande "tu es sûr ?".</p>
-<p class="voc"><b>Nom du métier :</b> confirmation (angl. <i>confirm dialog</i>).</p>
-<p class="voc"><b>Dans le code :</b> fonction <code>showConfirm()</code>, overlay <code>#confirm-overlay</code>.</p>
-<p class="voc"><b>Sert à :</b> protéger une action irréversible ; jamais de popup système.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sheetdemo"><div class="mitem" style="border-bottom:1px solid var(--bd);"><span class="ic" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span>Modifier</span></div><div class="mitem" style="border-bottom:1px solid var(--bd);"><span class="ic" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span><span>Noter vite</span></div><div class="mitem"><span class="ic" style="color:var(--fav);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span><span>Supprimer</span></div></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la liste d'actions qui s'ouvre depuis le kebab de l'affiche.</p>
-<p class="voc"><b>Nom du métier :</b> menu contextuel (angl. <i>action sheet</i>).</p>
-<p class="voc"><b>Dans le code :</b> fonction <code>openMenu()</code>, overlay <code>#menu-overlay</code>, classe <code>.mitem</code>.</p>
-<p class="voc"><b>Sert à :</b> grouper les actions d'une œuvre.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="sheetdemo"><div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--bd);"><button class="rnd" style="width:34px;height:34px;"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></span></button><div style="flex:1;text-align:center;font-family:var(--ft);color:var(--acc);font-weight:600;">Fenêtre</div></div><div style="padding-top:10px;font-size:14px;color:var(--dim);">Contenu…</div></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> panneau qui monte du bas.</p>
+<p class="voc"><b>Nom du métier :</b> fenêtre / sheet.</p>
+<p class="voc"><b>Dans le code :</b> <code>.sheet</code>, <code>setModal()</code>.</p>
+<p class="voc"><b>Sert à :</b> formulaire ou détail.</p>
 </div></details></div>
 
 <div class="carte"><details><summary><div class="ech"><span class="toastdemo">Enregistré</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit message qui apparaît en bas puis disparaît.</p>
-<p class="voc"><b>Nom du métier :</b> notification éphémère (angl. <i>toast</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.toast</code>, fonction <code>toast()</code>.</p>
-<p class="voc"><b>Sert à :</b> confirmer une action sans bloquer l'écran.</p>
+<p class="voc"><b>Ce que tu vois :</b> message bref en bas.</p>
+<p class="voc"><b>Nom du métier :</b> toast.</p>
+<p class="voc"><b>Dans le code :</b> <code>.toast</code>.</p>
+<p class="voc"><b>Sert à :</b> confirmer sans bloquer.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="backup-banner"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span>Ça fait 15 jour(s) sans sauvegarde. Pense à exporter.</span><button>Sauvegarder</button><button style="width:34px;height:34px;min-height:0;padding:0;"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le bandeau teinté qui apparaît en haut du site après un moment.</p>
-<p class="voc"><b>Nom du métier :</b> bandeau d'alerte (angl. <i>banner</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.backup-banner</code>, fonction <code>injectBackupBanner()</code>.</p>
-<p class="voc"><b>Sert à :</b> te rappeler d'exporter si ça fait trop longtemps ; se ferme d'un tap.</p>
+<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="backup-banner"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span>Ça fait 15 jour(s) sans sauvegarde.</span><button>Sauvegarder</button></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> bandeau teinté en haut.</p>
+<p class="voc"><b>Nom du métier :</b> bandeau d’alerte.</p>
+<p class="voc"><b>Dans le code :</b> <code>.backup-banner</code>.</p>
+<p class="voc"><b>Sert à :</b> rappeler la sauvegarde.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="poster" style="width:70px;background:linear-gradient(160deg,#3a2a6a,#1a0f33);"></span><span class="ic" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> l'affiche en plein écran, avec un bouton fermer.</p>
-<p class="voc"><b>Nom du métier :</b> visionneuse (angl. <i>lightbox</i>).</p>
-<p class="voc"><b>Dans le code :</b> overlay <code>#poster-overlay</code>, fonction <code>openPosterZoom()</code>.</p>
-<p class="voc"><b>Sert à :</b> voir l'affiche en grand.</p>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="7" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></span>Saisons &amp; épisodes</div>
+
+<div class="carte"><details><summary><div class="ech"><button class="next-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span><span>S02E20</span></button></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> bouton coche + numéro d’épisode.</p>
+<p class="voc"><b>Nom du métier :</b> raccourci épisode.</p>
+<p class="voc"><b>Dans le code :</b> <code>.next-btn</code>.</p>
+<p class="voc"><b>Sert à :</b> ouvrir la grille épisodes.</p>
 </div></details></div>
 
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="20" height="15" x="2" y="7" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></span>Saisons &amp; épisodes</div>
-
-<div class="carte"><details><summary><div class="ech"><button class="next-btn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>S02E20</button></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le bouton teinté avec une coche et un numéro d'épisode.</p>
-<p class="voc"><b>Nom du métier :</b> raccourci épisode (angl. <i>next episode</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.next-btn</code>, fonction <code>nextEpButton()</code>.</p>
-<p class="voc"><b>Sert à :</b> ouvrir la grille saisons/épisodes depuis une fiche.</p>
+<div class="carte"><details><summary><div class="ech"><div class="ep-grid"><span class="ep-cell seen">1</span><span class="ep-cell seen">2</span><span class="ep-cell">3</span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> cases numérotées.</p>
+<p class="voc"><b>Nom du métier :</b> grille d’épisodes.</p>
+<p class="voc"><b>Dans le code :</b> <code>.ep-cell</code>.</p>
+<p class="voc"><b>Sert à :</b> cocher vu / non vu.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech" style="width:100%;"><div class="ep-grid"><span class="ep-cell seen">1</span><span class="ep-cell seen">2</span><span class="ep-cell seen">3</span><span class="ep-cell">4</span><span class="ep-cell">5</span><span class="ep-cell">6</span><span class="ep-cell">7</span><span class="ep-cell">8</span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la grille complète des épisodes d'une saison.</p>
-<p class="voc"><b>Nom du métier :</b> grille d'épisodes (angl. <i>episode grid</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.ep-grid</code>, fonction <code>openEpisodeWindow()</code>.</p>
-<p class="voc"><b>Sert à :</b> cocher d'un tap ; bornée au total réel quand connu.</p>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></span>Personnalisation</div>
+
+<div class="carte"><details><summary><div class="ech"><span class="swatch" style="background:linear-gradient(135deg,#B24BF3,#7F5AF0);"></span><span class="swatch on" style="background:linear-gradient(135deg,#C0392B,#8E2A20);"></span><span class="swatch" style="background:linear-gradient(135deg,#3B82F6,#2563EB);"></span></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> carrés de couleur.</p>
+<p class="voc"><b>Nom du métier :</b> nuancier.</p>
+<p class="voc"><b>Dans le code :</b> <code>.swatch</code>.</p>
+<p class="voc"><b>Sert à :</b> thème du site.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span style="font-family:var(--fm);font-size:13px;color:var(--dim);">18 / 24 vus</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le compteur "vus / total" au-dessus de la grille.</p>
-<p class="voc"><b>Nom du métier :</b> compteur (angl. <i>counter</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.ep-head .cnt</code>.</p>
-<p class="voc"><b>Sert à :</b> savoir où t'en es dans la saison.</p>
+<div class="carte"><details><summary><div class="ech"><div class="radio-opt sel" style="width:100%;"><span class="dot"></span><span style="font-family:'Fraunces',serif;font-size:17px;">Fraunces</span></div></div><span class="L">L</span></summary><div class="fiche">
+<p class="voc"><b>Ce que tu vois :</b> police écrite dans sa propre police.</p>
+<p class="voc"><b>Nom du métier :</b> sélecteur de police.</p>
+<p class="voc"><b>Dans le code :</b> <code>.radio-opt</code>.</p>
+<p class="voc"><b>Sert à :</b> choisir la police.</p>
 </div></details></div>
 
-<div class="carte"><details><summary><div class="ech"><span class="qbtn"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Jusqu'au suivant</span><span class="qbtn">Tout cocher</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les petits boutons d'action au-dessus de la grille.</p>
-<p class="voc"><b>Nom du métier :</b> actions rapides (angl. <i>quick actions</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.qbtn</code>.</p>
-<p class="voc"><b>Sert à :</b> cocher en bloc (jusqu'ici, tout, rien).</p>
-</div></details></div>
-
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></span>Personnalisation</div>
-
-<div class="carte"><details><summary><div class="ech"><span class="swatch" style="background:linear-gradient(135deg,#B24BF3,#7F5AF0);"></span><span class="swatch on" style="background:linear-gradient(135deg,#C0392B,#8E2A20);"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg></span></span><span class="swatch" style="background:linear-gradient(135deg,#3B82F6,#2563EB);"></span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les carrés de couleur à choisir dans Options.</p>
-<p class="voc"><b>Nom du métier :</b> nuancier (angl. <i>swatch</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.swatch</code>, presets <code>THEME_PRESETS</code>.</p>
-<p class="voc"><b>Sert à :</b> changer la couleur du site ; tout en dérive (plus de violet fantôme).</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech"><div class="radio-opt sel" style="width:100%;"><span class="dot"></span><span style="font-family:'Fraunces',serif;font-size:17px;">Fraunces</span></div><div class="radio-opt" style="width:100%;"><span class="dot"></span><span style="font-family:'Poppins',sans-serif;font-size:17px;">Poppins</span></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> la liste des polices, chacune écrite dans sa propre police.</p>
-<p class="voc"><b>Nom du métier :</b> sélecteur de police (angl. <i>font picker</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.radio-opt</code>, presets <code>FONT_PRESETS</code>.</p>
-<p class="voc"><b>Sert à :</b> choisir la police ; en mode Avancé, titres et texte séparément.</p>
-</div></details></div>
-
-<div class="carte"><details><summary><div class="ech"><div class="pill"><b>Petit</b><b class="on">Normal</b><b>Grand</b></div></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> les ovales Taille / Densité dans Options.</p>
-<p class="voc"><b>Nom du métier :</b> sélecteur de réglage (angl. <i>setting pills</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.pill-sel</code>.</p>
-<p class="voc"><b>Sert à :</b> ajuster taille du texte et densité.</p>
-</div></details></div>
-
-<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Cette page elle-même</div>
+<div class="fam"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Cette page</div>
 
 <div class="carte"><details><summary><div class="ech"><span class="L">L</span></div><span class="L">L</span></summary><div class="fiche">
-<p class="voc"><b>Ce que tu vois :</b> le petit carré violet « L » à droite de chaque échantillon.</p>
-<p class="voc"><b>Nom du métier :</b> bouton d'aide (angl. <i>help toggle</i>).</p>
-<p class="voc"><b>Dans le code :</b> classe <code>.L</code>, dans un <code>&lt;details&gt;&lt;summary&gt;</code> HTML (pliage sans JavaScript).</p>
-<p class="voc"><b>Sert à :</b> afficher/masquer la fiche à 4 vocabulaires de l'élément.</p>
+<p class="voc"><b>Ce que tu vois :</b> petit carré L.</p>
+<p class="voc"><b>Nom du métier :</b> bouton d’aide.</p>
+<p class="voc"><b>Dans le code :</b> <code>.L</code>, <code>&lt;details&gt;</code>.</p>
+<p class="voc"><b>Sert à :</b> déplier la fiche de vocabulaire.</p>
 </div></details></div>
 
 <div class="intro" style="border-color:var(--bd);margin-top:26px;">
 <h2 style="color:var(--tx);">Rappel</h2>
-<p>Outil de discussion. Elle ne change rien à ton site. Pour parler d'un élément, cite son <b>nom</b> (et le contexte si besoin).</p>
-<p>À chaque build qui ajoute un élément, je te renvoie ce <code>legende.html</code> entier et à jour.</p>
+<p>Outil de discussion.</p>
+<p>Pour parler d’un élément, cite son nom et le contexte.</p>
+<p>À chaque build qui ajoute un élément, je renvoie ce fichier à jour.</p>
 </div>
 
 </main>
