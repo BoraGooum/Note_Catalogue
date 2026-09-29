@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#000000"/>
-  <path d="M50 80 C26 60 14 46 14 33 C14 21 24 13 34 13 C41 13 47 17 50 23 C53 17 59 13 66 13 C76 13 86 21 86 33 C86 46 74 60 50 80 Z" fill="#B24BF3"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Mon Univers">
+  <rect width="512" height="512" fill="#000000"/>
+  <g transform="translate(40 40) scale(18)" fill="none" stroke="#B24BF3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <circle cx="19" cy="5" r="2"/>
+    <circle cx="5" cy="19" r="2"/>
+    <path d="M10.4 21.9a10 10 0 0 0 9.941-15.416"/>
+    <path d="M13.5 2.1a10 10 0 0 0-9.841 15.416"/>
+  </g>
 </svg>
