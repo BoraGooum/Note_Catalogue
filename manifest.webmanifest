@@ -1,13 +1,28 @@
 {
-  "name": "Ma Collection",
-  "short_name": "Collection",
-  "start_url": "./index.html",
+  "name": "Mon Univers",
+  "short_name": "Mon Univers",
+  "description": "Suivi de films, séries, jeux, livres, musique et journal personnel.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "categories": ["entertainment", "productivity", "lifestyle"],
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
   ]
 }
