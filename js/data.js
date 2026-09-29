@@ -1,11 +1,12 @@
 /* ════════════════════════════════════════════════════════════════
-   DATA.JS — Couche "données" (statique + partagée)
-   Icônes · constantes · formatage · base de données · réglages · image
-   Aucune logique de rendu ici. Version V12.
+   FICHIER : js/data.js   —   VERSION : V0.9
+   RÔLE     : données statiques, icônes, formatage, base locale,
+              réglages, moteurs thème/police, helpers image.
+   ► À REMPLACER ? OUI   (jette l'ancien, colle celui-ci en entier)
+   ► À MODIFIER À LA MAIN ? NON  (tout est prêt, y compris BUILD)
    ════════════════════════════════════════════════════════════════ */
 
-
-/* ─────────── 1. ICÔNES LUCIDE ─────────── */
+/* ───────── 1. ICÔNES LUCIDE ───────── */
 var I = {
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
   library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>',
@@ -31,6 +32,8 @@ var I = {
   'rotate-ccw':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
   'chevron-left':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>',
   'chevron-right':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>',
+  'arrow-up':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>',
+  'arrow-down':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>',
   'more-horizontal':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>',
   grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>',
@@ -61,66 +64,120 @@ var I = {
   'bar-chart-3':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>',
   smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>',
   info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-  alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>'
+  alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+  type:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>',
+  'file-text':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>'
 };
 function ic(n){return I[n]||'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';}
 
-
-/* ─────────── 2. CONSTANTES GLOBALES ─────────── */
-var PROXY    = "https://catalogue-api.nicolasarnaud1010.workers.dev";
-var BUILD    = "2026-09-30T03:00:00+02:00";
-var TMDB_IMG = "https://image.tmdb.org/t/p/w200";
-var OE="\u0153",OEC="\u0152";
+/* ───────── 2. CONSTANTES ───────── */
+var PROXY="https://catalogue-api.nicolasarnaud1010.workers.dev";
+var BUILD="2026-09-29T23:53:00+02:00";
+var TMDB_IMG="https://image.tmdb.org/t/p/w200";
 var NO_POSTER="data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect width='200' height='300' fill='#121216'/><text x='100' y='155' font-family='monospace' font-size='13' fill='#9C93B8' text-anchor='middle'>pas d'affiche</text></svg>");
 
 var CORE_TYPES=[
-  {name:"Film",icon:"film"},{name:"S\u00e9rie",icon:"tv"},{name:"Jeu",icon:"gamepad-2"},
+  {name:"Film",icon:"film"},{name:"Série",icon:"tv"},{name:"Jeu",icon:"gamepad-2"},
   {name:"Livre",icon:"book-open"},{name:"Manga",icon:"book-open"},{name:"BD",icon:"image"},
   {name:"Roman",icon:"scroll"},{name:"Musique",icon:"disc"}
 ];
 var PLATFORMS=[
   {name:"PC",icon:"monitor"},{name:"PlayStation 5",icon:"gamepad-2"},{name:"PlayStation 4",icon:"gamepad-2"},
   {name:"Xbox Series",icon:"gamepad-2"},{name:"Xbox One",icon:"gamepad-2"},{name:"Nintendo Switch",icon:"gamepad-2"},
-  {name:"Nintendo Switch 2",icon:"gamepad-2"},{name:"Steam Deck",icon:"gamepad-2"},{name:"R\u00e9tro",icon:"gamepad-2"}
+  {name:"Nintendo Switch 2",icon:"gamepad-2"},{name:"Steam Deck",icon:"gamepad-2"},{name:"Rétro",icon:"gamepad-2"}
 ];
 var BONUSES=[
   {name:"Artbook",icon:"image"},{name:"OST (CD)",icon:"disc"},{name:"Making-of",icon:"film"},
   {name:"Carte du monde",icon:"image"},{name:"Figurine",icon:"gift"},{name:"DLC code",icon:"hash"},{name:"Autre",icon:"plus"}
 ];
-var SUPPORT_CHOICES=["Physique","D\u00e9mat\u00e9rialis\u00e9"];
-var PACKAGING_CHOICES=["Boite","Amaray","Fourreau","Steelbook","Coffret","Collector","Mediabook","Digipack","Limit\u00e9e"];
-var MONTHS=["Janvier","F\u00e9vrier","Mars","Avril","Mai","Juin","Juillet","Ao\u00fbt","Septembre","Octobre","Novembre","D\u00e9cembre"];
-var MONTHS_MIN=["janvier","f\u00e9vrier","mars","avril","mai","juin","juillet","ao\u00fbt","septembre","octobre","novembre","d\u00e9cembre"];
+var SUPPORT_CHOICES=["Physique","Dématérialisé"];
+var PACKAGING_CHOICES=["Boîte","Amaray","Fourreau","Steelbook","Coffret","Collector","Mediabook","Digipack","Édition limitée"];
+var MONTHS=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+var MONTHS_MIN=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+/* ───────── 3. THÈMES (palette dérivée d'une teinte) ───────── */
+/* Chaque preset = accent + accent2 + bordure assortie. Le fond reste
+   noir/gris foncé (signature du site). La notation garde ses 10 teintes
+   fixes (échelle de valeur, indépendante de l'accent). */
+var THEME_PRESETS=[
+  {id:"violet",  name:"Violet",       acc:"#B24BF3", acc2:"#7F5AF0", bd:"#4A3B7A"},
+  {id:"bordeaux",name:"Bordeaux",     acc:"#C0392B", acc2:"#8E2A20", bd:"#6B2420"},
+  {id:"bleu",    name:"Bleu nuit",    acc:"#3B82F6", acc2:"#2563EB", bd:"#2B4A7A"},
+  {id:"emeraude",name:"Émeraude",     acc:"#10B981", acc2:"#059669", bd:"#1F6B52"},
+  {id:"ambre",   name:"Ambre",        acc:"#F59E0B", acc2:"#D97706", bd:"#7A5A24"},
+  {id:"rose",    name:"Rose",         acc:"#EC4899", acc2:"#DB2777", bd:"#7A2F55"},
+  {id:"cyan",    name:"Cyan",         acc:"#06B6D4", acc2:"#0891B2", bd:"#1F5B6B"},
+  {id:"ardoise", name:"Ardoise",      acc:"#94A3B8", acc2:"#64748B", bd:"#3F4A5A"}
+];
+
+/* ───────── 4. POLICES (chargées à la demande) ───────── */
+var FONT_PRESETS=[
+  {id:"Manrope",       name:"Manrope",        stack:"'Manrope',system-ui,sans-serif",                 g:"Manrope:wght@400;500;600;700;800"},
+  {id:"Inter",         name:"Inter",          stack:"'Inter',system-ui,sans-serif",                   g:"Inter:wght@400;500;600;700"},
+  {id:"Poppins",       name:"Poppins",        stack:"'Poppins',system-ui,sans-serif",                 g:"Poppins:wght@400;500;600;700"},
+  {id:"Space Grotesk", name:"Space Grotesk",  stack:"'Space Grotesk',system-ui,sans-serif",           g:"Space+Grotesk:wght@400;500;600;700"},
+  {id:"Fraunces",      name:"Fraunces",       stack:"'Fraunces',Georgia,serif",                       g:"Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700"},
+  {id:"Playfair",      name:"Playfair Display",stack:"'Playfair Display',Georgia,serif",              g:"Playfair+Display:wght@400;600;700"},
+  {id:"IBM Plex Mono", name:"IBM Plex Mono",  stack:"'IBM Plex Mono',ui-monospace,monospace",         g:"IBM+Plex+Mono:wght@400;500;600"},
+  {id:"JetBrains Mono",name:"JetBrains Mono", stack:"'JetBrains Mono',ui-monospace,monospace",        g:"JetBrains+Mono:wght@400;500;600"}
+];
 
 function loadCustomTypes(){try{return JSON.parse(localStorage.getItem("custom_types")||"[]");}catch(e){return[];}}
 function saveCustomTypes(l){localStorage.setItem("custom_types",JSON.stringify(l));}
 function allTypes(){return CORE_TYPES.map(function(t){return t.name;}).concat(loadCustomTypes().map(function(t){return t.name;}));}
 function allTypesWithIcons(){return CORE_TYPES.concat(loadCustomTypes().map(function(t){return{name:t.name,icon:"tag"};}));}
 
-
-/* ─────────── 3. FORMATAGE ─────────── */
+/* ───────── 5. FORMATAGE ───────── */
 var pad2=function(n){return String(n).padStart(2,"0");};
 function todayFR(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());}
-function nowStamp(){var d=new Date();return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+" \u00e0 "+pad2(d.getHours())+"h"+pad2(d.getMinutes());}
+function nowStamp(){var d=new Date();return pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+" à "+pad2(d.getHours())+"h"+pad2(d.getMinutes());}
 function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9]/g,"");}
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function truncate(s,n){s=s||"";return s.length>n?s.slice(0,n)+"\u2026":s;}
+function truncate(s,n){s=s||"";return s.length>n?s.slice(0,n)+"…":s;}
 function formatDate(s){if(!s)return "";if(s.indexOf("/")>=0)return s;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+"/"+m[2]+"/"+m[1]:s;}
 function parseDateFR(s){if(!s)return null;var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return{y:+m[1],mo:+m[2],d:+m[3]};m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(m)return{y:+m[3],mo:+m[2],d:+m[1]};return null;}
-function statutStr(e){var s=[];if(e.isFavorite)s.push("Coup de coeur");if(e.enCours)s.push("En cours");if(e.aVoir)s.push("A voir");return s.length?s.join(" / "):"Fini";}
-function journalLines(e){var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);return j.map(function(x){if(x.kind==="time")return x.ts+" : "+x.text;if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" \u2022 "+x.note+"/10":"")+(x.text?" : "+x.text:"");if(x.kind==="session")return "Session "+(x.dur||"")+(x.text?" : "+x.text:"");return x.text;});}
+function statutStr(e){var s=[];if(e.isFavorite)s.push("Coup de cœur");if(e.enCours)s.push("En cours");if(e.aVoir)s.push("À voir");return s.length?s.join(" / "):"Fini";}
+
+/* Libellé compact d'une entrée de journal (sans emoji). */
+function entryTag(x){
+  if(x.kind==="time")return x.ts;
+  if(x.kind==="ep")return "S"+pad2(x.s)+"E"+pad2(x.e)+(x.note!=null?" · "+x.note+"/10":"");
+  if(x.kind==="session")return "Session "+(x.dur||"");
+  if(x.kind==="pages")return "Pages "+(x.read||0)+(x.total?"/"+x.total:"");
+  return "Libre";
+}
+function journalLines(e){
+  var j=e.journal||(e.comment?[{kind:"free",text:e.comment}]:[]);
+  return j.map(function(x){
+    if(x.kind==="time")return x.ts+" : "+x.text;
+    if(x.kind==="ep")return "S"+pad2(x.s||0)+"E"+pad2(x.e||0)+(x.note!=null?" · "+x.note+"/10":"")+(x.text?" : "+x.text:"");
+    if(x.kind==="session")return "Session "+(x.dur||"")+(x.text?" : "+x.text:"");
+    if(x.kind==="pages")return "Pages "+(x.read||0)+(x.total?"/"+x.total:"")+(x.text?" : "+x.text:"");
+    return x.text;
+  });
+}
 function descriptionOf(e){return journalLines(e).join(" | ");}
+
+/* Notation : 10 teintes distinctes, rampe rouge vif -> vert foncé,
+   puis argent (9) et or (10). [fond, texte]. */
 function noteColors(n){
   if(n==null)return null;
-  if(n===10)return["linear-gradient(135deg,#FFD700,#B8860B)","#1a1400"];
-  if(n===9)return["linear-gradient(135deg,#F2F2F2,#9E9E9E)","#111111"];
-  if(n>=7)return["linear-gradient(135deg,#46A758,#2CB67D)","#ffffff"];
-  if(n>=5)return["linear-gradient(135deg,#FFB224,#F76B15)","#1a1200"];
-  return["linear-gradient(135deg,#E5484D,#B23B3B)","#ffffff"];
+  switch(n){
+    case 1:return["linear-gradient(135deg,#FF2D2D,#D11A1A)","#ffffff"];
+    case 2:return["linear-gradient(135deg,#FF5A2E,#E0431C)","#ffffff"];
+    case 3:return["linear-gradient(135deg,#FF8A1E,#E0700F)","#1a1200"];
+    case 4:return["linear-gradient(135deg,#FFB300,#E09A00)","#1a1200"];
+    case 5:return["linear-gradient(135deg,#C9C400,#A6A200)","#1a1400"];
+    case 6:return["linear-gradient(135deg,#8FC93A,#6FA828)","#10240a"];
+    case 7:return["linear-gradient(135deg,#46B05A,#2E8C44)","#ffffff"];
+    case 8:return["linear-gradient(135deg,#1F8A44,#14622F)","#ffffff"];
+    case 9:return["linear-gradient(135deg,#F2F2F2,#9E9E9E)","#111111"];
+    case 10:return["linear-gradient(135deg,#FFD700,#B8860B)","#1a1400"];
+  }
+  return null;
 }
 
-
-/* ─────────── 4. BASE DE DONNÉES ─────────── */
+/* ───────── 6. BASE DE DONNÉES (IndexedDB + secours localStorage) ───────── */
 var db=null,USE_LS=false;
 function lsAll(){try{return JSON.parse(localStorage.getItem("entries_ls")||"[]");}catch(e){return[];}}
 function lsSave(l){try{localStorage.setItem("entries_ls",JSON.stringify(l));}catch(e){}}
@@ -142,14 +199,38 @@ function dbAll(){if(USE_LS)return Promise.resolve(lsAll());return new Promise(fu
 function dbPut(en){if(USE_LS){var l=lsAll(),i=-1;for(var k=0;k<l.length;k++){if(l[k].id===en.id){i=k;break;}}if(i>=0)l[i]=en;else l.push(en);lsSave(l);return Promise.resolve();}return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").put(en);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
 function dbDelete(id){if(USE_LS){lsSave(lsAll().filter(function(x){return x.id!==id;}));return Promise.resolve();}return new Promise(function(res,rej){var tx=db.transaction("entries","readwrite");tx.objectStore("entries").delete(id);tx.oncomplete=function(){res();};tx.onerror=function(e){rej(e);};});}
 
-
-/* ─────────── 5. RÉGLAGES ─────────── */
-var SETTINGS_DEFAULTS={density:"comfort",fontSize:"m",animOn:true,hcMode:false,searchMode:"simple",defaultType:"Film",panelMode:"simple",colView:"grid",colSort:"date-desc",colSupport:"all",alertBackupDays:14,fuzzy:true};
+/* ───────── 7. RÉGLAGES + MOTEURS THÈME / POLICE ───────── */
+var SETTINGS_DEFAULTS={density:"comfort",fontSize:"m",animOn:true,hcMode:false,searchMode:"simple",defaultType:"Film",panelMode:"simple",colView:"grid",colSort:"date-desc",colSupport:"all",alertBackupDays:14,fuzzy:true,theme:"violet",font:"Manrope"};
 function settingsLoad(){try{return Object.assign({},SETTINGS_DEFAULTS,JSON.parse(localStorage.getItem("settings")||"{}"));}catch(e){return Object.assign({},SETTINGS_DEFAULTS);}}
 function settingsSave(s){localStorage.setItem("settings",JSON.stringify(s));}
-function applySettings(){var s=settingsLoad();document.body.dataset.density=s.density;document.body.dataset.fs=s.fontSize;document.body.dataset.anim=s.animOn?"on":"off";document.body.dataset.hc=s.hcMode?"1":"0";var m=document.querySelector('meta[name=theme-color]');if(m)m.content="#000000";}
+function applyTheme(id){
+  var p=THEME_PRESETS.filter(function(t){return t.id===id;})[0]||THEME_PRESETS[0];
+  var r=document.documentElement.style;
+  r.setProperty("--acc",p.acc);r.setProperty("--acc2",p.acc2);r.setProperty("--bd",p.bd);
+}
+function ensureFontLoaded(id){
+  var p=FONT_PRESETS.filter(function(f){return f.id===id;})[0];if(!p)return;
+  if(document.querySelector('link[data-font="'+id+'"]'))return;
+  var l=document.createElement("link");l.rel="stylesheet";l.dataset.font=id;
+  l.href="https://fonts.googleapis.com/css2?family="+p.g+"&display=swap";
+  document.head.appendChild(l);
+}
+function applyFont(id){
+  var p=FONT_PRESETS.filter(function(f){return f.id===id;})[0]||FONT_PRESETS[0];
+  ensureFontLoaded(p.id);
+  document.documentElement.style.setProperty("--fs",p.stack);
+}
+function applySettings(){
+  var s=settingsLoad();
+  document.body.dataset.density=s.density;
+  document.body.dataset.fs=s.fontSize;
+  document.body.dataset.anim=s.animOn?"on":"off";
+  document.body.dataset.hc=s.hcMode?"1":"0";
+  applyTheme(s.theme||"violet");
+  applyFont(s.font||"Manrope");
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.content="#000000";
+}
 
-
-/* ─────────── 6. HELPERS IMAGE ─────────── */
+/* ───────── 8. HELPERS IMAGE ───────── */
 function fileToResized(file,maxW){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var sc=Math.min(1,maxW/img.width);var c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",0.82));};img.onerror=rej;img.src=r.result;};r.onerror=rej;r.readAsDataURL(file);});}
 function makeThumb(url){return new Promise(function(res){if(!url||url.indexOf("data:")===0){res(url||"");return;}var img=new Image();img.crossOrigin="anonymous";var done=false;var t=setTimeout(function(){if(!done){done=true;res("");}},4000);img.onload=function(){if(done)return;done=true;clearTimeout(t);try{var c=document.createElement("canvas");var sc=Math.min(1,300/img.width);c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",0.7));}catch(e){res("");}};img.onerror=function(){if(done)return;done=true;clearTimeout(t);res("");};img.src=url;});}
