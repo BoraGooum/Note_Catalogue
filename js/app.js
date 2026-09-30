@@ -844,6 +844,7 @@ async function init() {
 }
 
 init();
+
 // ==========================================
 // 8. FONCTIONS DE SCRAPPING & PROXY
 // ==========================================
@@ -899,24 +900,46 @@ async function searchFromUrl(url) {
 }
 
 // ==========================================
-// 9. PIPELINE EAN-SEARCH -> MARCHAND -> TMDB
+// 9. PIPELINE EAN (Barcode Lookup -> EAN-Search -> TMDB)
 // ==========================================
 async function searchEANSearch(ean) {
-  var url = "https://www.ean-search.org/ean/" + ean;
-  var html = await urlFetchHTML(url);
-  if (!html) return null;
-  var doc = new DOMParser().parseFromString(html, "text/html");
+  // 1. Priorité à Barcode Lookup
+  var urlBL = "https://www.barcodelookup.com/" + ean;
+  var htmlBL = await urlFetchHTML(urlBL);
+  if (htmlBL) {
+    var docBL = new DOMParser().parseFromString(htmlBL, "text/html");
+    var titleBL = (docBL.querySelector("h1.product-title") || docBL.querySelector("h2") || docBL.querySelector("h1") || {}).textContent || "";
+    titleBL = titleBL.replace(/^EAN\s*\d+\s*/i, "").trim();
+    
+    var imgBL = docBL.querySelector("img.product-image, .product-image img");
+    var imageUrlBL = imgBL ? (imgBL.getAttribute("src") || imgBL.getAttribute("data-src")) : "";
+    
+    var linkBL = docBL.querySelector("a[href*='rakuten.com'], a[href*='amazon.'], a[href*='fnac.com'], a[href*='dvdfr.com']");
+    var merchantUrlBL = linkBL ? linkBL.getAttribute("href") : "";
+    
+    if (titleBL) {
+      return { title: titleBL, merchantUrl: merchantUrlBL, imageUrl: imageUrlBL, source: "barcodelookup" };
+    }
+  }
   
-  var title = (doc.querySelector("h1") || doc.querySelector("title") || {}).textContent || "";
-  title = title.replace(/\s*-\s*EAN-Search\.org\s*$/i, "").trim();
+  // 2. Fallback sur EAN-Search
+  var urlES = "https://www.ean-search.org/ean/" + ean;
+  var htmlES = await urlFetchHTML(urlES);
+  if (htmlES) {
+    var docES = new DOMParser().parseFromString(htmlES, "text/html");
+    var titleES = (docES.querySelector("h1") || docES.querySelector("title") || {}).textContent || "";
+    titleES = titleES.replace(/\s*-\s*EAN-Search\.org\s*$/i, "").trim();
+    
+    var linkES = docES.querySelector('a[href*="rakuten.com"]') || docES.querySelector('a[href*="amazon."]') || docES.querySelector('a[href*="fnac.com"]');
+    var merchantUrlES = linkES ? linkES.getAttribute("href") : "";
+    
+    if (titleES) {
+      return { title: titleES, merchantUrl: merchantUrlES, imageUrl: "", source: "ean-search" };
+    }
+  }
   
-  var link = doc.querySelector('a[href*="rakuten.com"]') || 
-             doc.querySelector('a[href*="amazon."]') || 
-             doc.querySelector('a[href*="fnac.com"]') ||
-             doc.querySelector('a[href*="dvdfr.com"]');
-             
-  var merchantUrl = link ? link.getAttribute("href") : "";
-  return { title: title, merchantUrl: merchantUrl };
+  // 3. Échec total
+  return { title: "", merchantUrl: "", imageUrl: "", source: null, searchUrl: urlBL };
 }
 
 async function searchMerchantPage(url) {
@@ -926,7 +949,7 @@ async function searchMerchantPage(url) {
   var doc = new DOMParser().parseFromString(html, "text/html");
   
   var contenu = "", imageUrl = "", packaging = "", support = "Physique";
-  var editoEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription");
+  var editoEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details");
   if (editoEl) contenu = editoEl.textContent.trim();
   
   var imgEl = doc.querySelector("img.product-image, img[src*='rakuten'], img[src*='amazon'], img[src*='fnac'], img.main-image");
@@ -945,53 +968,55 @@ async function searchFromEAN(ean) {
   var st = $("search-status");
   if (st) { st.className = "status"; st.textContent = "Recherche du code " + ean + "…"; }
   
-  var eanSearch = await searchEANSearch(ean);
+  var eanData = await searchEANSearch(ean);
   var merchantData = null;
   var galerie = [];
   
-  // Étape 2 : Si on a un lien marchand, on va chercher les détails
-  if (eanSearch && eanSearch.merchantUrl) {
-    merchantData = await searchMerchantPage(eanSearch.merchantUrl);
-    if (merchantData && merchantData.imageUrl) {
-      galerie.push(merchantData.imageUrl); // Ajoute l'image du boîtier à la galerie
-    }
+  if (eanData && eanData.merchantUrl) {
+    merchantData = await searchMerchantPage(eanData.merchantUrl);
+    if (merchantData && merchantData.imageUrl) galerie.push(merchantData.imageUrl);
   }
   
-  var title = eanSearch ? eanSearch.title : "";
+  var title = eanData ? eanData.title : "";
   var contenu = merchantData ? merchantData.contenu : "";
-  var imageUrl = merchantData ? merchantData.imageUrl : "";
+  var imageUrl = (eanData && eanData.imageUrl) ? eanData.imageUrl : (merchantData ? merchantData.imageUrl : "");
   var packaging = merchantData ? merchantData.packaging : "";
   var support = merchantData ? merchantData.support : "Physique";
-  var merchantUrl = eanSearch ? eanSearch.merchantUrl : "";
+  var merchantUrl = eanData ? eanData.merchantUrl : "";
+  var searchUrl = eanData && eanData.searchUrl ? eanData.searchUrl : "https://www.barcodelookup.com/" + ean;
   
-  // Étape 3 : Enrichissement TMDB pour l'affiche officielle si on a un titre
+  // Si aucun titre trouvé, on ouvre Barcode Lookup pour aide manuelle
+  if (!title) {
+    if (st) st.textContent = "";
+    toast("Titre non trouvé. Ouverture de Barcode Lookup…", 3000);
+    window.open(searchUrl, "_blank");
+    
+    ST.selectedItem = { title: "", source: "ean", id: Date.now(), poster: "", imageUrl: "", url: searchUrl, contenu: "", support: "Physique", packaging: "", ean: ean, galerie: galerie };
+    ST.isInCollection = true; ST.galerie = galerie;
+    renderPanel(null);
+    ST.advFields.support = "Physique";
+    updateAdvBtn("support", "Physique");
+    if (ST._libPaint) ST._libPaint();
+    return;
+  }
+  
+  // Enrichissement TMDB
   if (title) {
     try {
       var tmdbRes = await searchTMDB(title, "movie");
-      if (tmdbRes && tmdbRes.length && tmdbRes[0].poster) {
-        imageUrl = tmdbRes[0].poster; // L'affiche TMDB devient l'image principale
-      }
+      if (tmdbRes && tmdbRes.length && tmdbRes[0].poster) imageUrl = tmdbRes[0].poster;
     } catch(e) {}
   }
   
-  // Création de la fiche pré-remplie
-  ST.selectedItem = {
-    title: title, source: "ean", id: Date.now(), poster: imageUrl,
-    imageUrl: imageUrl, url: merchantUrl, contenu: contenu,
-    support: support, packaging: packaging, ean: ean,
-    galerie: galerie
-  };
-  
+  ST.selectedItem = { title: title, source: "ean", id: Date.now(), poster: imageUrl, imageUrl: imageUrl, url: merchantUrl || searchUrl, contenu: contenu, support: support, packaging: packaging, ean: ean, galerie: galerie };
   if (st) st.textContent = "";
   renderPanel(null);
   
-  // Pré-remplissage des champs avancés
   if (support) ST.advFields.support = support;
   if (packaging) ST.advFields.packaging = packaging;
   if (contenu) ST.advFields.contenu = contenu;
   if (imageUrl) ST.advFields.imageUrl = imageUrl;
-  ST.galerie = galerie;
-  ST.isInCollection = true;
+  ST.galerie = galerie; ST.isInCollection = true;
   
   updateAdvBtn("support", support || "");
   updateAdvBtn("packaging", packaging || "");
