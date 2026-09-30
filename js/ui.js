@@ -373,9 +373,13 @@ function buildForm(host, mode) {
         if (data.titre) { ST.draft.titre = data.titre; $("p-title").value = data.titre; }
         if (data.support) { ST.advFields.support = data.support; updateAdvBtn("support", data.support); }
         if (data.packaging) { ST.advFields.packaging = data.packaging; updateAdvBtn("packaging", data.packaging); }
-        if (data.contenu) { ST.advFields.contenu = data.contenu; updateAdvBtn("contenu", "Voir"); }
         if (data.posterUrl) { ST.panelPoster = data.posterUrl; $("p-prev").src = data.posterUrl; makeThumb(data.posterUrl).then(t => ST.panelThumb = t); }
-        toast("Champs mis à jour avec succès !");
+        if (data.formattedDescription) {
+          var existing = ST.advFields.contenu || "";
+          ST.advFields.contenu = existing ? (existing + "\n\n" + data.formattedDescription) : data.formattedDescription;
+          updateAdvBtn("contenu", "Voir");
+        }
+        toast("Infos ajoutées à la description !");
       });
     });
     assistRow.appendChild(assistBtn); host.appendChild(assistRow);
@@ -562,9 +566,7 @@ function openEntryPicker(cb) {
     if (q) { var raw = inp.value.trim(), exact = arr.some(function(e) { return norm(e.titre) === q; }); if (!exact && raw) { var cr = el("div", "radio-opt"); cr.innerHTML = '<span class="dot"></span><span class="lbl">Créer « ' + esc(raw) + ' »</span>'; cr.addEventListener("click", function() { select(cr, { isNew: true, titre: raw, type: ST.currentType || "Livre" }); }); list.appendChild(cr); } }
   }
   inp.addEventListener("input", rebuild); rebuild(); setSheet("Choisir une œuvre", wrap, [["Valider", "primary", function() { closeMenu(); cb(chosen); }, "check"], ["Annuler", "", function() { closeMenu(); cb(undefined); }, "x"]]);
-}
-
-// ==========================================
+}// ==========================================
 // 18. CALENDRIER
 // ==========================================
 function entriesByDay() { var o = {}; ST.entries.forEach(function(en) { (en.journal || []).forEach(function(x) { if (!x.at) return; var t = new Date(x.at); o[t.getFullYear() + "-" + pad2(t.getMonth() + 1) + "-" + pad2(t.getDate())] = 1; }); }); return o; }
@@ -794,13 +796,11 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var body = el("div");
   body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:10px;";
   
-  // 1. Ligne des 3 boutons (Style unifié)
   var btnRow = el("div");
   btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:8px;";
   
   var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border: 1px solid var(--bd);";
   
-  // Bouton DVD.fr (Icône Eject + Dégradé Bleu/Blanc/Rouge subtil)
   var btnDvd = el("button", "sq-btn");
   btnDvd.setAttribute("aria-label", "Rechercher sur DVD.fr");
   btnDvd.innerHTML = '<span class="ic">' + ic("eject") + '</span>';
@@ -813,7 +813,6 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
     }
   });
   
-  // Bouton EAN-Search (Icône Code-barres)
   var btnEan = el("button", "sq-btn");
   btnEan.setAttribute("aria-label", "Rechercher par EAN");
   btnEan.innerHTML = '<span class="ic">' + ic("barcode") + '</span>';
@@ -826,7 +825,6 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
     }
   });
   
-  // Bouton Coller (Icône Presse-papiers)
   var btnPaste = el("button", "sq-btn");
   btnPaste.setAttribute("aria-label", "Coller et analyser");
   btnPaste.innerHTML = '<span class="ic">' + ic("clipboard") + '</span>';
@@ -837,7 +835,6 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   btnRow.appendChild(btnPaste);
   body.appendChild(btnRow);
   
-  // 2. Zone de collage (cachée au départ)
   var pasteArea = el("div");
   pasteArea.style.cssText = "display:none; flex-direction:column; gap:10px;";
   
@@ -860,7 +857,6 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   pasteArea.appendChild(analyzeBtn);
   body.appendChild(pasteArea);
   
-  // Afficher la zone de collage au clic
   btnPaste.addEventListener("click", function() {
     pasteArea.style.display = "flex";
     ta.focus();
@@ -869,36 +865,67 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   setModal("Assistant de saisie", body, [["Fermer", "", closeModal, "x"]]);
 }
 
-// Fonction d'analyse locale du texte collé
 async function processPastedText(text, cb) {
   var body = $("m-body");
   body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse en cours...</div>';
   
   try {
-    // Parser le texte comme du HTML (fonctionne même si c'est du texte brut)
     var doc = new DOMParser().parseFromString(text, "text/html");
-    
-    // 1. Extraction du titre
+    var fullText = doc.body ? doc.body.innerText : text;
     var rawTitle = (doc.querySelector("h1") || doc.querySelector("title") || {}).textContent || "";
     rawTitle = rawTitle.replace(/\s*[-–|]\s*.*$/i, "").trim();
     
-    // 2. Extraction du contenu (ciblage intelligent des classes courantes)
-    var textEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details");
-    var contenu = textEl ? textEl.textContent.trim() : (doc.body.innerText || "").trim();
+    var extracted = {
+      titre: rawTitle, ean: "", dateSortie: "", realisateur: "", acteurs: "",
+      resume: "", description: "", bonus: "", support: "", packaging: "",
+      langue: "", duree: "", editeur: "", technique: ""
+    };
     
-    // 3. Détection des mots-clés dans l'ensemble du texte
-    var allText = (rawTitle + " " + contenu).toLowerCase();
-    var support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
-                  allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
-                  allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
-    var packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" : "";
+    var eanMatch = fullText.match(/\b(\d{13})\b/);
+    if (eanMatch) extracted.ean = eanMatch[1];
     
-    // 4. Nettoyage du titre pour la recherche TMDB
+    var dateMatch = fullText.match(/(?:sortie|date|release|parution)[^0-9]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{4})/i);
+    if (dateMatch) extracted.dateSortie = dateMatch[1];
+    else { var yearMatch = fullText.match(/\b(19|20)\d{2}\b/); if (yearMatch) extracted.dateSortie = yearMatch[0]; }
+    
+    var realMatch = fullText.match(/(?:réalisateur|director|de|par)\s*[:\-]?\s*([A-Z][a-zéèàù]+\s+[A-Z][a-zéèàù]+)/i);
+    if (realMatch) extracted.realisateur = realMatch[1];
+    
+    var actMatch = fullText.match(/(?:avec|casting|acteurs?|distribution)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s*,\s*[A-Z][a-zéèàù]+){2,})/i);
+    if (actMatch) extracted.acteurs = actMatch[1];
+    
+    var synMatch = fullText.match(/(?:synopsis|résumé|resume|histoire|pitch)\s*[:\-]?\s*([\s\S]{50,500}?)(?=\n\n|\n[A-Z]|Bonus|Contenu|Descriptif|$)/i);
+    if (synMatch) extracted.resume = synMatch[1].trim();
+    
+    var descMatch = fullText.match(/(?:présentation|description|à propos|about)\s*[:\-]?\s*([\s\S]{50,800}?)(?=\n\n(?:Bonus|Contenu|Descriptif|Caractérist)|$)/i);
+    if (descMatch) extracted.description = descMatch[1].trim();
+    
+    var bonusMatch = fullText.match(/(?:bonus|contenu|suppléments?|special features)\s*[:\-]?\s*([\s\S]{20,1000}?)(?=\n\n(?:Descriptif|Caractérist|Format)|$)/i);
+    if (bonusMatch) extracted.bonus = bonusMatch[1].trim();
+    
+    var techMatch = fullText.match(/(?:descriptif\s*technique|caractéristique|format|spécifications?)\s*[:\-]?\s*([\s\S]{20,800}?)(?=\n\n(?:Détails|Conformité)|$)/i);
+    if (techMatch) extracted.technique = techMatch[1].trim();
+    
+    var langMatch = fullText.match(/(?:langue|audio|language)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s*,\s*[A-Z][a-zéèàù]+)*)/i);
+    if (langMatch) extracted.langue = langMatch[1];
+    
+    var dureeMatch = fullText.match(/(?:durée|duration|runtime)\s*[:\-]?\s*(\d+\s*(?:min|minutes?|h))/i);
+    if (dureeMatch) extracted.duree = dureeMatch[1];
+    
+    var editMatch = fullText.match(/(?:éditeur|studio|distributeur|edition)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s+[A-Z][a-zéèàù]+)*)/i);
+    if (editMatch) extracted.editeur = editMatch[1];
+    
+    var allText = (rawTitle + " " + fullText).toLowerCase();
+    extracted.support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
+                        allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
+                        allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
+    extracted.packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" :
+                          allText.indexOf("digipack") >= 0 ? "Digipack" : "";
+    
     var searchTitle = rawTitle.split(' - ')[0].split(' (')[0].trim();
     var finalTitle = rawTitle;
     var finalPoster = "";
     
-    // 5. Recherche TMDB pour obtenir le titre officiel et l'affiche
     if (searchTitle && typeof searchTMDB === "function") {
       try {
         var tmdbRes = await searchTMDB(searchTitle, "movie");
@@ -908,11 +935,11 @@ async function processPastedText(text, cb) {
         }
       } catch(e) { console.log("TMDB search failed", e); }
     }
+    extracted.titre = finalTitle;
     
-    // 6. Construction du formulaire de validation
     body.innerHTML = "";
     var form = el("div");
-    form.style.cssText = "display:flex;flex-direction:column;gap:16px;";
+    form.style.cssText = "display:flex;flex-direction:column;gap:12px;";
     
     function makeRow(label, value, key, isTextarea) {
       if (!value && key !== "titre") return null;
@@ -933,7 +960,7 @@ async function processPastedText(text, cb) {
       
       var val = isTextarea ? el("textarea") : el("input");
       val.value = value || "";
-      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:120px;resize:vertical;font-family:inherit;" : "");
+      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:80px;resize:vertical;font-family:inherit;" : "");
       
       var btnClear = el("button", "sq-btn");
       btnClear.setAttribute("aria-label", "Effacer ce champ");
@@ -949,41 +976,66 @@ async function processPastedText(text, cb) {
       return row;
     }
     
-    var r1 = makeRow("Titre (Officiel TMDB)", finalTitle, "titre", false);
-    var r2 = makeRow("Support détecté", support, "support", false);
-    var r3 = makeRow("Packaging détecté", packaging, "packaging", false);
-    var r4 = makeRow("Contenu / Bonus", contenu, "contenu", true);
+    var fields = [
+      ["Titre officiel", extracted.titre, "titre", false],
+      ["EAN", extracted.ean, "ean", false],
+      ["Date de sortie", extracted.dateSortie, "dateSortie", false],
+      ["Réalisateur", extracted.realisateur, "realisateur", false],
+      ["Acteurs", extracted.acteurs, "acteurs", false],
+      ["Résumé / Synopsis", extracted.resume, "resume", true],
+      ["Description", extracted.description, "description", true],
+      ["Bonus / Contenu", extracted.bonus, "bonus", true],
+      ["Description technique", extracted.technique, "technique", true],
+      ["Langue", extracted.langue, "langue", false],
+      ["Durée", extracted.duree, "duree", false],
+      ["Éditeur / Studio", extracted.editeur, "editeur", false],
+      ["Support détecté", extracted.support, "support", false],
+      ["Packaging détecté", extracted.packaging, "packaging", false]
+    ];
     
-    if (r1) form.appendChild(r1);
-    if (r2) form.appendChild(r2);
-    if (r3) form.appendChild(r3);
-    if (r4) form.appendChild(r4);
+    fields.forEach(function(f) {
+      var row = makeRow(f[0], f[1], f[2], f[3]);
+      if (row) form.appendChild(row);
+    });
     
-    if (!r1 && !r2 && !r3 && !r4) {
+    if (form.children.length === 0) {
       form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune information exploitable trouvée. Vérifie ton collage.</p>";
     }
     
     body.appendChild(form);
     
-    // 7. Mise à jour des boutons du modal
     var foot = $("m-foot");
     foot.innerHTML = "";
     var btnValidate = el("button", "primary");
-    btnValidate.innerHTML = '<span class="ic">' + ic("check") + '</span><span>Appliquer à la fiche</span>';
+    btnValidate.innerHTML = '<span class="ic">' + ic("check") + '</span><span>Appliquer dans la Description</span>';
     btnValidate.addEventListener("click", function() {
       var result = {};
+      var selectedSections = [];
+      
       form.querySelectorAll("input[type='checkbox']").forEach(function(c) {
         if (c.checked) {
           var valEl = c.nextElementSibling.querySelector("input, textarea");
-          if (valEl && valEl.value.trim()) result[c.dataset.key] = valEl.value.trim();
+          if (valEl && valEl.value.trim()) {
+            result[c.dataset.key] = valEl.value.trim();
+            selectedSections.push({ label: c.parentElement.querySelector("div div").textContent, value: valEl.value.trim() });
+          }
         }
       });
+      
       if (finalPoster) result.posterUrl = finalPoster;
-      closeModal();
+      
+      var formattedDesc = "";
+      selectedSections.forEach(function(sec, idx) {
+        if (idx > 0) formattedDesc += "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        formattedDesc += "▸ " + sec.label.toUpperCase() + "\n";
+        formattedDesc += sec.value;
+      });
+      
+      result.formattedDescription = formattedDesc;
       cb(result);
     });
     var btnCancel = el("button");
-    btnCancel.innerHTML = '<span class="ic">' + ic("x") + '</span><span>Annuler</span>';
+    btnCancel.innerHTML = '<span class="ic">' + ic("x") + '</span><span>Fermer</span>';
     btnCancel.addEventListener("click", closeModal);
     foot.appendChild(btnValidate);
     foot.appendChild(btnCancel);
