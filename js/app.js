@@ -4,10 +4,133 @@ async function urlTryFetch(u){var ctl=new AbortController(),t=setTimeout(functio
 async function urlFetchHTML(u){var list=["https://api.allorigins.win/raw?url=","https://corsproxy.io/?url="];for(var i=0;i<list.length;i++){var h=await urlTryFetch(list[i]+encodeURIComponent(u));if(h)return h;}return"";}
 async function searchFromUrl(url){var st=$("search-status");if(st){st.className="status";st.textContent="Lecture de la page…";}var host="";try{host=new URL(url).hostname;}catch(e){}var isBdt=/(^|\.)bedetheque\.com$/i.test(host),idm=url.match(/-(\d+)\.html/i),title="",poster="";var html=await urlFetchHTML(url);if(html){var doc=new DOMParser().parseFromString(html,"text/html");var m=function(p){var n=doc.querySelector('meta[property="'+p+'"]');return n?(n.getAttribute("content")||"").trim():"";};title=m("og:title")||(doc.title||"").trim();poster=m("og:image");}if(isBdt&&idm){if(!title){try{var slug=new URL(url).pathname.split("/").pop().replace(/\.html$/i,"").replace(/-\d+$/,"").replace(/^BD-/i,"");title=decodeURIComponent(slug).replace(/-/g," ").trim();}catch(e){}}if(!poster)poster="https://www.bedetheque.com/media/Couvertures/Couv_"+idm[1]+".jpg";}if(!title){if(st){st.className="status error";st.textContent="Impossible de lire cette URL.";}return;}ST.selectedItem={title:title,source:"url",id:"url_"+(idm?idm[1]:Date.now()),poster:poster};if(st)st.textContent="";renderPanel(null);}
 
-async function searchDVDFR(ean){var url="https://www.dvdfr.com/dvd/"+ean+"/";var html=await urlFetchHTML(url);if(!html)return null;var doc=new DOMParser().parseFromString(html,"text/html");var title="",posterUrl="",imageUrl="",contenu="",support="",packaging="";var ogTitle=doc.querySelector('meta[property="og:title"]');if(ogTitle)title=ogTitle.getAttribute("content").replace(/ - DVD.*$/,"").trim();var ogImage=doc.querySelector('meta[property="og:image"]');if(ogImage)posterUrl=ogImage.getAttribute("content");var productImg=doc.querySelector(".product-image img, .product-gallery img, img[src*='epagine'], img[src*='couvert']");if(productImg)imageUrl=productImg.getAttribute("src")||"";var contenuEl=doc.querySelector(".description.scrollbar-style, .product-description");if(contenuEl)contenu=contenuEl.textContent.trim();var blob=(title+" "+contenu).toLowerCase();if(blob.indexOf("steelbook")>=0||blob.indexOf("steel book")>=0||blob.indexOf("boîtier métal")>=0)packaging="Steelbook";if(blob.indexOf("4k")>=0||blob.indexOf("uhd")>=0)support="Physique - 4K UHD";else if(blob.indexOf("blu-ray")>=0||blob.indexOf("bluray")>=0)support="Physique - Blu-ray";else if(blob.indexOf("dvd")>=0)support="Physique - DVD";else support="Physique";if(!title)return null;return{source:"dvdfr",title:title,posterUrl:posterUrl,imageUrl:imageUrl,productUrl:url,contenu:contenu,support:support,packaging:packaging};}
+async function searchDVDFR(ean){
+  var searchUrl = "https://www.dvdfr.com/recherche_avancee.php?ean=" + ean + "&base=dvd";
+  var html = await urlFetchHTML(searchUrl);
+  if(!html) return null;
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  
+  var link = doc.querySelector("a[href*='/dvd/" + ean + "']") || doc.querySelector("a[href*='/dvd/f']");
+  var productUrl = searchUrl;
+  if(link){
+    var href = link.getAttribute("href");
+    if(href.indexOf("http") !== 0) productUrl = "https://www.dvdfr.com" + href;
+  }
+  
+  var detailHtml = (productUrl === searchUrl) ? html : await urlFetchHTML(productUrl);
+  var detailDoc = new DOMParser().parseFromString(detailHtml, "text/html");
+  
+  var title="", posterUrl="", imageUrl="", contenu="", support="Physique", packaging="";
+  var ogTitle = detailDoc.querySelector('meta[property="og:title"]');
+  if(ogTitle) title = ogTitle.getAttribute("content").replace(/\s*-\s*Dvdfr\.com\s*$/i, "").trim();
+  
+  var ogImage = detailDoc.querySelector('meta[property="og:image"]');
+  if(ogImage) { posterUrl = ogImage.getAttribute("content"); imageUrl = posterUrl; }
+  
+  var contenuEl = detailDoc.querySelector(".description.scrollbar-style, .product-description");
+  if(contenuEl) contenu = contenuEl.textContent.trim();
+  
+  var blob = (title + " " + contenu).toLowerCase();
+  if(blob.indexOf("steelbook") >= 0 || blob.indexOf("steel book") >= 0 || blob.indexOf("boîtier métal") >= 0) packaging = "Steelbook";
+  if(blob.indexOf("4k") >= 0 || blob.indexOf("uhd") >= 0) support = "Physique - 4K UHD";
+  else if(blob.indexOf("blu-ray") >= 0 || blob.indexOf("bluray") >= 0) support = "Physique - Blu-ray";
+  else if(blob.indexOf("dvd") >= 0) support = "Physique - DVD";
+  
+  if(!title) return null;
+  return {source:"dvdfr", title:title, posterUrl:posterUrl, imageUrl:imageUrl, productUrl:productUrl, contenu:contenu, support:support, packaging:packaging};
+}
 
-async function searchAmazon(ean){var url="https://www.amazon.fr/dp/"+ean;var html=await urlFetchHTML(url);if(!html)return null;var doc=new DOMParser().parseFromString(html,"text/html");var title="",posterUrl="",imageUrl="",contenu="";var titleEl=doc.querySelector("#productTitle, .product-title");if(titleEl)title=titleEl.textContent.trim();var mainImg=doc.querySelector("#imgBlk, .imgTagWrapper img, #main-image, img[data-a-hires]");if(mainImg){posterUrl=mainImg.getAttribute("src");imageUrl=posterUrl;}var descEl=doc.querySelector("#productDescription, .product-description");if(descEl)contenu=descEl.textContent.trim();if(!title)return null;return{source:"amazon",title:title,posterUrl:posterUrl,imageUrl:imageUrl,productUrl:url,contenu:contenu,support:"",packaging:""};}
+async function searchAmazon(ean){
+  var url = "https://www.amazon.fr/dp/" + ean;
+  var html = await urlFetchHTML(url);
+  if(!html) return null;
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  var title="", posterUrl="", imageUrl="", contenu="";
+  var titleEl = doc.querySelector("#productTitle, .product-title");
+  if(titleEl) title = titleEl.textContent.trim();
+  var mainImg = doc.querySelector("#imgBlk, .imgTagWrapper img, #main-image, img[data-a-hires]");
+  if(mainImg){ posterUrl = mainImg.getAttribute("src"); imageUrl = posterUrl; }
+  var descEl = doc.querySelector("#productDescription, .product-description");
+  if(descEl) contenu = descEl.textContent.trim();
+  if(!title) return null;
+  return {source:"amazon", title:title, posterUrl:posterUrl, imageUrl:imageUrl, productUrl:url, contenu:contenu, support:"", packaging:""};
+}
 
-async function searchFnac(ean){var url="https://recherche.fnac.com/SearchResult/ResultList.aspx?Search="+ean;var html=await urlFetchHTML(url);if(!html)return null;var doc=new DOMParser().parseFromString(html,"text/html");var title="",posterUrl="",imageUrl="",productUrl="";var card=doc.querySelector(".f-productCard, article, .product-card");if(card){var titleEl=card.querySelector(".f-productCard-title, h3, h2");if(titleEl)title=titleEl.textContent.trim();var imgEl=card.querySelector("img");if(imgEl){posterUrl=imgEl.getAttribute("src")||imgEl.getAttribute("data-src")||"";imageUrl=posterUrl;}var linkEl=card.querySelector("a");if(linkEl){productUrl=linkEl.getAttribute("href")||"";if(productUrl&&productUrl.indexOf("http")!==0)productUrl="https://www.fnac.com"+productUrl;}}if(!title)return null;return{source:"fnac",title:title,posterUrl:posterUrl,imageUrl:imageUrl,productUrl:productUrl,contenu:"",support:"Physique",packaging:""};}
+async function searchFnac(ean){
+  var url = "https://recherche.fnac.com/SearchResult/ResultList.aspx?Search=" + ean;
+  var html = await urlFetchHTML(url);
+  if(!html) return null;
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  var title="", posterUrl="", imageUrl="", productUrl="";
+  var card = doc.querySelector(".f-productCard, article, .product-card");
+  if(card){
+    var titleEl = card.querySelector(".f-productCard-title, h3, h2");
+    if(titleEl) title = titleEl.textContent.trim();
+    var imgEl = card.querySelector("img");
+    if(imgEl){ posterUrl = imgEl.getAttribute("src") || imgEl.getAttribute("data-src") || ""; imageUrl = posterUrl; }
+    var linkEl = card.querySelector("a");
+    if(linkEl){
+      productUrl = linkEl.getAttribute("href") || "";
+      if(productUrl && productUrl.indexOf("http") !== 0) productUrl = "https://www.fnac.com" + productUrl;
+    }
+  }
+  if(!title) return null;
+  return {source:"fnac", title:title, posterUrl:posterUrl, imageUrl:imageUrl, productUrl:productUrl, contenu:"", support:"Physique", packaging:""};
+}
 
-async function searchFromEAN(ean){var st=$("search-status");if(st){st.className="status";st.textContent="Recherche du code "+ean+"…";}var results=[];try{var dvdfr=await searchDVDFR(ean);if(dvdfr)results.push(dvdfr);}catch(e){}try{var amazon=await searchAmazon(ean);if(amazon)results.push(amazon);}catch(e){}try{var fnac=await searchFnac(ean);if(fnac)results.push(fnac);}catch(e){}if(results.length===0){if(st)st.textContent="";toast("Aucune information trouvée pour ce code.",3000);return;}var merged={title:"",posterUrl:"",imageUrl:"",productUrl:"",contenu:"",support:"",packaging:""};for(var i=0;i<results.length;i++){var r=results[i];if(!merged.title&&r.title)merged.title=r.title;if(!merged.posterUrl&&r.posterUrl)merged.posterUrl=r.posterUrl;if(!merged.imageUrl&&r.imageUrl)merged.imageUrl=r.imageUrl;if(!merged.productUrl&&r.productUrl)merged.productUrl=r.productUrl;if(!merged.contenu&&r.contenu)merged.contenu=r.contenu;if(!merged.support&&r.support)merged.support=r.support;if(!merged.packaging&&r.packaging)merged.packaging=r.packaging;}ST.selectedItem={title:merged.title,source:"ean",id:Date.now(),poster:merged.posterUrl,imageUrl:merged.imageUrl,url:merged.productUrl,contenu:merged.contenu,support:merged.support,packaging:merged.packaging,ean:ean};if(st)st.textContent="";renderPanel(null);if(merged.support)ST.advFields.support=merged.support;if(merged.packaging)ST.advFields.packaging=merged.packaging;if(merged.contenu)ST.advFields.contenu=merged.contenu;if(merged.imageUrl)ST.advFields.imageUrl=merged.imageUrl;ST.isInCollection=true;updateAdvBtn("support",merged.support||"");updateAdvBtn("packaging",merged.packaging||"");updateAdvBtn("contenu",merged.contenu?"Voir":"");updateAdvBtn("_img",merged.imageUrl?"Voir":"");if(ST._libPaint)ST._libPaint();toast("Informations trouvées - Vérifiez et ajustez");}
+async function searchFromEAN(ean){
+  var st = $("search-status");
+  if(st){ st.className = "status"; st.textContent = "Recherche du code " + ean + "…"; }
+  
+  var results = [];
+  try { var dvdfr = await searchDVDFR(ean); if(dvdfr) results.push(dvdfr); } catch(e) {}
+  try { var amazon = await searchAmazon(ean); if(amazon) results.push(amazon); } catch(e) {}
+  try { var fnac = await searchFnac(ean); if(fnac) results.push(fnac); } catch(e) {}
+  
+  if(results.length === 0){
+    if(st) st.textContent = "";
+    toast("Aucune info auto trouvée. Fiche pré-remplie avec lien de recherche.", 3000);
+    ST.selectedItem = {
+      title: "", source: "ean", id: Date.now(), poster: "",
+      imageUrl: "", url: "https://www.dvdfr.com/recherche_avancee.php?ean=" + ean + "&base=dvd",
+      contenu: "", support: "Physique", packaging: "", ean: ean
+    };
+    ST.isInCollection = true;
+    renderPanel(null);
+    return;
+  }
+  
+  var merged = {title:"", posterUrl:"", imageUrl:"", productUrl:"", contenu:"", support:"", packaging:""};
+  for(var i=0; i<results.length; i++){
+    var r = results[i];
+    if(!merged.title && r.title) merged.title = r.title;
+    if(!merged.posterUrl && r.posterUrl) merged.posterUrl = r.posterUrl;
+    if(!merged.imageUrl && r.imageUrl) merged.imageUrl = r.imageUrl;
+    if(!merged.productUrl && r.productUrl) merged.productUrl = r.productUrl;
+    if(!merged.contenu && r.contenu) merged.contenu = r.contenu;
+    if(!merged.support && r.support) merged.support = r.support;
+    if(!merged.packaging && r.packaging) merged.packaging = r.packaging;
+  }
+  
+  ST.selectedItem = {
+    title: merged.title, source: "ean", id: Date.now(), poster: merged.posterUrl,
+    imageUrl: merged.imageUrl, url: merged.productUrl, contenu: merged.contenu,
+    support: merged.support, packaging: merged.packaging, ean: ean
+  };
+  if(st) st.textContent = "";
+  renderPanel(null);
+  
+  if(merged.support) ST.advFields.support = merged.support;
+  if(merged.packaging) ST.advFields.packaging = merged.packaging;
+  if(merged.contenu) ST.advFields.contenu = merged.contenu;
+  if(merged.imageUrl) ST.advFields.imageUrl = merged.imageUrl;
+  ST.isInCollection = true;
+  
+  updateAdvBtn("support", merged.support || "");
+  updateAdvBtn("packaging", merged.packaging || "");
+  updateAdvBtn("contenu", merged.contenu ? "Voir" : "");
+  updateAdvBtn("_img", merged.imageUrl ? "Voir" : "");
+  if(ST._libPaint) ST._libPaint();
+  
+  toast("Informations trouvées - Vérifie et ajuste");
+}
