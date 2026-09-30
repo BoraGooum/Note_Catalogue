@@ -16,7 +16,7 @@ var ST = {
 var overlayStack = [], zCounter = 0;
 var KINDS = [["time", "Note datée", "calendar"], ["free", "Instantané", "pen"], ["ep", "Épisode", "tv"], ["session", "Session", "timer"], ["pages", "Pages", "file-text"]];
 var COLOR_SWATCHES = ["#B24BF3", "#7F5AF0", "#C0392B", "#E74C3C", "#F59E0B", "#FFD700", "#10B981", "#2CB67D", "#3B82F6", "#06B6D4", "#EC4899", "#FF5DA2", "#94A3B8", "#8E44AD", "#16A34A", "#EA580C"];
-var LUCIDE_NAMES = "film tv gamepad-2 book-open image scroll disc music mic headphones monitor smartphone tablet laptop cpu hard-drive usb battery wifi bluetooth box package package-open gift tag tags bookmark star heart thumb-up clock calendar calendar-check hourglass timer alarm-clock history pen edit pencil file-text notebook-pen notebook clipboard clipboard-list list grid layout-grid layers stack archive inbox folder folder-open search zoom-in zoom-out maximize-2 expand eye eye-off lock unlock key camera image-plus images clapperboard megaphone radio satellite globe map map-pin compass navigation anchor ship plane train car bike footprints mountain tree-pine leaf flower-2 sun moon cloud droplets flame zap sparkles palette brush spray-can wand-2 scissors utensils coffee wine beer cake-slice ice-cream apple cherry grape dumbbell trophy medal flag crown gem coins banknote wallet credit-card shopping-bag shopping-cart store briefcase backpack graduation-cap school baby users user smile frown ghost mask drama theater ticket concert barcode check".split(" ");
+var LUCIDE_NAMES = "film tv gamepad-2 book-open image scroll disc music mic headphones monitor smartphone tablet laptop cpu hard-drive usb battery wifi bluetooth box package package-open gift tag tags bookmark star heart thumb-up clock calendar calendar-check hourglass timer alarm-clock history pen edit pencil file-text notebook-pen notebook clipboard clipboard-list list grid layout-grid layers stack archive inbox folder folder-open search zoom-in zoom-out maximize-2 expand eye eye-off lock unlock key camera image-plus images clapperboard megaphone radio satellite globe map map-pin compass navigation anchor ship plane train car bike footprints mountain tree-pine leaf flower-2 sun moon cloud droplets flame zap sparkles palette brush spray-can wand-2 scissors utensils coffee wine beer cake-slice ice-cream apple cherry grape dumbbell trophy medal flag crown gem coins banknote wallet credit-card shopping-bag shopping-cart store briefcase backpack graduation-cap school baby users user smile frown ghost mask drama theater ticket concert barcode check eject clipboard alert-triangle".split(" ");
 
 // ==========================================
 // 2. ICÔNES LUCIDE
@@ -404,8 +404,7 @@ function buildForm(host, mode) {
     });
     host.appendChild(fieldBox("Recherche externe", sl));
   }
-}
-// ==========================================
+}// ==========================================
 // 13. LISTES PERSONNALISÉES
 // ==========================================
 function choiceRow(it, sel, pick, del) {
@@ -657,7 +656,7 @@ function injectBackupBanner() {
 // ==========================================
 // 20. OPTIONS ET SAUVEGARDE
 // ==========================================
-function renderOptions() { var g = $("opt-grid"); if (!g) return; g.innerHTML = ""; [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }, { i: "alert-triangle", l: "Problèmes / Bugs", f: openOptProblemes },].forEach(function(c) { var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b); }); }
+function renderOptions() { var g = $("opt-grid"); if (!g) return; g.innerHTML = ""; [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }, { i: "alert-triangle", l: "Problèmes / Bugs", f: openOptProblemes }].forEach(function(c) { var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b); }); }
 function openOptSave() {
   var b = el("div"); b.appendChild(el("div", "sec-title", "Sauvegarde locale"));
   b.appendChild(btn("Exporter en JSON", "download", "wide", function() { exportJSON(); })); b.appendChild(btn("Importer (fusion)", "upload", "wide", function() { importJSON(); })); b.appendChild(btn("Copier tout (TSV)", "clipboard-copy", "wide", function() { copyTSV(); }));
@@ -745,50 +744,31 @@ function openOptSearch() { var s = settingsLoad(), b = el("div"); b.appendChild(
 function openOptApp() { var b = el("div"); b.appendChild(btn("Installer l'application", "download", "wide", function() { triggerInstall(); })); b.appendChild(btn("Vider le cache hors-ligne", "trash", "wide", function() { if ("caches" in window) caches.keys().then(function(k) { k.forEach(function(x) { caches.delete(x); }); }); toast("Cache vidé"); })); b.appendChild(el("div", "", "Réseau : <b>" + (navigator.onLine ? "connecté" : "hors-ligne") + "</b>")); setModal("Application", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptAbout() { var b = el("div"); b.appendChild(el("div", "", "Version : <b>V0.9.5</b>")); b.appendChild(el("div", "", "Build : <b>" + new Date(BUILD).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }) + "</b>")); var c = el("a", "", "Créé par Gooumbora"); c.href = "https://www.senscritique.com/Gooumbora"; c.target = "_blank"; c.style.color = "var(--acc)"; b.appendChild(c); setModal("À propos", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptDanger() { var b = el("div"); b.appendChild(btn("Effacer toutes mes œuvres", "trash", "wide", function() { showConfirm("Effacer TOUTES tes œuvres ?", "Cette action est irréversible.", function() { (async function() { for (var i = 0; i < ST.entries.length; i++) await dbDelete(ST.entries[i].id); refreshAll(); toast("Vidé"); })(); }, "Effacer"); })); b.appendChild(btn("Réinitialiser les réglages", "rotate-ccw", "wide", function() { showConfirm("Remettre les réglages par défaut ?", "", function() { localStorage.removeItem("settings"); settingsSave(Object.assign({}, SETTINGS_DEFAULTS)); applySettings(); toast("Réglages réinitialisés"); }, "Réinitialiser"); })); setModal("Danger", b, [["Fermer", "", closeModal, "x"]]); }
+
 function openOptProblemes() {
   var b = el("div");
   var tabs = ["Recherche", "Bibliothèque", "Journal", "Options"];
-  
   tabs.forEach(function(t, i) {
-    var lbl = el("div", "flabel", t);
-    lbl.style.marginTop = "10px";
-    var ta = el("textarea");
-    ta.id = "prob-" + i;
-    ta.placeholder = "Notes pour l'onglet " + t + "...";
+    var lbl = el("div", "flabel", t); lbl.style.marginTop = "10px";
+    var ta = el("textarea"); ta.id = "prob-" + i; ta.placeholder = "Notes pour l'onglet " + t + "...";
     ta.style.cssText = "width:100%; min-height:80px; margin-bottom:12px; padding:10px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; color:var(--tx); font-family:inherit; font-size:14px; resize:vertical;";
     ta.value = localStorage.getItem("bug_report_" + i) || "";
     ta.addEventListener("input", function() { localStorage.setItem("bug_report_" + i, ta.value); });
-    b.appendChild(lbl);
-    b.appendChild(ta);
+    b.appendChild(lbl); b.appendChild(ta);
   });
-  
-  var btnRow = el("div");
-  btnRow.style.cssText = "display:flex; gap:10px; margin-top:16px;";
-  
+  var btnRow = el("div"); btnRow.style.cssText = "display:flex; gap:10px; margin-top:16px;";
   var btnCopy = btn("Copier le rapport", "clipboard", "primary", function() {
-    var report = "";
-    tabs.forEach(function(t, i) {
-      var val = document.getElementById("prob-" + i).value;
-      if (val.trim()) report += "--- " + t + " ---\n" + val + "\n\n";
-    });
+    var report = ""; tabs.forEach(function(t, i) { var val = document.getElementById("prob-" + i).value; if (val.trim()) report += "--- " + t + " ---\n" + val + "\n\n"; });
     if (!report) { toast("Rien à copier."); return; }
     navigator.clipboard.writeText(report).then(function() { toast("Rapport copié !"); }).catch(function() { toast("Erreur copie"); });
   });
-  
   var btnClear = btn("Tout effacer", "trash-2", "", function() {
     showConfirm("Effacer toutes les notes de bugs ?", "Cette action est irréversible.", function() {
-      tabs.forEach(function(t, i) {
-        document.getElementById("prob-" + i).value = "";
-        localStorage.removeItem("bug_report_" + i);
-      });
+      tabs.forEach(function(t, i) { document.getElementById("prob-" + i).value = ""; localStorage.removeItem("bug_report_" + i); });
       toast("Notes effacées");
     }, "Effacer");
   });
-  
-  btnRow.appendChild(btnCopy);
-  btnRow.appendChild(btnClear);
-  b.appendChild(btnRow);
-  
+  btnRow.appendChild(btnCopy); btnRow.appendChild(btnClear); b.appendChild(btnRow);
   setModal("Signaler un problème", b, [["Fermer", "", closeModal, "x"]]);
 }
 
@@ -814,15 +794,17 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var body = el("div");
   body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:10px;";
   
-  // 1. Ligne des 3 boutons
+  // 1. Ligne des 3 boutons (Style unifié)
   var btnRow = el("div");
   btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:8px;";
+  
+  var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border: 1px solid var(--bd);";
   
   // Bouton DVD.fr (Icône Eject + Dégradé Bleu/Blanc/Rouge subtil)
   var btnDvd = el("button", "sq-btn");
   btnDvd.setAttribute("aria-label", "Rechercher sur DVD.fr");
   btnDvd.innerHTML = '<span class="ic">' + ic("eject") + '</span>';
-  btnDvd.style.cssText = "width:48px; height:48px; min-width:48px; border-radius:12px; background: linear-gradient(135deg, rgba(0,85,164,0.25), rgba(255,255,255,0.1), rgba(239,65,53,0.25)); border: 1px solid rgba(255,255,255,0.15);";
+  btnDvd.style.cssText = commonBtnStyle + " background: linear-gradient(135deg, rgba(0,85,164,0.3), rgba(255,255,255,0.1), rgba(239,65,53,0.3));";
   btnDvd.addEventListener("click", function() {
     if (currentTitle) {
       window.open("https://www.dvdfr.com/listeliv.php?flou&mots_recherche=" + encodeURIComponent(currentTitle) + "&base=dvd", "_blank");
@@ -835,6 +817,7 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var btnEan = el("button", "sq-btn");
   btnEan.setAttribute("aria-label", "Rechercher par EAN");
   btnEan.innerHTML = '<span class="ic">' + ic("barcode") + '</span>';
+  btnEan.style.cssText = commonBtnStyle + " background: var(--s2);";
   btnEan.addEventListener("click", function() {
     if (ean) {
       window.open("https://www.ean-search.org/ean/" + ean, "_blank");
@@ -847,6 +830,7 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var btnPaste = el("button", "sq-btn");
   btnPaste.setAttribute("aria-label", "Coller et analyser");
   btnPaste.innerHTML = '<span class="ic">' + ic("clipboard") + '</span>';
+  btnPaste.style.cssText = commonBtnStyle + " background: var(--s2);";
   
   btnRow.appendChild(btnDvd);
   btnRow.appendChild(btnEan);
