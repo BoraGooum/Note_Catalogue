@@ -657,7 +657,7 @@ function injectBackupBanner() {
 // ==========================================
 // 20. OPTIONS ET SAUVEGARDE
 // ==========================================
-function renderOptions() { var g = $("opt-grid"); if (!g) return; g.innerHTML = ""; [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }].forEach(function(c) { var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b); }); }
+function renderOptions() { var g = $("opt-grid"); if (!g) return; g.innerHTML = ""; [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }, { i: "alert-triangle", l: "Problèmes / Bugs", f: openOptProblemes },].forEach(function(c) { var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b); }); }
 function openOptSave() {
   var b = el("div"); b.appendChild(el("div", "sec-title", "Sauvegarde locale"));
   b.appendChild(btn("Exporter en JSON", "download", "wide", function() { exportJSON(); })); b.appendChild(btn("Importer (fusion)", "upload", "wide", function() { importJSON(); })); b.appendChild(btn("Copier tout (TSV)", "clipboard-copy", "wide", function() { copyTSV(); }));
@@ -745,6 +745,52 @@ function openOptSearch() { var s = settingsLoad(), b = el("div"); b.appendChild(
 function openOptApp() { var b = el("div"); b.appendChild(btn("Installer l'application", "download", "wide", function() { triggerInstall(); })); b.appendChild(btn("Vider le cache hors-ligne", "trash", "wide", function() { if ("caches" in window) caches.keys().then(function(k) { k.forEach(function(x) { caches.delete(x); }); }); toast("Cache vidé"); })); b.appendChild(el("div", "", "Réseau : <b>" + (navigator.onLine ? "connecté" : "hors-ligne") + "</b>")); setModal("Application", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptAbout() { var b = el("div"); b.appendChild(el("div", "", "Version : <b>V0.9.5</b>")); b.appendChild(el("div", "", "Build : <b>" + new Date(BUILD).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }) + "</b>")); var c = el("a", "", "Créé par Gooumbora"); c.href = "https://www.senscritique.com/Gooumbora"; c.target = "_blank"; c.style.color = "var(--acc)"; b.appendChild(c); setModal("À propos", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptDanger() { var b = el("div"); b.appendChild(btn("Effacer toutes mes œuvres", "trash", "wide", function() { showConfirm("Effacer TOUTES tes œuvres ?", "Cette action est irréversible.", function() { (async function() { for (var i = 0; i < ST.entries.length; i++) await dbDelete(ST.entries[i].id); refreshAll(); toast("Vidé"); })(); }, "Effacer"); })); b.appendChild(btn("Réinitialiser les réglages", "rotate-ccw", "wide", function() { showConfirm("Remettre les réglages par défaut ?", "", function() { localStorage.removeItem("settings"); settingsSave(Object.assign({}, SETTINGS_DEFAULTS)); applySettings(); toast("Réglages réinitialisés"); }, "Réinitialiser"); })); setModal("Danger", b, [["Fermer", "", closeModal, "x"]]); }
+function openOptProblemes() {
+  var b = el("div");
+  var tabs = ["Recherche", "Bibliothèque", "Journal", "Options"];
+  
+  tabs.forEach(function(t, i) {
+    var lbl = el("div", "flabel", t);
+    lbl.style.marginTop = "10px";
+    var ta = el("textarea");
+    ta.id = "prob-" + i;
+    ta.placeholder = "Notes pour l'onglet " + t + "...";
+    ta.style.cssText = "width:100%; min-height:80px; margin-bottom:12px; padding:10px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; color:var(--tx); font-family:inherit; font-size:14px; resize:vertical;";
+    ta.value = localStorage.getItem("bug_report_" + i) || "";
+    ta.addEventListener("input", function() { localStorage.setItem("bug_report_" + i, ta.value); });
+    b.appendChild(lbl);
+    b.appendChild(ta);
+  });
+  
+  var btnRow = el("div");
+  btnRow.style.cssText = "display:flex; gap:10px; margin-top:16px;";
+  
+  var btnCopy = btn("Copier le rapport", "clipboard", "primary", function() {
+    var report = "";
+    tabs.forEach(function(t, i) {
+      var val = document.getElementById("prob-" + i).value;
+      if (val.trim()) report += "--- " + t + " ---\n" + val + "\n\n";
+    });
+    if (!report) { toast("Rien à copier."); return; }
+    navigator.clipboard.writeText(report).then(function() { toast("Rapport copié !"); }).catch(function() { toast("Erreur copie"); });
+  });
+  
+  var btnClear = btn("Tout effacer", "trash-2", "", function() {
+    showConfirm("Effacer toutes les notes de bugs ?", "Cette action est irréversible.", function() {
+      tabs.forEach(function(t, i) {
+        document.getElementById("prob-" + i).value = "";
+        localStorage.removeItem("bug_report_" + i);
+      });
+      toast("Notes effacées");
+    }, "Effacer");
+  });
+  
+  btnRow.appendChild(btnCopy);
+  btnRow.appendChild(btnClear);
+  b.appendChild(btnRow);
+  
+  setModal("Signaler un problème", b, [["Fermer", "", closeModal, "x"]]);
+}
 
 // ==========================================
 // 21. GITHUB BACKUP
