@@ -897,50 +897,42 @@ async function searchFromUrl(url) {
 }
 
 // ==========================================
-// 9. PIPELINE EAN (EAN-Search PRIORITAIRE -> TMDB)
+// 9. PIPELINE EAN (Fnac -> DVDfr -> TMDB)
 // ==========================================
 async function searchEANSearch(ean) {
-  // 1. PRIORITÉ ABSOLUE : EAN-Search
-  var urlES = "https://www.ean-search.org/ean/" + ean;
-  var htmlES = await urlFetchHTML(urlES);
+  // 1. PRIORITÉ : Fnac (souvent meilleur pour les films/jeux FR)
+  var urlFnac = "https://www.fnac.com/SearchResult/ResultList.aspx?Search=" + ean;
+  var htmlFnac = await urlFetchHTML(urlFnac);
   
-  if (htmlES) {
-    var docES = new DOMParser().parseFromString(htmlES, "text/html");
-    var titleES = (docES.querySelector("h1") || docES.querySelector("title") || {}).textContent || "";
-    titleES = titleES.replace(/\s*-\s*EAN-Search\.org\s*$/i, "").trim();
-    
-    var linkES = docES.querySelector('a[href*="rakuten.com"]') || 
-                 docES.querySelector('a[href*="amazon."]') || 
-                 docES.querySelector('a[href*="fnac.com"]') ||
-                 docES.querySelector('a[href*="dvdfr.com"]');
-    var merchantUrlES = linkES ? linkES.getAttribute("href") : "";
-    
-    if (titleES) {
-      return { title: titleES, merchantUrl: merchantUrlES, imageUrl: "", source: "ean-search" };
+  if (htmlFnac) {
+    var docF = new DOMParser().parseFromString(htmlFnac, "text/html");
+    // Cherche un produit qui correspond exactement ou contient l'EAN
+    var prod = docF.querySelector('.data-pricetab-main a[href*="/Product/"], .fnac-grid__item a');
+    if (prod) {
+      var titleF = (prod.querySelector('.fnac-grid__title') || {}).textContent || "";
+      var linkF = prod.getAttribute("href");
+      if (titleF && linkF) {
+        return { title: titleF.trim(), merchantUrl: "https://www.fnac.com" + linkF, source: "fnac" };
+      }
+    }
+  }
+
+  // 2. FALLBACK : DVD.fr
+  var urlDvd = "https://www.dvdfr.com/listeliv.php?mots_recherche=" + ean + "&base=dvd";
+  var htmlDvd = await urlFetchHTML(urlDvd);
+  if (htmlDvd) {
+    var docD = new DOMParser().parseFromString(htmlDvd, "text/html");
+    var prodD = docD.querySelector(".product-title a, h3 a"); // Sélecteur générique DVDfr
+    if (prodD) {
+      var titleD = prodD.textContent.trim();
+      var linkD = prodD.getAttribute("href");
+      if (titleD && linkD) {
+         return { title: titleD, merchantUrl: linkD.startsWith('http') ? linkD : "https://www.dvdfr.com" + linkD, source: "dvdfr" };
+      }
     }
   }
   
-  // 2. FALLBACK : Barcode Lookup
-  var urlBL = "https://www.barcodelookup.com/" + ean;
-  var htmlBL = await urlFetchHTML(urlBL);
-  if (htmlBL) {
-    var docBL = new DOMParser().parseFromString(htmlBL, "text/html");
-    var titleBL = (docBL.querySelector("h1.product-title") || docBL.querySelector("h2") || docBL.querySelector("h1") || {}).textContent || "";
-    titleBL = titleBL.replace(/^EAN\s*\d+\s*/i, "").trim();
-    
-    var imgBL = docBL.querySelector("img.product-image, .product-image img");
-    var imageUrlBL = imgBL ? (imgBL.getAttribute("src") || imgBL.getAttribute("data-src")) : "";
-    
-    var linkBL = docBL.querySelector("a[href*='rakuten.com'], a[href*='amazon.'], a[href*='fnac.com'], a[href*='dvdfr.com']");
-    var merchantUrlBL = linkBL ? linkBL.getAttribute("href") : "";
-    
-    if (titleBL) {
-      return { title: titleBL, merchantUrl: merchantUrlBL, imageUrl: imageUrlBL, source: "barcodelookup" };
-    }
-  }
-  
-  // 3. ÉCHEC TOTAL
-  return { title: "", merchantUrl: "", imageUrl: "", source: null, searchUrl: urlES };
+  return null; // Si rien trouvé
 }
 
 async function searchMerchantPage(url) {
@@ -950,17 +942,21 @@ async function searchMerchantPage(url) {
   var doc = new DOMParser().parseFromString(html, "text/html");
   
   var contenu = "", imageUrl = "", packaging = "", support = "Physique";
-  var editoEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details");
-  if (editoEl) contenu = editoEl.textContent.trim();
   
-  var imgEl = doc.querySelector("img.product-image, img[src*='rakuten'], img[src*='amazon'], img[src*='fnac'], img.main-image");
-  if (imgEl) imageUrl = imgEl.getAttribute("src") || imgEl.getAttribute("data-src") || "";
+  // Extraction Description/Bonus (Sélecteurs larges)
+  var descEl = doc.querySelector("#description_produit, .desc_produit, .fiche_desc, p[itemprop='description'], .product-description");
+  if(descEl) contenu = descEl.innerText.trim();
   
+  // Extraction Image
+  var imgEl = doc.querySelector("#img_produit, .main_img, img[itemprop='image']");
+  if(imgEl) imageUrl = imgEl.src;
+
+  // Détection Support/Packaging via texte global
   var blob = (contenu + " " + (doc.title || "")).toLowerCase();
-  if (blob.indexOf("steelbook") >= 0 || blob.indexOf("steel book") >= 0 || blob.indexOf("boîtier métal") >= 0) packaging = "Steelbook";
-  if (blob.indexOf("4k") >= 0 || blob.indexOf("uhd") >= 0) support = "Physique - 4K UHD";
-  else if (blob.indexOf("blu-ray") >= 0 || blob.indexOf("bluray") >= 0) support = "Physique - Blu-ray";
-  else if (blob.indexOf("dvd") >= 0) support = "Physique - DVD";
+  if(blob.indexOf("steelbook") >= 0 || blob.indexOf("boîtier métal") >= 0) packaging = "Steelbook";
+  if(blob.indexOf("4k") >= 0 || blob.indexOf("uhd") >= 0) support = "Physique - 4K UHD";
+  else if(blob.indexOf("blu-ray") >= 0 || blob.indexOf("bluray") >= 0) support = "Physique - Blu-ray";
+  else if(blob.indexOf("dvd") >= 0) support = "Physique - DVD";
   
   return { contenu: contenu, imageUrl: imageUrl, packaging: packaging, support: support };
 }
@@ -980,49 +976,45 @@ async function searchFromEAN(ean) {
   
   var title = eanData ? eanData.title : "";
   var contenu = merchantData ? merchantData.contenu : "";
-  var imageUrl = (eanData && eanData.imageUrl) ? eanData.imageUrl : (merchantData ? merchantData.imageUrl : "");
+  var imageUrl = merchantData ? merchantData.imageUrl : "";
   var packaging = merchantData ? merchantData.packaging : "";
   var support = merchantData ? merchantData.support : "Physique";
   var merchantUrl = eanData ? eanData.merchantUrl : "";
-  var searchUrl = eanData && eanData.searchUrl ? eanData.searchUrl : "https://www.ean-search.org/ean/" + ean;
   
-  if (!title) {
-    if (st) st.textContent = "";
-    toast("Titre non trouvé. Ouverture de la recherche…", 3000);
-    window.open(searchUrl, "_blank");
-    
-    ST.selectedItem = { title: "", source: "ean", id: Date.now(), poster: "", imageUrl: "", url: searchUrl, contenu: "", support: "Physique", packaging: "", ean: ean, galerie: galerie };
-    ST.isInCollection = true; ST.galerie = galerie;
-    renderPanel(null);
-    ST.advFields.support = "Physique";
-    updateAdvBtn("support", "Physique");
-    if (ST._libPaint) ST._libPaint();
-    return;
-  }
-  
+  // Enrichissement TMDB si on a un titre
   if (title) {
     try {
       var tmdbRes = await searchTMDB(title, "movie");
-      if (tmdbRes && tmdbRes.length && tmdbRes[0].poster) imageUrl = tmdbRes[0].poster;
+      if(tmdbRes && tmdbRes.length && tmdbRes[0].poster) {
+        imageUrl = tmdbRes[0].poster;
+      }
     } catch(e) {}
   }
   
-  ST.selectedItem = { title: title, source: "ean", id: Date.now(), poster: imageUrl, imageUrl: imageUrl, url: merchantUrl || searchUrl, contenu: contenu, support: support, packaging: packaging, ean: ean, galerie: galerie };
+  ST.selectedItem = {
+    title: title, source: "ean", id: Date.now(), poster: imageUrl,
+    imageUrl: imageUrl, url: merchantUrl, contenu: contenu,
+    support: support, packaging: packaging, ean: ean,
+    galerie: galerie
+  };
+  
   if (st) st.textContent = "";
   renderPanel(null);
   
-  if (support) ST.advFields.support = support;
-  if (packaging) ST.advFields.packaging = packaging;
-  if (contenu) ST.advFields.contenu = contenu;
-  if (imageUrl) ST.advFields.imageUrl = imageUrl;
-  ST.galerie = galerie; ST.isInCollection = true;
+  // Pré-remplissage des champs avancés
+  if(support) ST.advFields.support = support;
+  if(packaging) ST.advFields.packaging = packaging;
+  if(contenu) ST.advFields.contenu = contenu;
+  if(imageUrl) ST.advFields.imageUrl = imageUrl;
+  ST.galerie = galerie;
+  ST.isInCollection = true;
   
   updateAdvBtn("support", support || "");
   updateAdvBtn("packaging", packaging || "");
   updateAdvBtn("contenu", contenu ? "Voir" : "");
   updateAdvBtn("_img", imageUrl ? "Voir" : "");
   updateAdvBtn("_galerie", galerie.length + " image(s)");
-  if (ST._libPaint) ST._libPaint();
+  if(ST._libPaint) ST._libPaint();
   
   toast("Informations trouvées - Vérifie et ajuste");
 }
