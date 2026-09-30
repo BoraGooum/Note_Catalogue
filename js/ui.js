@@ -796,11 +796,13 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var body = el("div");
   body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:10px;";
   
+  // 1. Ligne des 3 boutons
   var btnRow = el("div");
   btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:8px;";
   
-  var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border: 1px solid var(--bd);";
+  var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border: 1px solid var(--bd); background: var(--s2);";
   
+  // Bouton DVD.fr (Icône Eject + Dégradé Bleu/Blanc/Rouge subtil)
   var btnDvd = el("button", "sq-btn");
   btnDvd.setAttribute("aria-label", "Rechercher sur DVD.fr");
   btnDvd.innerHTML = '<span class="ic">' + ic("eject") + '</span>';
@@ -809,42 +811,43 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
     if (currentTitle) {
       window.open("https://www.dvdfr.com/listeliv.php?flou&mots_recherche=" + encodeURIComponent(currentTitle) + "&base=dvd", "_blank");
     } else {
-      toast("Titre manquant pour la recherche.");
+      toast("Titre manquant.");
     }
   });
   
+  // Bouton EAN-Search (Icône Code-barres)
   var btnEan = el("button", "sq-btn");
   btnEan.setAttribute("aria-label", "Rechercher par EAN");
   btnEan.innerHTML = '<span class="ic">' + ic("barcode") + '</span>';
-  btnEan.style.cssText = commonBtnStyle + " background: var(--s2);";
   btnEan.addEventListener("click", function() {
     if (ean) {
       window.open("https://www.ean-search.org/ean/" + ean, "_blank");
     } else {
-      toast("EAN manquant pour la recherche.");
+      toast("EAN manquant.");
     }
   });
   
+  // Bouton Coller (Icône Presse-papiers)
   var btnPaste = el("button", "sq-btn");
   btnPaste.setAttribute("aria-label", "Coller et analyser");
   btnPaste.innerHTML = '<span class="ic">' + ic("clipboard") + '</span>';
-  btnPaste.style.cssText = commonBtnStyle + " background: var(--s2);";
   
   btnRow.appendChild(btnDvd);
   btnRow.appendChild(btnEan);
   btnRow.appendChild(btnPaste);
   body.appendChild(btnRow);
   
+  // 2. Zone de collage
   var pasteArea = el("div");
   pasteArea.style.cssText = "display:none; flex-direction:column; gap:10px;";
   
   var infoText = el("div");
   infoText.style.cssText = "font-size:13px; color:var(--dim); text-align:center; line-height:1.4;";
-  infoText.innerHTML = "Sur la page ouverte : <b>Ctrl+U</b> (Code source) → <b>Ctrl+A</b> → <b>Ctrl+C</b><br>ou copie simplement tout le texte de la page.";
+  infoText.innerHTML = "Copie le code source (Ctrl+U) ou le texte visible.";
   pasteArea.appendChild(infoText);
   
   var ta = el("textarea");
-  ta.placeholder = "Colle le code source ou le texte ici...";
+  ta.placeholder = "Colle ici...";
   ta.style.cssText = "width:100%; min-height:150px; padding:10px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; color:var(--tx); font-family:var(--fm); font-size:12px; resize:vertical;";
   
   var analyzeBtn = btn("Analyser le contenu collé", "search", "primary wide", function() {
@@ -865,63 +868,36 @@ async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   setModal("Assistant de saisie", body, [["Fermer", "", closeModal, "x"]]);
 }
 
+// Fonction d'analyse locale améliorée
 async function processPastedText(text, cb) {
   var body = $("m-body");
-  body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse en cours...</div>';
+  body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse intelligente...</div>';
   
   try {
     var doc = new DOMParser().parseFromString(text, "text/html");
     var fullText = doc.body ? doc.body.innerText : text;
+    
+    // 1. Extraction Titre
     var rawTitle = (doc.querySelector("h1") || doc.querySelector("title") || {}).textContent || "";
     rawTitle = rawTitle.replace(/\s*[-–|]\s*.*$/i, "").trim();
     
-    var extracted = {
-      titre: rawTitle, ean: "", dateSortie: "", realisateur: "", acteurs: "",
-      resume: "", description: "", bonus: "", support: "", packaging: "",
-      langue: "", duree: "", editeur: "", technique: ""
-    };
+    // 2. Extraction Contenu (Plus large)
+    var textEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details, .synopsis");
+    var contenu = textEl ? textEl.textContent.trim() : "";
     
-    var eanMatch = fullText.match(/\b(\d{13})\b/);
-    if (eanMatch) extracted.ean = eanMatch[1];
+    // Si pas trouvé, on prend tout le texte mais on nettoie un peu
+    if(!contenu && fullText.length > 100) {
+        contenu = fullText.substring(0, 2000); 
+    }
+
+    // 3. Détection mots-clés
+    var allText = (rawTitle + " " + contenu).toLowerCase();
+    var support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
+                  allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
+                  allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
+    var packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" : "";
     
-    var dateMatch = fullText.match(/(?:sortie|date|release|parution)[^0-9]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{4})/i);
-    if (dateMatch) extracted.dateSortie = dateMatch[1];
-    else { var yearMatch = fullText.match(/\b(19|20)\d{2}\b/); if (yearMatch) extracted.dateSortie = yearMatch[0]; }
-    
-    var realMatch = fullText.match(/(?:réalisateur|director|de|par)\s*[:\-]?\s*([A-Z][a-zéèàù]+\s+[A-Z][a-zéèàù]+)/i);
-    if (realMatch) extracted.realisateur = realMatch[1];
-    
-    var actMatch = fullText.match(/(?:avec|casting|acteurs?|distribution)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s*,\s*[A-Z][a-zéèàù]+){2,})/i);
-    if (actMatch) extracted.acteurs = actMatch[1];
-    
-    var synMatch = fullText.match(/(?:synopsis|résumé|resume|histoire|pitch)\s*[:\-]?\s*([\s\S]{50,500}?)(?=\n\n|\n[A-Z]|Bonus|Contenu|Descriptif|$)/i);
-    if (synMatch) extracted.resume = synMatch[1].trim();
-    
-    var descMatch = fullText.match(/(?:présentation|description|à propos|about)\s*[:\-]?\s*([\s\S]{50,800}?)(?=\n\n(?:Bonus|Contenu|Descriptif|Caractérist)|$)/i);
-    if (descMatch) extracted.description = descMatch[1].trim();
-    
-    var bonusMatch = fullText.match(/(?:bonus|contenu|suppléments?|special features)\s*[:\-]?\s*([\s\S]{20,1000}?)(?=\n\n(?:Descriptif|Caractérist|Format)|$)/i);
-    if (bonusMatch) extracted.bonus = bonusMatch[1].trim();
-    
-    var techMatch = fullText.match(/(?:descriptif\s*technique|caractéristique|format|spécifications?)\s*[:\-]?\s*([\s\S]{20,800}?)(?=\n\n(?:Détails|Conformité)|$)/i);
-    if (techMatch) extracted.technique = techMatch[1].trim();
-    
-    var langMatch = fullText.match(/(?:langue|audio|language)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s*,\s*[A-Z][a-zéèàù]+)*)/i);
-    if (langMatch) extracted.langue = langMatch[1];
-    
-    var dureeMatch = fullText.match(/(?:durée|duration|runtime)\s*[:\-]?\s*(\d+\s*(?:min|minutes?|h))/i);
-    if (dureeMatch) extracted.duree = dureeMatch[1];
-    
-    var editMatch = fullText.match(/(?:éditeur|studio|distributeur|edition)\s*[:\-]?\s*([A-Z][a-zéèàù]+(?:\s+[A-Z][a-zéèàù]+)*)/i);
-    if (editMatch) extracted.editeur = editMatch[1];
-    
-    var allText = (rawTitle + " " + fullText).toLowerCase();
-    extracted.support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
-                        allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
-                        allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
-    extracted.packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" :
-                          allText.indexOf("digipack") >= 0 ? "Digipack" : "";
-    
+    // 4. Recherche TMDB (Titre propre + Affiche)
     var searchTitle = rawTitle.split(' - ')[0].split(' (')[0].trim();
     var finalTitle = rawTitle;
     var finalPoster = "";
@@ -933,13 +909,13 @@ async function processPastedText(text, cb) {
           finalTitle = tmdbRes[0].title;
           finalPoster = tmdbRes[0].poster;
         }
-      } catch(e) { console.log("TMDB search failed", e); }
+      } catch(e) {}
     }
-    extracted.titre = finalTitle;
     
+    // 5. Construction Formulaire (TOUT DÉCOCHÉ PAR DÉFAUT)
     body.innerHTML = "";
     var form = el("div");
-    form.style.cssText = "display:flex;flex-direction:column;gap:12px;";
+    form.style.cssText = "display:flex;flex-direction:column;gap:16px;";
     
     function makeRow(label, value, key, isTextarea) {
       if (!value && key !== "titre") return null;
@@ -948,7 +924,7 @@ async function processPastedText(text, cb) {
       
       var cbx = el("input");
       cbx.type = "checkbox";
-      cbx.checked = true;
+      cbx.checked = false; // <--- IMPORTANT : Tout décoché
       cbx.dataset.key = key;
       cbx.style.cssText = "margin-top:12px;width:18px;height:18px;accent-color:var(--acc);cursor:pointer;";
       
@@ -960,10 +936,10 @@ async function processPastedText(text, cb) {
       
       var val = isTextarea ? el("textarea") : el("input");
       val.value = value || "";
-      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:80px;resize:vertical;font-family:inherit;" : "");
+      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:120px;resize:vertical;font-family:inherit;" : "");
       
       var btnClear = el("button", "sq-btn");
-      btnClear.setAttribute("aria-label", "Effacer ce champ");
+      btnClear.setAttribute("aria-label", "Effacer");
       btnClear.innerHTML = '<span class="ic">' + ic("x") + '</span>';
       btnClear.style.cssText = "width:32px;height:32px;min-width:32px;padding:0;margin-top:8px;";
       btnClear.addEventListener("click", function() { val.value = ""; });
@@ -976,71 +952,46 @@ async function processPastedText(text, cb) {
       return row;
     }
     
-    var fields = [
-      ["Titre officiel", extracted.titre, "titre", false],
-      ["EAN", extracted.ean, "ean", false],
-      ["Date de sortie", extracted.dateSortie, "dateSortie", false],
-      ["Réalisateur", extracted.realisateur, "realisateur", false],
-      ["Acteurs", extracted.acteurs, "acteurs", false],
-      ["Résumé / Synopsis", extracted.resume, "resume", true],
-      ["Description", extracted.description, "description", true],
-      ["Bonus / Contenu", extracted.bonus, "bonus", true],
-      ["Description technique", extracted.technique, "technique", true],
-      ["Langue", extracted.langue, "langue", false],
-      ["Durée", extracted.duree, "duree", false],
-      ["Éditeur / Studio", extracted.editeur, "editeur", false],
-      ["Support détecté", extracted.support, "support", false],
-      ["Packaging détecté", extracted.packaging, "packaging", false]
-    ];
+    var r1 = makeRow("Titre (Officiel TMDB)", finalTitle, "titre", false);
+    var r2 = makeRow("Support détecté", support, "support", false);
+    var r3 = makeRow("Packaging détecté", packaging, "packaging", false);
+    var r4 = makeRow("Contenu / Bonus", contenu, "contenu", true);
     
-    fields.forEach(function(f) {
-      var row = makeRow(f[0], f[1], f[2], f[3]);
-      if (row) form.appendChild(row);
-    });
+    if(r1) form.appendChild(r1);
+    if(r2) form.appendChild(r2);
+    if(r3) form.appendChild(r3);
+    if(r4) form.appendChild(r4);
     
-    if (form.children.length === 0) {
-      form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune information exploitable trouvée. Vérifie ton collage.</p>";
+    if (!r1 && !r2 && !r3 && !r4) {
+      form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune info trouvée.</p>";
     }
     
     body.appendChild(form);
     
+    // Validation
     var foot = $("m-foot");
     foot.innerHTML = "";
     var btnValidate = el("button", "primary");
-    btnValidate.innerHTML = '<span class="ic">' + ic("check") + '</span><span>Appliquer dans la Description</span>';
+    btnValidate.innerHTML = '<span class="ic">' + ic("check") + '</span><span>Appliquer</span>';
     btnValidate.addEventListener("click", function() {
       var result = {};
-      var selectedSections = [];
-      
       form.querySelectorAll("input[type='checkbox']").forEach(function(c) {
-        if (c.checked) {
+        if (c.checked) { // Ne prend que ce qui est COCHÉ
           var valEl = c.nextElementSibling.querySelector("input, textarea");
-          if (valEl && valEl.value.trim()) {
-            result[c.dataset.key] = valEl.value.trim();
-            selectedSections.push({ label: c.parentElement.querySelector("div div").textContent, value: valEl.value.trim() });
-          }
+          if (valEl && valEl.value.trim()) result[c.dataset.key] = valEl.value.trim();
         }
       });
-      
       if (finalPoster) result.posterUrl = finalPoster;
-      
-      var formattedDesc = "";
-      selectedSections.forEach(function(sec, idx) {
-        if (idx > 0) formattedDesc += "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
-        formattedDesc += "▸ " + sec.label.toUpperCase() + "\n";
-        formattedDesc += sec.value;
-      });
-      
-      result.formattedDescription = formattedDesc;
+      closeModal();
       cb(result);
     });
     var btnCancel = el("button");
-    btnCancel.innerHTML = '<span class="ic">' + ic("x") + '</span><span>Fermer</span>';
+    btnCancel.innerHTML = '<span class="ic">' + ic("x") + '</span><span>Annuler</span>';
     btnCancel.addEventListener("click", closeModal);
     foot.appendChild(btnValidate);
     foot.appendChild(btnCancel);
     
   } catch(e) {
-    body.innerHTML = '<div class="status error" style="text-align:center;padding:20px;">Erreur lors de l\'analyse : ' + e.message + '</div>';
+    body.innerHTML = '<div class="status error" style="text-align:center;padding:20px;">Erreur : ' + e.message + '</div>';
   }
 }
