@@ -194,10 +194,7 @@ async function runSearch() {
   if (!si) return;
   var q = si.value.trim();
   
-  // Détection URL
   if (/^https?:\/\/\S+$/i.test(q)) { searchFromUrl(q); return; }
-  
-  // NOUVEAU : Détection automatique d'un code EAN (8 à 14 chiffres)
   if (/^\d{8,14}$/.test(q)) { searchFromEAN(q); return; }
   
   if (!q) {
@@ -758,7 +755,7 @@ async function init() {
   });
   
   on("search-input", "keydown", function(e) { if (e.key === "Enter") runSearch(); });
-  on("search-barcode", "click", function() { startEAN(searchFromEAN); }); // Bouton barcode
+  on("search-barcode", "click", function() { startEAN(searchFromEAN); });
   on("search-loupe", "click", runSearch);
   on("search-recent-btn", "click", showRecent);
   on("type-btn", "click", function() {
@@ -900,10 +897,30 @@ async function searchFromUrl(url) {
 }
 
 // ==========================================
-// 9. PIPELINE EAN (Barcode Lookup -> EAN-Search -> TMDB)
+// 9. PIPELINE EAN (EAN-Search PRIORITAIRE -> TMDB)
 // ==========================================
 async function searchEANSearch(ean) {
-  // 1. Priorité à Barcode Lookup
+  // 1. PRIORITÉ ABSOLUE : EAN-Search
+  var urlES = "https://www.ean-search.org/ean/" + ean;
+  var htmlES = await urlFetchHTML(urlES);
+  
+  if (htmlES) {
+    var docES = new DOMParser().parseFromString(htmlES, "text/html");
+    var titleES = (docES.querySelector("h1") || docES.querySelector("title") || {}).textContent || "";
+    titleES = titleES.replace(/\s*-\s*EAN-Search\.org\s*$/i, "").trim();
+    
+    var linkES = docES.querySelector('a[href*="rakuten.com"]') || 
+                 docES.querySelector('a[href*="amazon."]') || 
+                 docES.querySelector('a[href*="fnac.com"]') ||
+                 docES.querySelector('a[href*="dvdfr.com"]');
+    var merchantUrlES = linkES ? linkES.getAttribute("href") : "";
+    
+    if (titleES) {
+      return { title: titleES, merchantUrl: merchantUrlES, imageUrl: "", source: "ean-search" };
+    }
+  }
+  
+  // 2. FALLBACK : Barcode Lookup
   var urlBL = "https://www.barcodelookup.com/" + ean;
   var htmlBL = await urlFetchHTML(urlBL);
   if (htmlBL) {
@@ -922,24 +939,8 @@ async function searchEANSearch(ean) {
     }
   }
   
-  // 2. Fallback sur EAN-Search
-  var urlES = "https://www.ean-search.org/ean/" + ean;
-  var htmlES = await urlFetchHTML(urlES);
-  if (htmlES) {
-    var docES = new DOMParser().parseFromString(htmlES, "text/html");
-    var titleES = (docES.querySelector("h1") || docES.querySelector("title") || {}).textContent || "";
-    titleES = titleES.replace(/\s*-\s*EAN-Search\.org\s*$/i, "").trim();
-    
-    var linkES = docES.querySelector('a[href*="rakuten.com"]') || docES.querySelector('a[href*="amazon."]') || docES.querySelector('a[href*="fnac.com"]');
-    var merchantUrlES = linkES ? linkES.getAttribute("href") : "";
-    
-    if (titleES) {
-      return { title: titleES, merchantUrl: merchantUrlES, imageUrl: "", source: "ean-search" };
-    }
-  }
-  
-  // 3. Échec total
-  return { title: "", merchantUrl: "", imageUrl: "", source: null, searchUrl: urlBL };
+  // 3. ÉCHEC TOTAL
+  return { title: "", merchantUrl: "", imageUrl: "", source: null, searchUrl: urlES };
 }
 
 async function searchMerchantPage(url) {
@@ -983,12 +984,11 @@ async function searchFromEAN(ean) {
   var packaging = merchantData ? merchantData.packaging : "";
   var support = merchantData ? merchantData.support : "Physique";
   var merchantUrl = eanData ? eanData.merchantUrl : "";
-  var searchUrl = eanData && eanData.searchUrl ? eanData.searchUrl : "https://www.barcodelookup.com/" + ean;
+  var searchUrl = eanData && eanData.searchUrl ? eanData.searchUrl : "https://www.ean-search.org/ean/" + ean;
   
-  // Si aucun titre trouvé, on ouvre Barcode Lookup pour aide manuelle
   if (!title) {
     if (st) st.textContent = "";
-    toast("Titre non trouvé. Ouverture de Barcode Lookup…", 3000);
+    toast("Titre non trouvé. Ouverture de la recherche…", 3000);
     window.open(searchUrl, "_blank");
     
     ST.selectedItem = { title: "", source: "ean", id: Date.now(), poster: "", imageUrl: "", url: searchUrl, contenu: "", support: "Physique", packaging: "", ean: ean, galerie: galerie };
@@ -1000,7 +1000,6 @@ async function searchFromEAN(ean) {
     return;
   }
   
-  // Enrichissement TMDB
   if (title) {
     try {
       var tmdbRes = await searchTMDB(title, "movie");
