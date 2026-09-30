@@ -912,6 +912,30 @@ function buildForm(host, mode) {
   ti.placeholder = "Titre de l'œuvre";
   host.appendChild(fieldBox("Titre", ti));
 
+  // --- NOUVEAU : Assistant de saisie intelligent ---
+      var assistRow = el("div", "field");
+      assistRow.style.cssText = "margin-top:16px; padding-top:16px; border-top:1px solid var(--bd);";
+      assistRow.appendChild(el("span", "flabel", "Assistant de saisie"));
+      
+      var assistBtn = btn("Ouvrir l'assistant", "wand-2", "wide", function() {
+        openSmartScrapeAssistant(ST.advFields.ean || "", ST.draft.titre || "", function(data) {
+          if (data.titre) { ST.draft.titre = data.titre; $("p-title").value = data.titre; }
+          if (data.support) { ST.advFields.support = data.support; updateAdvBtn("support", data.support); }
+          if (data.packaging) { ST.advFields.packaging = data.packaging; updateAdvBtn("packaging", data.packaging); }
+          if (data.contenu) { ST.advFields.contenu = data.contenu; updateAdvBtn("contenu", "Voir"); }
+          if (data.posterUrl) { 
+            ST.panelPoster = data.posterUrl; 
+            $("p-prev").src = data.posterUrl; 
+            makeThumb(data.posterUrl).then(t => ST.panelThumb = t); 
+          }
+          toast("Champs mis à jour avec succès !");
+        });
+      });
+      
+      assistRow.appendChild(assistBtn);
+      host.appendChild(assistRow);
+  // -----------------------------------------------
+
   var r1 = el("div", "form-row");
   r1.appendChild(libToggleBtn(function() { return ST.isInCollection; }, function(v) { ST.isInCollection = v; }));
   r1.appendChild(detailValueBtn("star", "Note", "note", ST.currentNote != null ? ST.currentNote + "/10" : "", function() {
@@ -2333,62 +2357,155 @@ async function ghRestore() {
 }
 
 // ==========================================
-// 22. ASSISTANT DE SAISIE (SMART SCRAPE)
+// ASSISTANT DE SAISIE (SMART SCRAPE LOCAL)
 // ==========================================
-async function openSmartScrapeSheet(url, cb) {
+async function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var body = el("div");
-  body.style.cssText = "padding-bottom:10px;";
-  body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse de la page en cours...</div>';
-  setModal("Assistant de saisie", body, [["Annuler", "", closeModal, "x"]]);
+  body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:10px;";
+  
+  // 1. Ligne des 3 boutons
+  var btnRow = el("div");
+  btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:8px;";
+  
+  // Bouton DVD.fr (Icône Eject + Dégradé Bleu/Blanc/Rouge subtil)
+  var btnDvd = el("button", "sq-btn");
+  btnDvd.setAttribute("aria-label", "Rechercher sur DVD.fr");
+  btnDvd.innerHTML = '<span class="ic">' + ic("eject") + '</span>';
+  btnDvd.style.cssText = "width:48px; height:48px; min-width:48px; border-radius:12px; background: linear-gradient(135deg, rgba(0,85,164,0.25), rgba(255,255,255,0.1), rgba(239,65,53,0.25)); border: 1px solid rgba(255,255,255,0.15);";
+  btnDvd.addEventListener("click", function() {
+    if (currentTitle) {
+      window.open("https://www.dvdfr.com/listeliv.php?flou&mots_recherche=" + encodeURIComponent(currentTitle) + "&base=dvd", "_blank");
+    } else {
+      toast("Titre manquant pour la recherche.");
+    }
+  });
+  
+  // Bouton EAN-Search (Icône Code-barres)
+  var btnEan = el("button", "sq-btn");
+  btnEan.setAttribute("aria-label", "Rechercher par EAN");
+  btnEan.innerHTML = '<span class="ic">' + ic("barcode") + '</span>';
+  btnEan.addEventListener("click", function() {
+    if (ean) {
+      window.open("https://www.ean-search.org/ean/" + ean, "_blank");
+    } else {
+      toast("EAN manquant pour la recherche.");
+    }
+  });
+  
+  // Bouton Coller (Icône Presse-papiers)
+  var btnPaste = el("button", "sq-btn");
+  btnPaste.setAttribute("aria-label", "Coller et analyser");
+  btnPaste.innerHTML = '<span class="ic">' + ic("clipboard") + '</span>';
+  
+  btnRow.appendChild(btnDvd);
+  btnRow.appendChild(btnEan);
+  btnRow.appendChild(btnPaste);
+  body.appendChild(btnRow);
+  
+  // 2. Zone de collage (cachée au départ)
+  var pasteArea = el("div");
+  pasteArea.style.cssText = "display:none; flex-direction:column; gap:10px;";
+  
+  var infoText = el("div");
+  infoText.style.cssText = "font-size:13px; color:var(--dim); text-align:center; line-height:1.4;";
+  infoText.innerHTML = "Sur la page ouverte : <b>Ctrl+U</b> (Code source) → <b>Ctrl+A</b> → <b>Ctrl+C</b><br>ou copie simplement tout le texte de la page.";
+  pasteArea.appendChild(infoText);
+  
+  var ta = el("textarea");
+  ta.placeholder = "Colle le code source ou le texte ici...";
+  ta.style.cssText = "width:100%; min-height:150px; padding:10px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; color:var(--tx); font-family:var(--fm); font-size:12px; resize:vertical;";
+  
+  var analyzeBtn = btn("Analyser le contenu collé", "search", "primary wide", function() {
+    var text = ta.value.trim();
+    if (!text) { toast("Rien à analyser."); return; }
+    processPastedText(text, cb);
+  });
+  
+  pasteArea.appendChild(ta);
+  pasteArea.appendChild(analyzeBtn);
+  body.appendChild(pasteArea);
+  
+  // Afficher la zone de collage au clic
+  btnPaste.addEventListener("click", function() {
+    pasteArea.style.display = "flex";
+    ta.focus();
+  });
+  
+  setModal("Assistant de saisie", body, [["Fermer", "", closeModal, "x"]]);
+}
 
+// Fonction d'analyse locale du texte collé
+async function processPastedText(text, cb) {
+  var body = $("m-body");
+  body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse en cours...</div>';
+  
   try {
-    var html = await urlFetchHTML(url);
-    if (!html) throw new Error("Page inaccessible via le proxy.");
-    var doc = new DOMParser().parseFromString(html, "text/html");
-
-    var title = (doc.querySelector("h1") || doc.querySelector('meta[property="og:title"]') || {}).textContent || "";
-    title = title.replace(/\s*[-–|]\s*.*$/i, "").trim();
-
+    // Parser le texte comme du HTML (fonctionne même si c'est du texte brut)
+    var doc = new DOMParser().parseFromString(text, "text/html");
+    
+    // 1. Extraction du titre
+    var rawTitle = (doc.querySelector("h1") || doc.querySelector("title") || {}).textContent || "";
+    rawTitle = rawTitle.replace(/\s*[-–|]\s*.*$/i, "").trim();
+    
+    // 2. Extraction du contenu (ciblage intelligent des classes courantes)
     var textEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details");
-    var contenu = textEl ? textEl.textContent.trim() : "";
-
-    var blob = (title + " " + contenu).toLowerCase();
-    var support = blob.indexOf("4k") >= 0 || blob.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
-                  blob.indexOf("blu-ray") >= 0 || blob.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
-                  blob.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
-    var packaging = blob.indexOf("steelbook") >= 0 || blob.indexOf("boîtier métal") >= 0 ? "Steelbook" : "";
-
+    var contenu = textEl ? textEl.textContent.trim() : (doc.body.innerText || "").trim();
+    
+    // 3. Détection des mots-clés dans l'ensemble du texte
+    var allText = (rawTitle + " " + contenu).toLowerCase();
+    var support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
+                  allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
+                  allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
+    var packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" : "";
+    
+    // 4. Nettoyage du titre pour la recherche TMDB
+    var searchTitle = rawTitle.split(' - ')[0].split(' (')[0].trim();
+    var finalTitle = rawTitle;
+    var finalPoster = "";
+    
+    // 5. Recherche TMDB pour obtenir le titre officiel et l'affiche
+    if (searchTitle && typeof searchTMDB === "function") {
+      try {
+        var tmdbRes = await searchTMDB(searchTitle, "movie");
+        if (tmdbRes && tmdbRes.length) {
+          finalTitle = tmdbRes[0].title;
+          finalPoster = tmdbRes[0].poster;
+        }
+      } catch(e) { console.log("TMDB search failed", e); }
+    }
+    
+    // 6. Construction du formulaire de validation
     body.innerHTML = "";
     var form = el("div");
     form.style.cssText = "display:flex;flex-direction:column;gap:16px;";
-
+    
     function makeRow(label, value, key, isTextarea) {
       if (!value && key !== "titre") return null;
       var row = el("div");
       row.style.cssText = "display:flex;align-items:flex-start;gap:10px;";
-
+      
       var cbx = el("input");
       cbx.type = "checkbox";
       cbx.checked = true;
       cbx.dataset.key = key;
       cbx.style.cssText = "margin-top:12px;width:18px;height:18px;accent-color:var(--acc);cursor:pointer;";
-
+      
       var info = el("div");
       info.style.cssText = "flex:1;min-width:0;";
       var lbl = el("div");
       lbl.style.cssText = "font-size:12px;font-weight:700;color:var(--dim);margin-bottom:4px;";
       lbl.textContent = label;
-
+      
       var val = isTextarea ? el("textarea") : el("input");
       val.value = value || "";
-      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--text);" + (isTextarea ? "min-height:120px;resize:vertical;font-family:inherit;" : "");
-
+      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:120px;resize:vertical;font-family:inherit;" : "");
+      
       var btnClear = el("button", "sq-btn");
-      btnClear.setAttribute("aria-label", "Effacer");
+      btnClear.setAttribute("aria-label", "Effacer ce champ");
       btnClear.innerHTML = '<span class="ic">' + ic("x") + '</span>';
       btnClear.style.cssText = "width:32px;height:32px;min-width:32px;padding:0;margin-top:8px;";
       btnClear.addEventListener("click", function() { val.value = ""; });
-
+      
       info.appendChild(lbl);
       info.appendChild(val);
       row.appendChild(cbx);
@@ -2396,23 +2513,24 @@ async function openSmartScrapeSheet(url, cb) {
       row.appendChild(btnClear);
       return row;
     }
-
-    var r1 = makeRow("Titre", title, "titre", false);
+    
+    var r1 = makeRow("Titre (Officiel TMDB)", finalTitle, "titre", false);
     var r2 = makeRow("Support détecté", support, "support", false);
     var r3 = makeRow("Packaging détecté", packaging, "packaging", false);
     var r4 = makeRow("Contenu / Bonus", contenu, "contenu", true);
-
+    
     if (r1) form.appendChild(r1);
     if (r2) form.appendChild(r2);
     if (r3) form.appendChild(r3);
     if (r4) form.appendChild(r4);
-
+    
     if (!r1 && !r2 && !r3 && !r4) {
-      form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune information exploitable trouvée. Tu peux fermer et saisir manuellement.</p>";
+      form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune information exploitable trouvée. Vérifie ton collage.</p>";
     }
-
+    
     body.appendChild(form);
-
+    
+    // 7. Mise à jour des boutons du modal
     var foot = $("m-foot");
     foot.innerHTML = "";
     var btnValidate = el("button", "primary");
@@ -2425,6 +2543,7 @@ async function openSmartScrapeSheet(url, cb) {
           if (valEl && valEl.value.trim()) result[c.dataset.key] = valEl.value.trim();
         }
       });
+      if (finalPoster) result.posterUrl = finalPoster;
       closeModal();
       cb(result);
     });
@@ -2433,8 +2552,8 @@ async function openSmartScrapeSheet(url, cb) {
     btnCancel.addEventListener("click", closeModal);
     foot.appendChild(btnValidate);
     foot.appendChild(btnCancel);
-
+    
   } catch(e) {
-    body.innerHTML = '<div class="status error" style="text-align:center;padding:20px;">Erreur : ' + e.message + '</div>';
+    body.innerHTML = '<div class="status error" style="text-align:center;padding:20px;">Erreur lors de l\'analyse : ' + e.message + '</div>';
   }
 }
