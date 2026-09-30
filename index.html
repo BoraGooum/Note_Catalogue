@@ -21,7 +21,8 @@
 <main>
   <section id="view-search" class="view active">
     <div class="sbar">
-      <input type="search" id="search-input" placeholder="Titre, auteur, année…" enterkeyhint="search" autocomplete="off">
+      <input type="search" id="search-input" placeholder="Titre, auteur, année…" enterkeyhint="search" autocomplete="off" style="flex:0.7">
+      <button class="sq-btn" id="search-barcode" aria-label="Scanner EAN"><span class="ic" data-ic="barcode"></span></button>
       <button class="sq-btn" id="search-loupe" aria-label="Chercher"><span class="ic" data-ic="search"></span></button>
       <button class="sq-btn" id="search-recent-btn" aria-label="Recherches récentes"><span class="ic" data-ic="clock"></span></button>
     </div>
@@ -144,38 +145,53 @@
   <div class="m-body" id="confirm-body"></div>
   <div class="m-foot" id="confirm-foot"></div>
 </div></div>
-<div class="overlay dark" id="poster-overlay">
-  <img id="poster-img" alt="">
-  <div class="bar"><button id="poster-close"><span class="ic" data-ic="arrow-left"></span><span>Fermer</span></button></div>
-</div>
-<div class="overlay" id="filter-panel-overlay"><div class="filter-panel">
-  <div class="head">
+<div class="overlay" id="filter-panel-overlay"><div class="sheet low">
+  <div class="m-head">
     <button class="rnd-btn" id="filter-back" aria-label="Retour"><span class="ic" data-ic="arrow-left"></span></button>
-    <h3>Filtres &amp; Tri</h3>
-    <button class="apply-btn" id="filter-apply"><span>Appliquer</span></button>
+    <div class="m-title">Filtres & Tri</div>
+    <div class="m-spacer"></div>
   </div>
-  <div class="fsec"><h4>Type</h4><div class="chips" id="filter-type-chips"></div></div>
-  <div class="fsec"><h4>Support</h4><div class="chips" id="filter-support-chips"></div></div>
-  <div class="fsec"><h4>Trier par</h4><div class="sort-row" id="filter-sort-btns"></div></div>
-  <div class="factions"><button id="filter-reset"><span class="ic" data-ic="rotate-ccw"></span><span>Réinitialiser</span></button></div>
+  <div class="m-body">
+    <div class="sec-title">Type d'œuvre</div>
+    <div class="chips" id="filter-type-chips"></div>
+    <div class="sec-title">Support</div>
+    <div class="chips" id="filter-support-chips"></div>
+    <div class="sec-title">Trier par</div>
+    <div class="sort-row" id="filter-sort-btns"></div>
+  </div>
+  <div class="m-foot">
+    <button class="primary" id="filter-apply"><span>Appliquer</span></button>
+    <button id="filter-reset"><span>Réinitialiser</span></button>
+  </div>
 </div></div>
-<div class="overlay" id="calendar-overlay"><div class="cal-modal">
-  <div class="head">
-    <button class="rnd-btn" id="cal-back" aria-label="Fermer"><span class="ic" data-ic="arrow-left"></span></button>
-    <div class="cal-picker">
-      <button class="cal-pick-btn" id="cal-month-btn"><span>Mois</span></button>
-      <button class="cal-pick-btn" id="cal-year-btn"><span>Année</span></button>
-    </div>
+<div class="overlay" id="calendar-overlay"><div class="sheet low">
+  <div class="m-head">
+    <button class="rnd-btn" id="cal-back" aria-label="Retour"><span class="ic" data-ic="arrow-left"></span></button>
+    <div class="m-spacer"></div>
+  </div>
+  <div class="cal-head">
+    <button class="cal-nav" id="cal-prev"><span class="ic" data-ic="chevron-left"></span></button>
+    <button class="cal-month-btn" id="cal-month-btn"></button>
+    <button class="cal-year-btn" id="cal-year-btn"></button>
+    <button class="cal-nav" id="cal-next"><span class="ic" data-ic="chevron-right"></span></button>
   </div>
   <div class="cal-dow" id="cal-dow"></div>
   <div class="cal-grid" id="cal-grid"></div>
 </div></div>
-<nav class="tabbar">
-  <button class="active" data-view="search"><span class="ic" data-ic="search"></span><span>Recherche</span></button>
-  <button data-view="collection"><span class="ic" data-ic="library"></span><span>Bibliothèque</span></button>
-  <button data-view="journal" id="tab-journal"><span class="badge-dot" id="journal-badge" style="display:none;"></span><span class="ic" data-ic="book-open"></span><span>Journal</span></button>
-  <button data-view="options"><span class="ic" data-ic="settings"></span><span>Options</span></button>
-</nav>
+<div class="overlay" id="poster-overlay"><div class="poster-sheet">
+  <button class="rnd-btn" id="poster-close" aria-label="Fermer"><span class="ic" data-ic="x"></span></button>
+  <img id="poster-img" alt="">
+  <div class="bar">
+    <button class="primary wide" id="poster-save"><span class="ic" data-ic="download"></span><span>Télécharger</span></button>
+  </div>
+</div></div>
+<div class="fab hidden" id="fab-note"><span class="ic" data-ic="pen-square"></span></div>
+<div class="backup-banner hidden" id="backup-banner">
+  <span class="ic" data-ic="alert-circle"></span>
+  <span class="bmsg"></span>
+  <button id="backup-now"><span class="ic" data-ic="download"></span><span>Sauvegarder</span></button>
+  <button class="rnd-btn" id="backup-close" aria-label="Fermer"><span class="ic" data-ic="x"></span></button>
+</div>
 <script src="js/data.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/app.js"></script>
