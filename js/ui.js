@@ -200,12 +200,11 @@ function collectionCard(e) {
   var c = el("div", "grid-cell"); c.appendChild(renderPoster(e, true)); c.appendChild(el("div", "title", esc(e.titre)));
   var m = (e.support || "") + (e.packaging ? " · " + e.packaging : ""); if (m) c.appendChild(el("div", "meta", esc(m)));
   c.addEventListener("click", function(ev) { if (ev.target.closest("button")) return; showCollectionDetail(e); }); return c;
-}
-
+}// ==========================================
+// 9. GALERIE D'IMAGES + ZOOM AFFICHE
 // ==========================================
-// 9. GALERIE D'IMAGES
-// ==========================================
-function openImageZoom(u) { if (!u) return; var i = $("poster-img"); if (i) i.src = u; showOverlay("poster-overlay"); }
+function openImageZoom(u) { if (!u) return; var i = $("poster-img"); if (i) { i.src = u; i.style.display = ""; } showOverlay("poster-overlay"); }
+function openPosterZoom(u) { if (!u) return; var i = $("poster-img"); if (i) { i.src = u; i.style.display = ""; } showOverlay("poster-overlay"); }
 function openGalerieSheet(galerie, cb) {
   var b = el("div"); var list = el("div"); list.style.cssText = "display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;";
   galerie.forEach(function(url, i) {
@@ -249,87 +248,37 @@ function openImageMenu(e, cb) {
 }
 
 // ==========================================
-// 11. FICHE DÉTAILLÉE COMPLÈTE (MODIFIÉE)
+// 11. FICHE DÉTAILLÉE COMPLÈTE
 // ==========================================
 function showCollectionDetail(e) {
   var body = el("div"), hd = el("div", "detail-head"), pw = el("div", "detail-poster"), po = renderPoster(e, true);
-  po.id = "d-poster"; 
-  var im = po.querySelector("img"); 
+  po.id = "d-poster";
+  var im = po.querySelector("img");
   if (im) im.addEventListener("click", function() { openPosterZoom(im.src); });
-  
-  var zb = el("div", "zoom-btn"); 
-  zb.innerHTML = '<span class="ic">' + ic("maximize-2") + "</span><span>Agrandir</span>";
-  zb.addEventListener("click", function() { openPosterZoom(im ? im.src : po.querySelector("img").src); }); 
-  po.appendChild(zb); 
-  pw.appendChild(po); 
-  hd.appendChild(pw);
-  
-  var inf = el("div"); 
-  inf.style.cssText = "flex:1;min-width:0;";
-  var h2 = el("h2", "", esc(e.titre)); 
-  h2.style.cssText = "font-family:var(--ft);font-size:21px;margin-bottom:10px;"; 
-  inf.appendChild(h2);
-  
-  var tg = el("div", "tagline"); 
-  tg.appendChild(el("span", "tag", esc(e.type))); 
-  if (e.support) tg.appendChild(el("span", "tag", esc(e.support))); 
-  inf.appendChild(tg);
-  
-  var hr = el("div", "detail-heart"); 
-  hr.appendChild(makeHeartButton(!!e.coeur, function(on) { 
-    e.coeur = on; 
-    dbPut(e).then(function() { toast(on ? "Coup de cœur" : "Coup de cœur retiré"); syncPoster(e); refreshAll(); }); 
-  })); 
-  inf.appendChild(hr);
-  
-  if (hasEp(e)) inf.appendChild(nextEpButton(e)); 
-  hd.appendChild(inf); 
-  body.appendChild(hd);
-  
+  var zb = el("div", "zoom-btn"); zb.innerHTML = '<span class="ic">' + ic("maximize-2") + "</span><span>Agrandir</span>";
+  zb.addEventListener("click", function() { openPosterZoom(im ? im.src : po.querySelector("img").src); });
+  po.appendChild(zb); pw.appendChild(po); hd.appendChild(pw);
+  var inf = el("div"); inf.style.cssText = "flex:1;min-width:0;";
+  var h2 = el("h2", "", esc(e.titre)); h2.style.cssText = "font-family:var(--ft);font-size:21px;margin-bottom:10px;"; inf.appendChild(h2);
+  var tg = el("div", "tagline"); tg.appendChild(el("span", "tag", esc(e.type))); if (e.support) tg.appendChild(el("span", "tag", esc(e.support))); inf.appendChild(tg);
+  var hr = el("div", "detail-heart"); hr.appendChild(makeHeartButton(!!e.coeur, function(on) { e.coeur = on; dbPut(e).then(function() { toast(on ? "Coup de cœur" : "Coup de cœur retiré"); syncPoster(e); refreshAll(); }); })); inf.appendChild(hr);
+  if (hasEp(e)) inf.appendChild(nextEpButton(e)); hd.appendChild(inf); body.appendChild(hd);
   function save(p, l) { p(e); dbPut(e).then(function() { toast(l); syncPoster(e); refreshAll(); }); }
-  
   var row = el("div", "form-row");
-  row.appendChild(libToggleBtn(function() { return e.inCollection; }, function(v) { 
-    e.inCollection = v; 
-    dbPut(e).then(function() { toast(v ? "Ajouté à la bibliothèque" : "Retiré de la bibliothèque"); refreshAll(); }); 
-  }));
-  row.appendChild(detailValueBtn("star", "Note", "note", e.note != null ? e.note + "/10" : "", function() { 
-    openNoteSheet(e.note, !!e.coeur, function(n, c) { 
-      updateAdvBtn("note", n != null ? n + "/10" : ""); 
-      save(function(x) { x.note = n; x.coeur = c; }, "Note enregistrée"); 
-    }); 
-  }));
-  row.appendChild(detailValueBtn("flag", "Statuts", "statuts", detailStatusLabel(e), function() { 
-    openStatusSheet({ isEnc: !!e.enCours, isVoir: !!e.aVoir, isFini: !!e.fini }, function(st) { 
-      updateAdvBtn("statuts", statusText(st)); 
-      save(function(x) { x.enCours = st.isEnc; x.aVoir = st.isVoir; x.fini = st.isFini; }, "Statuts mis à jour"); 
-    }); 
-  }));
-  row.appendChild(detailValueBtn("notebook-pen", "Journal", "journal", journalCountLabel(e), function() { 
-    openJournalSheet({ kind: "entry", e: e }, function() { updateAdvBtn("journal", journalCountLabel(e)); syncPoster(e); }); 
-  }));
-  
-  row.appendChild(detailValueBtn("calendar-check", "Date", "dateFin", dateLabel(e), function() { 
-    openDatePicker(e.dateFin || "", function(iso) { 
-      if (iso === "DELETE") {
-        save(function(x) { x.dateFin = ""; }, "Date supprimée");
-        updateAdvBtn("dateFin", "");
-      } else {
-        updateAdvBtn("dateFin", iso ? formatDate(iso) : dateLabel(e));
-        save(function(x) { x.dateFin = iso ? formatDate(iso) : todayFR(); }, "Date enregistrée");
-      }
+  row.appendChild(libToggleBtn(function() { return e.inCollection; }, function(v) { e.inCollection = v; dbPut(e).then(function() { toast(v ? "Ajouté à la bibliothèque" : "Retiré de la bibliothèque"); refreshAll(); }); }));
+  row.appendChild(detailValueBtn("star", "Note", "note", e.note != null ? e.note + "/10" : "", function() { openNoteSheet(e.note, !!e.coeur, function(n, c) { updateAdvBtn("note", n != null ? n + "/10" : ""); save(function(x) { x.note = n; x.coeur = c; }, "Note enregistrée"); }); }));
+  row.appendChild(detailValueBtn("flag", "Statuts", "statuts", detailStatusLabel(e), function() { openStatusSheet({ isEnc: !!e.enCours, isVoir: !!e.aVoir, isFini: !!e.fini }, function(st) { updateAdvBtn("statuts", statusText(st)); save(function(x) { x.enCours = st.isEnc; x.aVoir = st.isVoir; x.fini = st.isFini; }, "Statuts mis à jour"); }); }));
+  row.appendChild(detailValueBtn("notebook-pen", "Journal", "journal", journalCountLabel(e), function() { openJournalSheet({ kind: "entry", e: e }, function() { updateAdvBtn("journal", journalCountLabel(e)); syncPoster(e); }); }));
+  row.appendChild(detailValueBtn("calendar-check", "Date", "dateFin", dateLabel(e), function() {
+    openDatePicker(e.dateFin || "", function(iso) {
+      if (iso === "DELETE") { save(function(x) { x.dateFin = ""; }, "Date supprimée"); updateAdvBtn("dateFin", ""); }
+      else { updateAdvBtn("dateFin", iso ? formatDate(iso) : dateLabel(e)); save(function(x) { x.dateFin = iso ? formatDate(iso) : todayFR(); }, "Date enregistrée"); }
     }, true);
   }));
-  
-  row.appendChild(detailValueBtn("shopping-cart", "Date d'achat", "dateAchat", e.dateAchat ? formatDate(e.dateAchat) : "", function() { 
-    openDatePicker(e.dateAchat, function(iso) { 
-      if (iso === "DELETE") {
-        save(function(x) { x.dateAchat = ""; }, "Date d'achat supprimée");
-        updateAdvBtn("dateAchat", "");
-      } else {
-        updateAdvBtn("dateAchat", iso ? formatDate(iso) : ""); 
-        save(function(x) { x.dateAchat = iso || ""; x.inCollection = true; }, "Date d'achat enregistrée"); 
-      }
+  row.appendChild(detailValueBtn("shopping-cart", "Date d'achat", "dateAchat", e.dateAchat ? formatDate(e.dateAchat) : "", function() {
+    openDatePicker(e.dateAchat, function(iso) {
+      if (iso === "DELETE") { save(function(x) { x.dateAchat = ""; }, "Date d'achat supprimée"); updateAdvBtn("dateAchat", ""); }
+      else { updateAdvBtn("dateAchat", iso ? formatDate(iso) : ""); save(function(x) { x.dateAchat = iso || ""; x.inCollection = true; }, "Date d'achat enregistrée"); }
     }, true);
   }));
   body.appendChild(fieldBox("Rangement & suivi", row));
@@ -369,16 +318,23 @@ function showCollectionDetail(e) {
   body.appendChild(ac);
 
   setModal(e.titre, body, [
-    ["Modifier", "primary", function() { closeModal(); setTimeout(function(){ renderPanel(e); }, 100); }, "pen"],
+    ["Modifier", "primary", function() { renderPanel(e); }, "pen"],
     ["Supprimer", "", function() { showConfirm("Supprimer " + e.titre + " ?", "Toutes les entrées de journal seront perdues.", function() { dbDelete(e.id).then(function() { toast("Supprimé"); closeModal(); refreshAll(); }); }, "Supprimer"); }, "trash-2"]
   ]);
-}
-
-// ==========================================
+}// ==========================================
 // 12. FORMULAIRE D'ÉDITION (PANEL)
 // ==========================================
 function capturePanel() { var t = $("p-title"); if (t) ST.draft.titre = t.value; var c = $("p-comment"); if (c) ST.draft.comment = c.value; var s = $("p-sub"); if (s) ST.draft.sub = s.value; }
 function rerenderPanel() { capturePanel(); renderPanel(ST.editing, true); }
+function fillModal(t, bn, ft) {
+  var x = $("m-title"); if (x) x.textContent = t;
+  var b = $("m-body"); if (b) { b.innerHTML = ""; b.appendChild(bn); }
+  var f = $("m-foot");
+  if (f) {
+    f.innerHTML = "";
+    (ft || []).forEach(function(bt) { var n = el("button", bt[1] || ""); n.innerHTML = (bt[3] ? '<span class="ic">' + ic(bt[3]) + "</span>" : "") + "<span>" + esc(bt[0]) + "</span>"; n.addEventListener("click", bt[2]); f.appendChild(n); });
+  }
+}
 function renderPanel(en, kd) {
   ST.editing = en || null;
   if (!kd) {
@@ -402,7 +358,9 @@ function renderPanel(en, kd) {
     seg.appendChild(b);
   });
   body.appendChild(seg); body.appendChild(fh); buildForm(fh, mode);
-  setModal(en ? "Modifier l'œuvre" : "Nouvelle œuvre", body, [["Enregistrer", "primary", saveCurrentEntry, "save"], ["Annuler", "", closeModal, "x"]]);
+  fillModal(en ? "Modifier l'œuvre" : "Nouvelle œuvre", body, [["Enregistrer", "primary", saveCurrentEntry, "save"], ["Annuler", "", closeModal, "x"]]);
+  var ov = $("modal-overlay");
+  if (ov && !ov.classList.contains("on")) showOverlay("modal-overlay");
 }
 
 function buildForm(host, mode) {
@@ -413,7 +371,7 @@ function buildForm(host, mode) {
   r1.appendChild(detailValueBtn("star", "Note", "note", ST.currentNote != null ? ST.currentNote + "/10" : "", function() { openNoteSheet(ST.currentNote, ST.isCoeur, function(n, c) { ST.currentNote = n; ST.isCoeur = c; updateAdvBtn("note", n != null ? n + "/10" : ""); }); }));
   r1.appendChild(detailValueBtn("flag", "Statuts", "statuts", formStatusLabel(), function() { openStatusSheet({ isEnc: ST.isEnc, isVoir: ST.isVoir, isFini: ST.isFini }, function(st) { ST.isEnc = st.isEnc; ST.isVoir = st.isVoir; ST.isFini = st.isFini; updateAdvBtn("statuts", formStatusLabel()); }); }));
   r1.appendChild(detailValueBtn("notebook-pen", "Journal", "journal", ST.draftJournal.length ? ST.draftJournal.length + " entrée" + (ST.draftJournal.length > 1 ? "s" : "") : "", function() { openJournalSheet({ kind: "draft" }, function() { updateAdvBtn("journal", ST.draftJournal.length ? ST.draftJournal.length + " entrée" + (ST.draftJournal.length > 1 ? "s" : "") : ""); }); }));
-  r1.appendChild(detailValueBtn("calendar-check", "Date", "dateFin", ST.draft.date ? formatDate(ST.draft.date) : todayFR(), function() { openDatePicker(ST.draft.date, function(iso) { ST.draft.date = iso || ""; updateAdvBtn("dateFin", ST.draft.date ? formatDate(ST.draft.date) : todayFR()); }); }));
+  r1.appendChild(detailValueBtn("calendar-check", "Date", "dateFin", ST.draft.date ? formatDate(ST.draft.date) : todayFR(), function() { openDatePicker(ST.draft.date, function(iso) { if (iso === "DELETE") { ST.draft.date = ""; updateAdvBtn("dateFin", todayFR()); } else { ST.draft.date = iso || ""; updateAdvBtn("dateFin", ST.draft.date ? formatDate(ST.draft.date) : todayFR()); } }, true); }));
   host.appendChild(fieldBox("Rangement & suivi", r1));
   var ci = el("textarea"); ci.id = "p-comment"; ci.value = ST.draft.comment; ci.placeholder = "Ton avis…"; host.appendChild(fieldBox("Commentaire", ci));
   var ar = el("div", "poster-row"), pv = el("img"); pv.id = "p-prev"; pv.src = ST.panelPoster || NO_POSTER; pv.addEventListener("click", function() { openPosterZoom(pv.src); });
@@ -432,13 +390,14 @@ function buildForm(host, mode) {
     assistRow.appendChild(el("span", "flabel", "Assistant de saisie"));
     var assistBtn = btn("Ouvrir l'assistant", "wand-2", "wide", function() {
       openSmartScrapeAssistant(ST.advFields.ean || "", ST.draft.titre || "", function(data) {
-        if (data.titre) { ST.draft.titre = data.titre; $("p-title").value = data.titre; }
+        if (data.titre) { ST.draft.titre = data.titre; var t = $("p-title"); if (t) t.value = data.titre; }
         if (data.support) { ST.advFields.support = data.support; updateAdvBtn("support", data.support); }
         if (data.packaging) { ST.advFields.packaging = data.packaging; updateAdvBtn("packaging", data.packaging); }
-        if (data.posterUrl) { ST.panelPoster = data.posterUrl; $("p-prev").src = data.posterUrl; makeThumb(data.posterUrl).then(t => ST.panelThumb = t); }
+        if (data.ean) { ST.advFields.ean = data.ean; updateAdvBtn("ean", data.ean); }
+        if (data.posterUrl) { ST.panelPoster = data.posterUrl; var p = $("p-prev"); if (p) p.src = data.posterUrl; makeThumb(data.posterUrl).then(function(t) { ST.panelThumb = t; }); }
         if (data.formattedDescription) {
-          var existing = ST.advFields.contenu || "";
-          ST.advFields.contenu = existing ? (existing + "\n\n" + data.formattedDescription) : data.formattedDescription;
+          var ex = ST.advFields.contenu || "";
+          ST.advFields.contenu = ex ? (ex + "\n\n" + data.formattedDescription) : data.formattedDescription;
           updateAdvBtn("contenu", "Voir");
         }
         toast("Infos ajoutées à la description !");
@@ -452,7 +411,7 @@ function buildForm(host, mode) {
     host.appendChild(fieldBox("Galerie", galBtn));
 
     var r2 = el("div", "form-row");
-    r2.appendChild(detailValueBtn("shopping-cart", "Date d'achat", "dateAchat", ST.advFields.dateAchat ? formatDate(ST.advFields.dateAchat) : "", function() { openDatePicker(ST.advFields.dateAchat, function(iso) { ST.advFields.dateAchat = iso || ""; if (iso) markCollection(); updateAdvBtn("dateAchat", iso ? formatDate(iso) : ""); }); }));
+    r2.appendChild(detailValueBtn("shopping-cart", "Date d'achat", "dateAchat", ST.advFields.dateAchat ? formatDate(ST.advFields.dateAchat) : "", function() { openDatePicker(ST.advFields.dateAchat, function(iso) { if (iso === "DELETE") { ST.advFields.dateAchat = ""; updateAdvBtn("dateAchat", ""); } else { ST.advFields.dateAchat = iso || ""; if (iso) markCollection(); updateAdvBtn("dateAchat", iso ? formatDate(iso) : ""); } }, true); }));
     r2.appendChild(detailValueBtn("monitor", "Plateforme", "plateforme", ST.advFields.plateforme, function() { openListSheet("plateformes", ST.advFields.plateforme, function(v) { ST.advFields.plateforme = v; markCollection(); updateAdvBtn("plateforme", v); }); }));
     r2.appendChild(detailValueBtn("box", "Support", "support", ST.advFields.support, function() { openListSheet("supports", ST.advFields.support, function(v) { ST.advFields.support = v; markCollection(); updateAdvBtn("support", v); }); }));
     r2.appendChild(detailValueBtn("package-open", "Packaging", "packaging", ST.advFields.packaging, function() { openListSheet("packagings", ST.advFields.packaging, function(v) { ST.advFields.packaging = v; markCollection(); updateAdvBtn("packaging", v); }); }));
@@ -469,7 +428,9 @@ function buildForm(host, mode) {
     });
     host.appendChild(fieldBox("Recherche externe", sl));
   }
-}// ==========================================
+}
+
+// ==========================================
 // 13. LISTES PERSONNALISÉES
 // ==========================================
 function choiceRow(it, sel, pick, del) {
@@ -502,7 +463,7 @@ function openEditionSheet(c, p) { var b = el("div"), i = el("input"); i.placehol
 function openEanSheet(c, p) {
   var b = el("div"), i = el("input"); i.placeholder = "Code EAN"; i.inputMode = "numeric"; i.value = c || ""; b.appendChild(i);
   if (c && /^\d{8,14}$/.test(c)) {
-    var searchBtn = btn("🔎 Rechercher cet EAN", "search", "wide", function() { window.open("https://www.ean-search.org/ean/" + c, "_blank"); });
+    var searchBtn = btn("Rechercher cet EAN", "search", "wide", function() { window.open("https://www.ean-search.org/ean/" + c, "_blank"); });
     searchBtn.style.marginTop = "12px"; searchBtn.style.background = "var(--s2)"; b.appendChild(searchBtn);
   }
   var sc = btn("Scanner le code-barres", "camera", "wide", function() { startEAN(function(cd) { i.value = cd; }); }); sc.style.marginTop = "12px"; b.appendChild(sc);
@@ -511,33 +472,21 @@ function openEanSheet(c, p) {
 function openUrlSheet(c, p) { var b = el("div"), i = el("input"); i.placeholder = "URL de la fiche"; i.value = c || ""; b.appendChild(i); setSheet("URL", b, [["Valider", "primary", function() { p(i.value.trim()); closeMenu(); }, "check"], ["Annuler", "", closeMenu, "x"]]); }
 
 // ==========================================
-// 14. NOTES ET STATUTS (MODIFIÉ)
+// 14. NOTES ET STATUTS
 // ==========================================
 function openNoteSheet(cur, co, cb) {
   var sel = cur, coe = !!co, b = el("div"), ng = el("div", "note-grid");
   function paint() { ng.querySelectorAll(".note-btn").forEach(function(x) { var n = +x.dataset.n, c = noteColors(n); if (n === sel && c) { x.style.background = c[0]; x.style.color = c[1]; x.style.borderColor = "transparent"; } else { x.style.background = ""; x.style.color = ""; x.style.borderColor = ""; } x.classList.toggle("sel", n === sel); }); }
   for (var n = 1; n <= 10; n++) { (function(n) { var c = el("button", "note-btn", "<span>" + n + "</span>"); c.dataset.n = n; c.addEventListener("click", function() { sel = n; paint(); }); ng.appendChild(c); })(n); }
   b.appendChild(ng); paint();
-  
-  var hr = el("div", "heart-row"); 
+  var hr = el("div", "heart-row");
   var heartBtn = makeHeartButton(coe, function(on) { coe = on; });
-  hr.appendChild(heartBtn); 
-  b.appendChild(hr);
-  
-  // CORRECTION : Bouton pour retirer note ET cœur
+  hr.appendChild(heartBtn); b.appendChild(hr);
   if (sel != null || coe) {
-    var rb = btn("Retirer note et cœur", "x", "wide", function() { 
-      sel = null; 
-      coe = false; 
-      heartBtn.classList.remove("on"); 
-      paint(); 
-    });
-    rb.style.marginTop = "14px"; 
-    rb.style.color = "var(--fav)";
-    rb.style.borderColor = "var(--fav)";
+    var rb = btn("Retirer", "x", "wide", function() { sel = null; coe = false; heartBtn.classList.remove("on"); paint(); });
+    rb.style.marginTop = "14px"; rb.style.color = "var(--fav)"; rb.style.borderColor = "var(--fav)";
     b.appendChild(rb);
   }
-  
   setSheet("Note /10", b, [["Valider", "primary", function() { cb(sel, coe); closeMenu(); }, "check"], ["Annuler", "", closeMenu, "x"]]);
 }
 function openStatusSheet(st, cb) {
@@ -549,10 +498,8 @@ function openStatusSheet(st, cb) {
   }
   mk("isEnc", "En cours", "hourglass"); mk("isVoir", "À voir", "eye"); mk("isFini", "Vu / Fini", "check");
   setSheet("Statuts", b, [["Valider", "primary", function() { cb(s); closeMenu(); }, "check"], ["Annuler", "", closeMenu, "x"]]);
-}
-
-// ==========================================
-// 15. JOURNAL
+}// ==========================================
+// 15. JOURNAL (FEUILLE PAR ŒUVRE / BROUILLON)
 // ==========================================
 function getJournalArr(d) { return d.kind === "draft" ? ST.draftJournal : (d.e.journal || (d.e.journal = [])); }
 function openJournalSheet(d, ac) {
@@ -565,7 +512,12 @@ function openJournalSheet(d, ac) {
       var r = el("div", "jrow"), t = el("div", "jb"); t.style.cursor = "pointer"; t.innerHTML = '<div class="jt">' + esc(entryTag(x)) + '</div><div class="jx">' + esc(x.text || "") + "</div>";
       if (d.kind === "entry") t.addEventListener("click", function() { closeMenu(); openReaderForEntry(d.e, i); });
       var ed = el("button"); ed.setAttribute("aria-label", "Modifier"); ed.innerHTML = '<span class="ic">' + ic("pen") + "</span>"; ed.addEventListener("click", function() { quickNoteOpen(d.kind === "entry" ? d.e : null, x.text, x.kind, i, d); });
-      var dl = el("button"); dl.setAttribute("aria-label", "Supprimer"); dl.innerHTML = '<span class="ic">' + ic("trash-2") + "</span>"; dl.addEventListener("click", function() { showConfirm("Supprimer cette entrée ?", "", function() { a.splice(i, 1); if (d.kind === "entry") dbPut(d.e).then(function() { toast("Supprimée"); rb(); refreshAll(); }); else rb(); }, "Supprimer"); });
+      // SUPPRESSION DIRECTE, SANS CONFIRMATION (entrée de journal)
+      var dl = el("button"); dl.setAttribute("aria-label", "Supprimer"); dl.innerHTML = '<span class="ic">' + ic("trash-2") + "</span>"; dl.addEventListener("click", function() {
+        a.splice(i, 1);
+        if (d.kind === "entry") dbPut(d.e).then(function() { toast("Supprimée"); rb(); refreshAll(); });
+        else rb();
+      });
       r.appendChild(t); r.appendChild(ed); r.appendChild(dl); list.appendChild(r);
     });
     if (ac) ac();
@@ -645,12 +597,20 @@ function openEntryPicker(cb) {
     if (q) { var raw = inp.value.trim(), exact = arr.some(function(e) { return norm(e.titre) === q; }); if (!exact && raw) { var cr = el("div", "radio-opt"); cr.innerHTML = '<span class="dot"></span><span class="lbl">Créer « ' + esc(raw) + ' »</span>'; cr.addEventListener("click", function() { select(cr, { isNew: true, titre: raw, type: ST.currentType || "Livre" }); }); list.appendChild(cr); } }
   }
   inp.addEventListener("input", rebuild); rebuild(); setSheet("Choisir une œuvre", wrap, [["Valider", "primary", function() { closeMenu(); cb(chosen); }, "check"], ["Annuler", "", function() { closeMenu(); cb(undefined); }, "x"]]);
+}// ==========================================
+// 18. CALENDRIER (avec bouton supprimer discret)
+// ==========================================
+function entriesByDay() {
+  var o = {};
+  ST.entries.forEach(function(en) {
+    (en.journal || []).forEach(function(x) {
+      if (!x.at) return;
+      var t = new Date(x.at);
+      o[t.getFullYear() + "-" + pad2(t.getMonth() + 1) + "-" + pad2(t.getDate())] = 1;
+    });
+  });
+  return o;
 }
-
-// ==========================================
-// 18. CALENDRIER (MODIFIÉ AVEC BOUTON SUPPRIMER)
-// ==========================================
-function entriesByDay() { var o = {}; ST.entries.forEach(function(en) { (en.journal || []).forEach(function(x) { if (!x.at) return; var t = new Date(x.at); o[t.getFullYear() + "-" + pad2(t.getMonth() + 1) + "-" + pad2(t.getDate())] = 1; }); }); return o; }
 
 function openDatePicker(init, cb, allowDelete) {
   ST.calMode = "pick";
@@ -666,38 +626,62 @@ function openDatePicker(init, cb, allowDelete) {
 
 function updateCalendarDeleteButton() {
   var calOverlay = $("calendar-overlay");
-  var existingDel = calOverlay.querySelector(".cal-delete-btn");
-  if(existingDel) existingDel.remove();
+  if (!calOverlay) return;
+  var old = calOverlay.querySelector(".cal-del-wrap");
+  if (old) old.remove();
+  if (!(ST.calAllowDelete && ST.calPickCb)) return;
 
-  if (ST.calAllowDelete && ST.calPickCb && ST.calSel && ST.calSel.d) {
-     var delBtn = el("button", "cal-delete-btn");
-     delBtn.innerHTML = '<span class="ic">' + ic("trash-2") + '</span><span>Supprimer la date</span>';
-     delBtn.style.cssText = "width:calc(100% - 40px); margin:10px 20px 20px 20px; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; gap:8px;";
-     delBtn.addEventListener("click", function() {
-        hideOverlay("calendar-overlay");
-        if (ST.calPickCb) ST.calPickCb("DELETE");
-        ST.calPickCb = null;
-     });
-     calOverlay.appendChild(delBtn);
-  }
+  var wrap = el("div", "cal-del-wrap");
+  wrap.style.cssText = "display:flex; justify-content:flex-end; padding:8px 16px 16px 16px;";
+  var delBtn = el("button", "sq-btn");
+  delBtn.setAttribute("aria-label", "Supprimer la date");
+  delBtn.innerHTML = '<span class="ic">' + ic("trash-2") + "</span>";
+  delBtn.style.cssText = "width:40px; height:40px; min-width:40px; padding:0; border-radius:50%; background:#e74c3c; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.35);";
+  delBtn.addEventListener("click", function() {
+    hideOverlay("calendar-overlay");
+    if (ST.calPickCb) ST.calPickCb("DELETE");
+    ST.calPickCb = null;
+  });
+  wrap.appendChild(delBtn);
+  calOverlay.appendChild(wrap);
 }
 
-function openJournalCalendar() { ST.calMode = "journal"; if (!ST.calSel) { var n = new Date(); ST.calSel = { y: n.getFullYear(), mo: n.getMonth(), d: n.getDate() }; } ST.calView = { y: ST.calSel.y, mo: ST.calSel.mo }; ST.calDate = new Date(ST.calSel.y, ST.calSel.mo, ST.calSel.d, 12); showOverlay("calendar-overlay"); renderCalendar(); }
+function openJournalCalendar() {
+  ST.calMode = "journal";
+  if (!ST.calSel) { var n = new Date(); ST.calSel = { y: n.getFullYear(), mo: n.getMonth(), d: n.getDate() }; }
+  ST.calView = { y: ST.calSel.y, mo: ST.calSel.mo };
+  ST.calDate = new Date(ST.calSel.y, ST.calSel.mo, ST.calSel.d, 12);
+  showOverlay("calendar-overlay");
+  renderCalendar();
+  updateCalendarDeleteButton();
+}
+
 function setCalendarMonthYear(y, mo) {
-  if (ST.calMode === "journal") { ST.calView = { y: y, mo: mo }; var ds = new Date(y, mo + 1, 0).getDate(); ST.calDate = new Date(y, mo, Math.min(ST.calSel ? ST.calSel.d : 1, ds), 12); }
-  else { var ds2 = new Date(y, mo + 1, 0).getDate(); ST.calSel = { y: y, mo: mo, d: Math.min(ST.calSel ? ST.calSel.d : 1, ds2) }; ST.calDate = new Date(y, mo, ST.calSel.d, 12); }
+  if (ST.calMode === "journal") {
+    ST.calView = { y: y, mo: mo };
+    var ds = new Date(y, mo + 1, 0).getDate();
+    ST.calDate = new Date(y, mo, Math.min(ST.calSel ? ST.calSel.d : 1, ds), 12);
+  } else {
+    var ds2 = new Date(y, mo + 1, 0).getDate();
+    ST.calSel = { y: y, mo: mo, d: Math.min(ST.calSel ? ST.calSel.d : 1, ds2) };
+    ST.calDate = new Date(y, mo, ST.calSel.d, 12);
+  }
   renderCalendar();
   updateCalendarDeleteButton();
 }
 
 function renderCalendar() {
   var cal = $("cal-grid"); if (!cal) return; cal.innerHTML = "";
-  var dw = $("cal-dow"); if (dw) { dw.innerHTML = ""; ["L", "M", "M", "J", "V", "S", "D"].forEach(function(d) { dw.appendChild(el("span", "", "<span>" + d + "</span>")); }); }
-  var y, mo; if (ST.calMode === "journal" && ST.calView) { y = ST.calView.y; mo = ST.calView.mo; } else { y = ST.calSel.y; mo = ST.calSel.mo; }
+  var dw = $("cal-dow");
+  if (dw) { dw.innerHTML = ""; ["L", "M", "M", "J", "V", "S", "D"].forEach(function(d) { dw.appendChild(el("span", "", "<span>" + d + "</span>")); }); }
+  var y, mo;
+  if (ST.calMode === "journal" && ST.calView) { y = ST.calView.y; mo = ST.calView.mo; }
+  else { y = ST.calSel.y; mo = ST.calSel.mo; }
   var mb = $("cal-month-btn"), yb = $("cal-year-btn"), td = new Date();
   if (mb) { mb.textContent = MONTHS[mo]; mb.classList.toggle("now", mo === td.getMonth() && y === td.getFullYear()); }
   if (yb) { yb.textContent = y; yb.classList.toggle("now", y === td.getFullYear()); }
-  var first = (new Date(y, mo, 1).getDay() + 6) % 7, days = new Date(y, mo + 1, 0).getDate(), weeks = Math.ceil((first + days) / 7), has = ST.calMode === "journal" ? entriesByDay() : {}, i, d;
+  var first = (new Date(y, mo, 1).getDay() + 6) % 7, days = new Date(y, mo + 1, 0).getDate(), weeks = Math.ceil((first + days) / 7);
+  var has = ST.calMode === "journal" ? entriesByDay() : {}, i, d;
   for (i = 0; i < first; i++) cal.appendChild(el("div", "cal-day empty"));
   for (d = 1; d <= days; d++) {
     (function(d) {
@@ -705,84 +689,259 @@ function renderCalendar() {
       if (ST.calMode === "journal" && !nt) cls += " muted";
       if (d === td.getDate() && mo === td.getMonth() && y === td.getFullYear()) cls += " today";
       if (ST.calSel && ST.calSel.y === y && ST.calSel.mo === mo && ST.calSel.d === d) cls += " sel";
-      var c = el("div", cls, "<span>" + d + "</span>"); if (ST.calMode === "journal" && nt) c.classList.add("has-entry");
+      var c = el("div", cls, "<span>" + d + "</span>");
+      if (ST.calMode === "journal" && nt) c.classList.add("has-entry");
       c.addEventListener("click", function() {
-        if (ST.calMode === "pick") { hideOverlay("calendar-overlay"); if (ST.calPickCb) ST.calPickCb(y + "-" + pad2(mo + 1) + "-" + pad2(d)); ST.calPickCb = null; }
-        else { ST.calSel = { y: y, mo: mo, d: d }; ST.calDate = new Date(y, mo, d, 12); hideOverlay("calendar-overlay"); renderJournal(); }
+        if (ST.calMode === "pick") {
+          hideOverlay("calendar-overlay");
+          if (ST.calPickCb) ST.calPickCb(y + "-" + pad2(mo + 1) + "-" + pad2(d));
+          ST.calPickCb = null;
+        } else {
+          ST.calSel = { y: y, mo: mo, d: d };
+          ST.calDate = new Date(y, mo, d, 12);
+          hideOverlay("calendar-overlay");
+          renderJournal();
+        }
       });
       cal.appendChild(c);
     })(d);
   }
-  var fill = weeks * 7 - first - days; for (i = 0; i < fill; i++) cal.appendChild(el("div", "cal-day empty"));
+  var fill = weeks * 7 - first - days;
+  for (i = 0; i < fill; i++) cal.appendChild(el("div", "cal-day empty"));
 }
-function openMonthPicker() { var y = (ST.calMode === "journal" && ST.calView) ? ST.calView.y : ST.calSel.y, b = el("div", "month-grid"); MONTHS.forEach(function(m, i) { var x = el("button", "cal-pick-btn", "<span>" + m + "</span>"); x.addEventListener("click", function() { setCalendarMonthYear(y, i); closeMenu(); }); b.appendChild(x); }); setSheet("Mois", b, [["Retour", "", closeMenu, "x"]]); }
+
+function openMonthPicker() {
+  var y = (ST.calMode === "journal" && ST.calView) ? ST.calView.y : ST.calSel.y, b = el("div", "month-grid");
+  MONTHS.forEach(function(m, i) {
+    var x = el("button", "cal-pick-btn", "<span>" + m + "</span>");
+    x.addEventListener("click", function() { setCalendarMonthYear(y, i); closeMenu(); });
+    b.appendChild(x);
+  });
+  setSheet("Mois", b, [["Retour", "", closeMenu, "x"]]);
+}
+
 function openYearPicker() {
   var cur = (ST.calMode === "journal" && ST.calView) ? ST.calView.y : ST.calSel.y, grp = Math.floor(cur / 16) * 16, b = el("div");
   function rn() {
-    b.innerHTML = ""; var nv = el("div", "year-nav"), lf = el("button", "rnd-btn"); lf.setAttribute("aria-label", "Années précédentes"); lf.innerHTML = '<span class="ic">' + ic("chevron-left") + "</span>"; lf.disabled = grp <= 1900; lf.addEventListener("click", function() { grp -= 16; rn(); });
-    var rt = el("button", "rnd-btn"); rt.setAttribute("aria-label", "Années suivantes"); rt.innerHTML = '<span class="ic">' + ic("chevron-right") + "</span>"; rt.disabled = grp >= 2100; rt.addEventListener("click", function() { grp += 16; rn(); });
+    b.innerHTML = "";
+    var nv = el("div", "year-nav"), lf = el("button", "rnd-btn");
+    lf.setAttribute("aria-label", "Années précédentes");
+    lf.innerHTML = '<span class="ic">' + ic("chevron-left") + "</span>";
+    lf.disabled = grp <= 1900;
+    lf.addEventListener("click", function() { grp -= 16; rn(); });
+    var rt = el("button", "rnd-btn");
+    rt.setAttribute("aria-label", "Années suivantes");
+    rt.innerHTML = '<span class="ic">' + ic("chevron-right") + "</span>";
+    rt.disabled = grp >= 2100;
+    rt.addEventListener("click", function() { grp += 16; rn(); });
     nv.appendChild(lf); nv.appendChild(rt); b.appendChild(nv);
-    var g = el("div", "year-grid"); for (var i = 0; i < 16; i++) { (function(yr) { var x = el("button", "cal-pick-btn" + (yr === cur ? " on" : ""), "<span>" + yr + "</span>"); if (yr < 1900 || yr > 2100) x.disabled = true; x.addEventListener("click", function() { setCalendarMonthYear(yr, (ST.calMode === "journal" && ST.calView) ? ST.calView.mo : ST.calSel.mo); closeMenu(); }); g.appendChild(x); })(grp + i); }
+    var g = el("div", "year-grid");
+    for (var i = 0; i < 16; i++) {
+      (function(yr) {
+        var x = el("button", "cal-pick-btn" + (yr === cur ? " on" : ""), "<span>" + yr + "</span>");
+        if (yr < 1900 || yr > 2100) x.disabled = true;
+        x.addEventListener("click", function() { setCalendarMonthYear(yr, (ST.calMode === "journal" && ST.calView) ? ST.calView.mo : ST.calSel.mo); closeMenu(); });
+        g.appendChild(x);
+      })(grp + i);
+    }
     b.appendChild(g);
   }
-  rn(); setSheet("Année", b, [["Retour", "", closeMenu, "x"]]);
+  rn();
+  setSheet("Année", b, [["Retour", "", closeMenu, "x"]]);
 }
 
 // ==========================================
-// 19. AFFICHAGE DU JOURNAL
+// 19. JOURNAL (suivi épisode rapide + suppression sans confirmation)
 // ==========================================
+function markEpSeen(en, s, e) {
+  if (!en.journal) en.journal = [];
+  var exists = en.journal.some(function(x) { return x.kind === "ep" && x.s === s && x.e === e; });
+  if (!exists) en.journal.push({ kind: "ep", s: s, e: e, note: null, text: "Vu", at: Date.now() });
+  dbPut(en).then(function() { toast("S" + pad2(s) + "E" + pad2(e) + " marqué vu"); refreshAll(); });
+}
+
+function openQuickEpSheet(en) {
+  var n = nextEpFor(en), b = el("div");
+  b.style.cssText = "display:flex; flex-direction:column; gap:12px;";
+  var info = el("div");
+  info.style.cssText = "text-align:center; font-size:15px; color:var(--tx); margin-bottom:4px;";
+  info.innerHTML = "Prochain épisode : <b>S" + pad2(n.s) + "E" + pad2(n.e) + "</b>";
+  b.appendChild(info);
+  var b1 = btn("Marquer vu", "check", "primary wide", function() {
+    markEpSeen(en, n.s, n.e);
+    closeMenu();
+  });
+  var b2 = btn("Marquer vu + avis", "notebook-pen", "wide", function() {
+    closeMenu();
+    setTimeout(function() {
+      quickNoteOpen(en, "", "ep", null, { kind: "entry", e: en });
+      var ss = $("qn-s"), ee = $("qn-e");
+      if (ss) ss.value = n.s;
+      if (ee) ee.value = n.e;
+      syncQnKind();
+    }, 60);
+  });
+  b.appendChild(b1); b.appendChild(b2);
+  setSheet("Suivi : " + en.titre, b, [["Fermer", "", closeMenu, "x"]]);
+}
+
 function renderEncours() {
   var r = $("j-encours"); if (!r) return; r.innerHTML = "";
   var enc = ST.entries.filter(function(e) { return e.enCours || e.aVoir || e.note != null || (e.comment || "").trim() || (e.journal || []).length; });
   if (!enc.length) { r.style.display = "none"; return; } r.style.display = "";
-  enc.sort(function(a, b) { var la = 0, lb = 0; (a.journal || []).forEach(function(x) { if (x.at > la) la = x.at; }); (b.journal || []).forEach(function(x) { if (x.at > lb) lb = x.at; }); if (lb !== la) return lb - la; return (b.dateAjout || "").localeCompare(a.dateAjout || ""); });
-  enc.forEach(function(e) { var m = el("div", "mini"); m.appendChild(renderPoster(e, false)); m.appendChild(el("div", "t", esc(e.titre))); var s = e.fini ? "Fini" : e.aVoir ? "À voir" : e.enCours ? "En cours" : "—"; m.appendChild(el("div", "s", esc(s))); m.addEventListener("click", function() { showCollectionDetail(e); }); r.appendChild(m); });
+  enc.sort(function(a, b) {
+    var la = 0, lb = 0;
+    (a.journal || []).forEach(function(x) { if (x.at > la) la = x.at; });
+    (b.journal || []).forEach(function(x) { if (x.at > lb) lb = x.at; });
+    if (lb !== la) return lb - la;
+    return (b.dateAjout || "").localeCompare(a.dateAjout || "");
+  });
+  enc.forEach(function(e) {
+    var m = el("div", "mini");
+    m.appendChild(renderPoster(e, false));
+    m.appendChild(el("div", "t", esc(e.titre)));
+    var s = e.fini ? "Fini" : e.aVoir ? "À voir" : e.enCours ? "En cours" : "—";
+    m.appendChild(el("div", "s", esc(s)));
+    if (hasEp(e)) {
+      var n = nextEpFor(e);
+      var eb = el("button", "ep-quick-btn");
+      eb.innerHTML = '<span class="ic">' + ic("check") + "</span><span>S" + pad2(n.s) + "E" + pad2(n.e) + "</span>";
+      eb.style.cssText = "margin-top:6px; width:100%; padding:6px 8px; border-radius:8px; border:1px solid var(--bd); background:var(--s2); color:var(--acc); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;";
+      eb.addEventListener("click", function(ev) { ev.stopPropagation(); openQuickEpSheet(e); });
+      m.appendChild(eb);
+    }
+    m.addEventListener("click", function() { showCollectionDetail(e); });
+    r.appendChild(m);
+  });
 }
+
 function renderJournal() {
   if (!ST.calSel) { var n = new Date(); ST.calSel = { y: n.getFullYear(), mo: n.getMonth(), d: n.getDate() }; }
-  var y = ST.calSel.y, mo = ST.calSel.mo, d = ST.calSel.d, bt = $("bilan-title"); if (bt) bt.textContent = d + " " + MONTHS_MIN[mo] + " " + y;
-  var sh = document.querySelector("#view-journal .sec-head.sticky span:last-child"); if (sh) sh.textContent = "Notes du jour"; renderEncours();
-  var feed = []; ST.entries.forEach(function(en) { (en.journal || []).forEach(function(x, ix) { var t = x.at ? new Date(x.at) : null; if (t && t.getFullYear() === y && t.getMonth() === mo && t.getDate() === d) feed.push({ e: en, x: x, ix: ix, at: x.at || 0 }); }); });
+  var y = ST.calSel.y, mo = ST.calSel.mo, d = ST.calSel.d, bt = $("bilan-title");
+  if (bt) bt.textContent = d + " " + MONTHS_MIN[mo] + " " + y;
+  var sh = document.querySelector("#view-journal .sec-head.sticky span:last-child");
+  if (sh) sh.textContent = "Notes du jour";
+  renderEncours();
+  var feed = [];
+  ST.entries.forEach(function(en) {
+    (en.journal || []).forEach(function(x, ix) {
+      var t = x.at ? new Date(x.at) : null;
+      if (t && t.getFullYear() === y && t.getMonth() === mo && t.getDate() === d) feed.push({ e: en, x: x, ix: ix, at: x.at || 0 });
+    });
+  });
   feed.sort(function(a, b) { return b.at - a.at; });
   var f = $("j-feed"); if (!f) return; f.innerHTML = "";
   if (!feed.length) { f.appendChild(emptyBox("book-open", "Aucune entrée ce jour.")); return; }
   feed.slice(0, 80).forEach(function(it) {
-    var item = el("div", "jentry"), pd = el("div", "poster"), pi = el("img"); pi.src = it.e.posterThumb || it.e.posterUrl || NO_POSTER; pd.appendChild(pi); pd.addEventListener("click", function(ev) { ev.stopPropagation(); showCollectionDetail(it.e); }); item.appendChild(pd);
-    var b = el("div", "content"); b.appendChild(el("div", "time", esc(entryTag(it.x))));
-    var tx = el("div", "text", esc(truncate(it.x.text || "", 90))); tx.addEventListener("click", function(ev) { ev.stopPropagation(); openReaderForEntry(it.e, it.ix); }); b.appendChild(tx); b.appendChild(el("div", "title", esc(it.e.titre))); item.appendChild(b);
-    var ac = el("div", "acts"), ed = el("button"); ed.setAttribute("aria-label", "Modifier"); ed.innerHTML = '<span class="ic">' + ic("pen") + "</span>"; ed.addEventListener("click", function(ev) { ev.stopPropagation(); quickNoteOpen(it.e, it.x.text, it.x.kind, it.ix, { kind: "entry", e: it.e }); });
-    var dl = el("button", "del"); dl.setAttribute("aria-label", "Supprimer"); dl.innerHTML = '<span class="ic">' + ic("trash-2") + "</span>"; dl.addEventListener("click", function(ev) { ev.stopPropagation(); showConfirm("Supprimer cette entrée ?", "", function() { it.e.journal.splice(it.ix, 1); dbPut(it.e).then(function() { toast("Entrée supprimée"); refreshAll(); }); }, "Supprimer"); });
-    ac.appendChild(ed); ac.appendChild(dl); item.appendChild(ac); item.addEventListener("click", function() { openReaderForEntry(it.e, it.ix); }); f.appendChild(item);
+    var item = el("div", "jentry"), pd = el("div", "poster"), pi = el("img");
+    pi.src = it.e.posterThumb || it.e.posterUrl || NO_POSTER;
+    pd.appendChild(pi);
+    pd.addEventListener("click", function(ev) { ev.stopPropagation(); showCollectionDetail(it.e); });
+    item.appendChild(pd);
+    var b = el("div", "content");
+    b.appendChild(el("div", "time", esc(entryTag(it.x))));
+    var tx = el("div", "text", esc(truncate(it.x.text || "", 90)));
+    tx.addEventListener("click", function(ev) { ev.stopPropagation(); openReaderForEntry(it.e, it.ix); });
+    b.appendChild(tx);
+    b.appendChild(el("div", "title", esc(it.e.titre)));
+    item.appendChild(b);
+    var ac = el("div", "acts"), ed = el("button");
+    ed.setAttribute("aria-label", "Modifier");
+    ed.innerHTML = '<span class="ic">' + ic("pen") + "</span>";
+    ed.addEventListener("click", function(ev) { ev.stopPropagation(); quickNoteOpen(it.e, it.x.text, it.x.kind, it.ix, { kind: "entry", e: it.e }); });
+    // Suppression directe, sans confirmation
+    var dl = el("button", "del");
+    dl.setAttribute("aria-label", "Supprimer");
+    dl.innerHTML = '<span class="ic">' + ic("trash-2") + "</span>";
+    dl.addEventListener("click", function(ev) {
+      ev.stopPropagation();
+      it.e.journal.splice(it.ix, 1);
+      dbPut(it.e).then(function() { toast("Entrée supprimée"); refreshAll(); });
+    });
+    ac.appendChild(ed); ac.appendChild(dl); item.appendChild(ac);
+    item.addEventListener("click", function() { openReaderForEntry(it.e, it.ix); });
+    f.appendChild(item);
   });
 }
-function injectJournalControls() { var cal = $("journal-cal-btn"); if (!cal || $("journal-today-btn")) return; var b = el("button", "sq-btn"); b.id = "journal-today-btn"; b.setAttribute("aria-label", "Revenir à aujourd'hui"); b.innerHTML = '<span class="ic">' + ic("clock") + "</span>"; b.addEventListener("click", function() { var n = new Date(); ST.calSel = { y: n.getFullYear(), mo: n.getMonth(), d: n.getDate() }; ST.calView = { y: n.getFullYear(), mo: n.getMonth() }; ST.calDate = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 12); renderJournal(); toast("Aujourd'hui"); }); if (cal.parentNode) cal.parentNode.insertBefore(b, cal.nextSibling); }
-function injectFloatingNoteBtn() { if (!$("fab-note")) { var b = el("button", "fab-note hidden"); b.id = "fab-note"; b.setAttribute("aria-label", "Note rapide"); b.innerHTML = '<span class="ic">' + ic("notebook-pen") + "</span>"; b.addEventListener("click", function() { quickNoteOpen(null, "", "time", null, { kind: "global" }); }); document.body.appendChild(b); } injectJournalControls(); }
-function updateFabVisibility() { var b = $("fab-note"); if (b) b.classList.toggle("hidden", ST.view !== "journal"); }
-function injectBackupBanner() {
-  var s = settingsLoad(), days = s.alertBackupDays || 14, last = parseInt(localStorage.getItem("last_gh_backup") || localStorage.getItem("last_backup") || "0", 10), mn = document.querySelector("main"); if (!mn) return;
-  var od = $("backup-banner"); if (od) od.remove(); if (sessionStorage.getItem("bb_dismissed") === "1") return;
-  var age = last ? (Date.now() - last) / 86400000 : 9999; if (age < days) return;
-  var b = el("div", "backup-banner"); b.id = "backup-banner"; b.innerHTML = '<span class="ic">' + ic("alert") + "</span><span>Ça fait " + (last ? Math.floor(age) + " jour(s)" : "toujours") + " sans sauvegarde. Pense à exporter.</span>";
-  var go = el("button", ""); go.innerHTML = "<span>Sauvegarder</span>"; go.addEventListener("click", function() { openOptSave(); });
-  var cl = el("button", "bb-close"); cl.setAttribute("aria-label", "Ignorer"); cl.innerHTML = '<span class="ic">' + ic("x") + "</span>"; cl.addEventListener("click", function() { sessionStorage.setItem("bb_dismissed", "1"); b.remove(); });
-  b.appendChild(go); b.appendChild(cl); mn.insertBefore(b, mn.firstChild);
+
+function injectJournalControls() {
+  var cal = $("journal-cal-btn");
+  if (!cal || $("journal-today-btn")) return;
+  var b = el("button", "sq-btn");
+  b.id = "journal-today-btn";
+  b.setAttribute("aria-label", "Revenir à aujourd'hui");
+  b.innerHTML = '<span class="ic">' + ic("clock") + "</span>";
+  b.addEventListener("click", function() {
+    var n = new Date();
+    ST.calSel = { y: n.getFullYear(), mo: n.getMonth(), d: n.getDate() };
+    ST.calView = { y: n.getFullYear(), mo: n.getMonth() };
+    ST.calDate = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 12);
+    renderJournal();
+    toast("Aujourd'hui");
+  });
+  if (cal.parentNode) cal.parentNode.insertBefore(b, cal.nextSibling);
 }
 
-// ==========================================
+function injectFloatingNoteBtn() {
+  if (!$("fab-note")) {
+    var b = el("button", "fab-note hidden");
+    b.id = "fab-note";
+    b.setAttribute("aria-label", "Note rapide");
+    b.innerHTML = '<span class="ic">' + ic("notebook-pen") + "</span>";
+    b.addEventListener("click", function() { quickNoteOpen(null, "", "time", null, { kind: "global" }); });
+    document.body.appendChild(b);
+  }
+  injectJournalControls();
+}
+
+function updateFabVisibility() {
+  var b = $("fab-note");
+  if (b) b.classList.toggle("hidden", ST.view !== "journal");
+}
+
+function injectBackupBanner() {
+  var s = settingsLoad(), days = s.alertBackupDays || 14;
+  var last = parseInt(localStorage.getItem("last_gh_backup") || localStorage.getItem("last_backup") || "0", 10);
+  var mn = document.querySelector("main"); if (!mn) return;
+  var od = $("backup-banner"); if (od) od.remove();
+  if (sessionStorage.getItem("bb_dismissed") === "1") return;
+  var age = last ? (Date.now() - last) / 86400000 : 9999;
+  if (age < days) return;
+  var b = el("div", "backup-banner");
+  b.id = "backup-banner";
+  b.innerHTML = '<span class="ic">' + ic("alert") + "</span><span>Ça fait " + (last ? Math.floor(age) + " jour(s)" : "toujours") + " sans sauvegarde. Pense à exporter.</span>";
+  var go = el("button", ""); go.innerHTML = "<span>Sauvegarder</span>";
+  go.addEventListener("click", function() { openOptSave(); });
+  var cl = el("button", "bb-close");
+  cl.setAttribute("aria-label", "Ignorer");
+  cl.innerHTML = '<span class="ic">' + ic("x") + "</span>";
+  cl.addEventListener("click", function() { sessionStorage.setItem("bb_dismissed", "1"); b.remove(); });
+  b.appendChild(go); b.appendChild(cl);
+  mn.insertBefore(b, mn.firstChild);
+}// ==========================================
 // 20. OPTIONS ET SAUVEGARDE
 // ==========================================
-function renderOptions() { var g = $("opt-grid"); if (!g) return; g.innerHTML = ""; [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }, { i: "alert-triangle", l: "Problèmes / Bugs", f: openOptProblemes }].forEach(function(c) { var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b); }); }
+function renderOptions() {
+  var g = $("opt-grid"); if (!g) return; g.innerHTML = "";
+  [{ i: "save", l: "Sauvegarde", f: openOptSave }, { i: "list", l: "Mes listes", f: openOptMyLists }, { i: "palette", l: "Apparence", f: openOptAppearance }, { i: "bar-chart-3", l: "Stats", f: openOptStats }, { i: "search", l: "Recherche", f: openOptSearch }, { i: "smartphone", l: "Application", f: openOptApp }, { i: "info", l: "À propos", f: openOptAbout }, { i: "alert", l: "Danger", f: openOptDanger }, { i: "alert-triangle", l: "Problèmes / Bugs", f: openOptProblemes }].forEach(function(c) {
+    var b = el("button", "opt-btn"); b.innerHTML = '<span class="ic">' + ic(c.i) + "</span><span>" + esc(c.l) + "</span>"; b.addEventListener("click", c.f); g.appendChild(b);
+  });
+}
 function openOptSave() {
   var b = el("div"); b.appendChild(el("div", "sec-title", "Sauvegarde locale"));
-  b.appendChild(btn("Exporter en JSON", "download", "wide", function() { exportJSON(); })); b.appendChild(btn("Importer (fusion)", "upload", "wide", function() { importJSON(); })); b.appendChild(btn("Copier tout (TSV)", "clipboard-copy", "wide", function() { copyTSV(); }));
+  b.appendChild(btn("Exporter en JSON", "download", "wide", function() { exportJSON(); }));
+  b.appendChild(btn("Importer (fusion)", "upload", "wide", function() { importJSON(); }));
+  b.appendChild(btn("Copier tout (TSV)", "clipboard-copy", "wide", function() { copyTSV(); }));
   b.appendChild(el("div", "sec-title", "Backup GitHub (repo privé)"));
   var go = el("input"); go.placeholder = "Owner (ex : BoraGooum)"; go.value = localStorage.getItem("gh_owner") || ""; go.style.marginBottom = "10px"; b.appendChild(go);
   var gr = el("input"); gr.placeholder = "Repo (ex : collection-backup)"; gr.value = localStorage.getItem("gh_repo") || ""; gr.style.marginBottom = "10px"; b.appendChild(gr);
   var gt = el("input"); gt.placeholder = "Token (github_pat_…)"; gt.type = "password"; gt.value = localStorage.getItem("gh_token") || ""; gt.style.marginBottom = "14px"; b.appendChild(gt);
   b.appendChild(btn("Sauver la config", "save", "primary wide", function() { localStorage.setItem("gh_owner", go.value.trim()); localStorage.setItem("gh_repo", gr.value.trim()); localStorage.setItem("gh_token", gt.value.trim()); toast("Config GitHub sauvée"); }));
-  b.appendChild(btn("Tester la connexion", "link", "wide", function() { ghTest(); })); b.appendChild(btn("Sauvegarder maintenant", "upload", "wide", function() { ghBackupNow(true); }));
+  b.appendChild(btn("Tester la connexion", "link", "wide", function() { ghTest(); }));
+  b.appendChild(btn("Sauvegarder maintenant", "upload", "wide", function() { ghBackupNow(true); }));
   b.appendChild(btn("Restaurer depuis GitHub", "download", "wide", function() { showConfirm("Restaurer ?", "Les œuvres manquantes seront ajoutées.", function() { ghRestore(); }, "Restaurer"); }));
-  var lb = localStorage.getItem("last_gh_backup"); b.appendChild(el("div", "", "Dernier backup GitHub : <b>" + (lb ? new Date(parseInt(lb, 10)).toLocaleString("fr-FR") : "jamais") + "</b>"));
+  var lb = localStorage.getItem("last_gh_backup");
+  b.appendChild(el("div", "", "Dernier backup GitHub : <b>" + (lb ? new Date(parseInt(lb, 10)).toLocaleString("fr-FR") : "jamais") + "</b>"));
   setModal("Sauvegarde", b, [["Fermer", "", closeModal, "x"]]);
 }
 function openOptMyLists() {
@@ -790,7 +949,8 @@ function openOptMyLists() {
   function uc(k, n) { var c = 0; ST.entries.forEach(function(e) { if (k === "types" && e.type === n) c++; if (k === "plateformes" && e.plateforme === n) c++; if (k === "supports" && e.support === n) c++; if (k === "packagings" && e.packaging === n) c++; if (k === "bonus" && (e.bonus || []).indexOf(n) >= 0) c++; }); return c; }
   function rt() { tb.innerHTML = ""; LIST_KEYS.forEach(function(k) { var c = el("div", "chip" + (k === cur ? " on" : ""), "<span>" + LB[k] + "</span>"); c.addEventListener("click", function() { cur = k; rt(); rr(); }); tb.appendChild(c); }); }
   function rr() {
-    hs.innerHTML = ""; var it = listItems(cur); if (!it.length) { hs.appendChild(emptyBox("list", "Liste vide.")); return; }
+    hs.innerHTML = ""; var it = listItems(cur);
+    if (!it.length) { hs.appendChild(emptyBox("list", "Liste vide.")); return; }
     it.forEach(function(x, i) {
       var r = el("div", "mylist-row"); r.innerHTML = valueIconHTML(x) + '<span class="ml-name">' + esc(x.name) + "</span>" + (x.base ? '<span class="ml-base">base</span>' : "");
       var u = uc(cur, x.name); if (u) r.querySelector(".ml-name").insertAdjacentHTML("afterend", ' <span class="ml-used">utilisée (' + u + ")</span>");
@@ -827,7 +987,8 @@ function openItemEditor(key, item, after) {
     function cell(n, s) { var c = el("button", "icon-cell" + (n === it.icon ? " on" : "")); c.setAttribute("aria-label", "Icône " + n); c.innerHTML = s || ic(n); c.addEventListener("click", function() { setItemMeta(key, it.name, { icon: n }); after(); state.view = "main"; rn(); }); return c; }
     function rb() { g.innerHTML = ""; Object.keys(I).forEach(function(n) { g.appendChild(cell(n, I[n])); }); }
     function rs(q) {
-      g.innerHTML = ""; var nm = LUCIDE_NAMES.filter(function(n) { return n.indexOf(q) >= 0; }).slice(0, 60); if (!nm.length) { g.appendChild(el("div", "status", "Aucune icône trouvée.")); return; }
+      g.innerHTML = ""; var nm = LUCIDE_NAMES.filter(function(n) { return n.indexOf(q) >= 0; }).slice(0, 60);
+      if (!nm.length) { g.appendChild(el("div", "status", "Aucune icône trouvée.")); return; }
       nm.forEach(function(n) { if (I[n]) { g.appendChild(cell(n, I[n])); return; } var c = el("button", "icon-cell" + (n === it.icon ? " on" : "")); c.setAttribute("aria-label", "Charger icône " + n); c.innerHTML = '<span class="ic">' + ic("image") + "</span>"; c.addEventListener("click", function() { fetch("https://unpkg.com/lucide-static@latest/icons/" + n + ".svg").then(function(r) { return r.text(); }).then(function(t) { localStorage.setItem("icon_svg_" + n, t); I[n] = t; setItemMeta(key, it.name, { icon: n }); after(); state.view = "main"; rn(); }).catch(function() { toast("Icône indisponible (réseau).", 3000); }); }); g.appendChild(c); });
     }
     se.addEventListener("input", function() { state.q = norm(se.value); if (!state.q) rb(); else rs(state.q); }); if (!state.q) rb(); else rs(state.q); setSheet("Icône", b, [["Retour", "", function() { state.view = "main"; rn(); }, "x"]]);
@@ -858,8 +1019,12 @@ function openOptStats() {
 function openOptSearch() { var s = settingsLoad(), b = el("div"); b.appendChild(el("span", "flabel", "Type par défaut")); var tp = el("div", "pill-sel"); allTypes().forEach(function(t) { var x = el("button", t === s.defaultType ? "on" : "", "<span>" + esc(t) + "</span>"); x.addEventListener("click", function() { s.defaultType = t; settingsSave(s); ST.currentType = t; closeModal(); openOptSearch(); buildTypeDropdown(); }); tp.appendChild(x); }); b.appendChild(tp); setModal("Recherche", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptApp() { var b = el("div"); b.appendChild(btn("Installer l'application", "download", "wide", function() { triggerInstall(); })); b.appendChild(btn("Vider le cache hors-ligne", "trash", "wide", function() { if ("caches" in window) caches.keys().then(function(k) { k.forEach(function(x) { caches.delete(x); }); }); toast("Cache vidé"); })); b.appendChild(el("div", "", "Réseau : <b>" + (navigator.onLine ? "connecté" : "hors-ligne") + "</b>")); setModal("Application", b, [["Fermer", "", closeModal, "x"]]); }
 function openOptAbout() { var b = el("div"); b.appendChild(el("div", "", "Version : <b>V0.9.5</b>")); b.appendChild(el("div", "", "Build : <b>" + new Date(BUILD).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }) + "</b>")); var c = el("a", "", "Créé par Gooumbora"); c.href = "https://www.senscritique.com/Gooumbora"; c.target = "_blank"; c.style.color = "var(--acc)"; b.appendChild(c); setModal("À propos", b, [["Fermer", "", closeModal, "x"]]); }
-function openOptDanger() { var b = el("div"); b.appendChild(btn("Effacer toutes mes œuvres", "trash", "wide", function() { showConfirm("Effacer TOUTES tes œuvres ?", "Cette action est irréversible.", function() { (async function() { for (var i = 0; i < ST.entries.length; i++) await dbDelete(ST.entries[i].id); refreshAll(); toast("Vidé"); })(); }, "Effacer"); })); b.appendChild(btn("Réinitialiser les réglages", "rotate-ccw", "wide", function() { showConfirm("Remettre les réglages par défaut ?", "", function() { localStorage.removeItem("settings"); settingsSave(Object.assign({}, SETTINGS_DEFAULTS)); applySettings(); toast("Réglages réinitialisés"); }, "Réinitialiser"); })); setModal("Danger", b, [["Fermer", "", closeModal, "x"]]); }
-
+function openOptDanger() {
+  var b = el("div");
+  b.appendChild(btn("Effacer toutes mes œuvres", "trash", "wide", function() { showConfirm("Effacer TOUTES tes œuvres ?", "Cette action est irréversible.", function() { (async function() { for (var i = 0; i < ST.entries.length; i++) await dbDelete(ST.entries[i].id); refreshAll(); toast("Vidé"); })(); }, "Effacer"); }));
+  b.appendChild(btn("Réinitialiser les réglages", "rotate-ccw", "wide", function() { showConfirm("Remettre les réglages par défaut ?", "", function() { localStorage.removeItem("settings"); settingsSave(Object.assign({}, SETTINGS_DEFAULTS)); applySettings(); toast("Réglages réinitialisés"); }, "Réinitialiser"); }));
+  setModal("Danger", b, [["Fermer", "", closeModal, "x"]]);
+}
 function openOptProblemes() {
   var b = el("div");
   var tabs = ["Recherche", "Bibliothèque", "Journal", "Options"];
@@ -902,192 +1067,265 @@ async function ghBackupNow(m) { var c = ghConfig(); if (!c.owner || !c.repo || !
 async function ghTest() { var c = ghConfig(); if (!c.owner || !c.repo || !c.token) { toast("Remplis owner, repo et token."); return; } try { var r = await fetch("https://api.github.com/repos/" + c.owner + "/" + c.repo, { headers: { Authorization: "Bearer " + c.token, Accept: "application/vnd.github+json" } }); if (r.ok) { var d = await r.json(); toast("Connexion OK : " + d.full_name + (d.private ? " (privé)" : " (PUBLIC !)")); } else toast("Erreur " + r.status, 3000); } catch(e) { toast("Réseau impossible", 3000); } }
 async function ghRestore() { var c = ghConfig(); if (!c.owner || !c.repo || !c.token) { toast("Configure GitHub dans Options."); return; } try { var f = await ghGetFile(c, "sauvegarde.json"); if (!f) { toast("Aucune sauvegarde trouvée.", 3000); return; } var d = JSON.parse(ghB64decode(f.content)), ls = d.entries || [], ids = {}; ST.entries.forEach(function(x) { ids[x.id] = 1; }); var ad = 0; for (var i = 0; i < ls.length; i++) { var en = ls[i]; if (en && en.id && !ids[en.id]) { if (!en.titre) en.titre = "Sans titre"; if (!en.dateAjout) en.dateAjout = new Date().toISOString(); await dbPut(en); ad++; } } if (d.settings) settingsSave(Object.assign({}, SETTINGS_DEFAULTS, d.settings)); if (d.lists) LIST_KEYS.forEach(function(k) { if (Array.isArray(d.lists[k]) && d.lists[k].length) setList(k, d.lists[k]); }); if (d.customTypes) importLegacyList("types", d.customTypes); if (d.customLists) { importLegacyList("plateformes", d.customLists.plateformes); importLegacyList("supports", d.customLists.supports); importLegacyList("packagings", d.customLists.packagings); importLegacyList("bonus", d.customLists.bonus); } if (d.customIcons) setCustomIcons(d.customIcons); applySettings(); buildTypeDropdown(); refreshAll(); toast("Restauré : " + ad + " œuvre(s) ajoutée(s)"); } catch(e) { toast("Restauration impossible : " + e.message, 3000); } }
 
+// >>>>>>>>>> ATTENTION : fichier INCOMPLET ici <<<<<<<<<<
+// >>>>>>>>>> La Section 22 (assistant de saisie) suit dans la PARTIE 6b <<<<<<<<<<
+// >>>>>>>>>> Ne commit PAS avant d'avoir collé la 6b à la suite. <<<<<<<<<<// ==========================================
+// 22. ASSISTANT DE SAISIE (FEUILLE INDÉPENDANTE)
 // ==========================================
-// 22. ASSISTANT DE SAISIE (SMART SCRAPE LOCAL - TOUT DÉCOCHÉ)
-// ==========================================
-async function openSmartScrapeAssistant(ean, currentTitle, cb) {
+function openSmartScrapeAssistant(ean, currentTitle, cb) {
   var body = el("div");
-  body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:10px;";
-  
+  body.style.cssText = "display:flex; flex-direction:column; gap:16px; padding-bottom:6px;";
+
   var btnRow = el("div");
-  btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:8px;";
-  
-  var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border: 1px solid var(--bd); background: var(--s2);";
-  
+  btnRow.style.cssText = "display:flex; gap:12px; justify-content:center; margin-bottom:4px;";
+  var commonBtnStyle = "width:60px; height:60px; min-width:60px; border-radius:16px; display:flex; align-items:center; justify-content:center; border:1px solid var(--bd); background:var(--s2);";
+
+  var btnFnac = el("button", "sq-btn");
+  btnFnac.setAttribute("aria-label", "Rechercher sur Fnac");
+  btnFnac.innerHTML = '<span class="ic">' + ic("shopping-bag") + '</span>';
+  btnFnac.style.cssText = commonBtnStyle + " background: linear-gradient(135deg, rgba(0,85,164,0.3), rgba(255,255,255,0.1), rgba(239,65,53,0.3));";
+  btnFnac.addEventListener("click", function() {
+    var q = currentTitle || ean || "";
+    if (q) window.open("https://www.fnac.com/SearchResult/ResultList.aspx?Search=" + encodeURIComponent(q), "_blank");
+    else toast("Titre ou EAN manquant.");
+  });
+
   var btnDvd = el("button", "sq-btn");
   btnDvd.setAttribute("aria-label", "Rechercher sur DVD.fr");
   btnDvd.innerHTML = '<span class="ic">' + ic("eject") + '</span>';
-  btnDvd.style.cssText = commonBtnStyle + " background: linear-gradient(135deg, rgba(0,85,164,0.3), rgba(255,255,255,0.1), rgba(239,65,53,0.3));";
+  btnDvd.style.cssText = commonBtnStyle;
   btnDvd.addEventListener("click", function() {
-    if (currentTitle) {
-      window.open("https://www.dvdfr.com/listeliv.php?flou&mots_recherche=" + encodeURIComponent(currentTitle) + "&base=dvd", "_blank");
-    } else {
-      toast("Titre manquant.");
-    }
+    var q = currentTitle || ean || "";
+    if (q) window.open("https://www.dvdfr.com/listeliv.php?flou&mots_recherche=" + encodeURIComponent(q) + "&base=dvd", "_blank");
+    else toast("Titre ou EAN manquant.");
   });
-  
-  var btnEan = el("button", "sq-btn");
-  btnEan.setAttribute("aria-label", "Rechercher par EAN");
-  btnEan.innerHTML = '<span class="ic">' + ic("barcode") + '</span>';
-  btnEan.addEventListener("click", function() {
-    if (ean) {
-      window.open("https://www.ean-search.org/ean/" + ean, "_blank");
-    } else {
-      toast("EAN manquant.");
-    }
-  });
-  
+
   var btnPaste = el("button", "sq-btn");
   btnPaste.setAttribute("aria-label", "Coller et analyser");
   btnPaste.innerHTML = '<span class="ic">' + ic("clipboard") + '</span>';
-  
+  btnPaste.style.cssText = commonBtnStyle;
+
+  btnRow.appendChild(btnFnac);
   btnRow.appendChild(btnDvd);
-  btnRow.appendChild(btnEan);
   btnRow.appendChild(btnPaste);
   body.appendChild(btnRow);
-  
+
   var pasteArea = el("div");
   pasteArea.style.cssText = "display:none; flex-direction:column; gap:10px;";
-  
   var infoText = el("div");
   infoText.style.cssText = "font-size:13px; color:var(--dim); text-align:center; line-height:1.4;";
-  infoText.innerHTML = "Copie le code source (Ctrl+U) ou le texte visible.";
+  infoText.innerHTML = "Ouvre Fnac ou DVD.fr dans un onglet, puis copie <b>tout</b> (Ctrl+A → Ctrl+C) et colle ici.";
   pasteArea.appendChild(infoText);
-  
+
   var ta = el("textarea");
-  ta.placeholder = "Colle ici...";
+  ta.placeholder = "Colle le texte ou le code source ici…";
   ta.style.cssText = "width:100%; min-height:150px; padding:10px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; color:var(--tx); font-family:var(--fm); font-size:12px; resize:vertical;";
-  
+  pasteArea.appendChild(ta);
+
   var analyzeBtn = btn("Analyser le contenu collé", "search", "primary wide", function() {
     var text = ta.value.trim();
     if (!text) { toast("Rien à analyser."); return; }
-    processPastedText(text, cb);
+    processPastedText(text, cb, ean, currentTitle);
   });
-  
-  pasteArea.appendChild(ta);
   pasteArea.appendChild(analyzeBtn);
   body.appendChild(pasteArea);
-  
+
   btnPaste.addEventListener("click", function() {
     pasteArea.style.display = "flex";
-    ta.focus();
+    setTimeout(function() { ta.focus(); }, 50);
   });
-  
-  setModal("Assistant de saisie", body, [["Fermer", "", closeModal, "x"]]);
+
+  setSheet("Assistant de saisie", body, [["Fermer", "", closeMenu, "x"]]);
 }
 
-async function processPastedText(text, cb) {
-  var body = $("m-body");
-  body.innerHTML = '<div class="status" style="text-align:center;padding:20px;">Analyse intelligente...</div>';
-  
-  try {
-    var doc = new DOMParser().parseFromString(text, "text/html");
-    var fullText = doc.body ? doc.body.innerText : text;
-    var rawTitle = (doc.querySelector("h1") || doc.querySelector("title") || {}).textContent || "";
-    rawTitle = rawTitle.replace(/\s*[-–|]\s*.*$/i, "").trim();
-    
-    var textEl = doc.querySelector("p.edito, .edito, .product-description, .description, #productDescription, .product-details, .synopsis");
-    var contenu = textEl ? textEl.textContent.trim() : "";
-    if(!contenu && fullText.length > 100) { contenu = fullText.substring(0, 2000); }
+function processPastedText(text, cb, ean, currentTitle) {
+  var extracted = {
+    titre: "", ean: "", dateSortie: "", realisateur: "", acteurs: "",
+    resume: "", description: "", bonus: "", technique: "", langue: "",
+    duree: "", editeur: "", support: "", packaging: "", brut: ""
+  };
 
-    var allText = (rawTitle + " " + contenu).toLowerCase();
-    var support = allText.indexOf("4k") >= 0 || allText.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
-                  allText.indexOf("blu-ray") >= 0 || allText.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
-                  allText.indexOf("dvd") >= 0 ? "Physique - DVD" : "";
-    var packaging = allText.indexOf("steelbook") >= 0 || allText.indexOf("boîtier métal") >= 0 ? "Steelbook" : "";
-    
-    var searchTitle = rawTitle.split(' - ')[0].split(' (')[0].trim();
-    var finalTitle = rawTitle;
-    var finalPoster = "";
-    
-    if (searchTitle && typeof searchTMDB === "function") {
-      try {
-        var tmdbRes = await searchTMDB(searchTitle, "movie");
-        if (tmdbRes && tmdbRes.length) {
-          finalTitle = tmdbRes[0].title;
-          finalPoster = tmdbRes[0].poster;
-        }
-      } catch(e) {}
-    }
-    
-    body.innerHTML = "";
-    var form = el("div");
-    form.style.cssText = "display:flex;flex-direction:column;gap:16px;";
-    
-    function makeRow(label, value, key, isTextarea) {
-      if (!value && key !== "titre") return null;
-      var row = el("div");
-      row.style.cssText = "display:flex;align-items:flex-start;gap:10px;";
-      
-      var cbx = el("input");
-      cbx.type = "checkbox";
-      cbx.checked = false; // TOUT DÉCOCHÉ PAR DÉFAUT
-      cbx.dataset.key = key;
-      cbx.style.cssText = "margin-top:12px;width:18px;height:18px;accent-color:var(--acc);cursor:pointer;";
-      
-      var info = el("div");
-      info.style.cssText = "flex:1;min-width:0;";
-      var lbl = el("div");
-      lbl.style.cssText = "font-size:12px;font-weight:700;color:var(--dim);margin-bottom:4px;";
-      lbl.textContent = label;
-      
-      var val = isTextarea ? el("textarea") : el("input");
-      val.value = value || "";
-      val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);" + (isTextarea ? "min-height:120px;resize:vertical;font-family:inherit;" : "");
-      
-      var btnClear = el("button", "sq-btn");
-      btnClear.setAttribute("aria-label", "Effacer");
-      btnClear.innerHTML = '<span class="ic">' + ic("x") + '</span>';
-      btnClear.style.cssText = "width:32px;height:32px;min-width:32px;padding:0;margin-top:8px;";
-      btnClear.addEventListener("click", function() { val.value = ""; });
-      
-      info.appendChild(lbl);
-      info.appendChild(val);
-      row.appendChild(cbx);
-      row.appendChild(info);
-      row.appendChild(btnClear);
-      return row;
-    }
-    
-    var r1 = makeRow("Titre (Officiel TMDB)", finalTitle, "titre", false);
-    var r2 = makeRow("Support détecté", support, "support", false);
-    var r3 = makeRow("Packaging détecté", packaging, "packaging", false);
-    var r4 = makeRow("Contenu / Bonus", contenu, "contenu", true);
-    
-    if(r1) form.appendChild(r1);
-    if(r2) form.appendChild(r2);
-    if(r3) form.appendChild(r3);
-    if(r4) form.appendChild(r4);
-    
-    if (!r1 && !r2 && !r3 && !r4) {
-      form.innerHTML = "<p style='text-align:center;color:var(--dim);'>Aucune info trouvée.</p>";
-    }
-    
-    body.appendChild(form);
-    
-    var foot = $("m-foot");
-    foot.innerHTML = "";
-    var btnValidate = el("button", "primary");
-    btnValidate.innerHTML = '<span class="ic">' + ic("check") + '</span><span>Appliquer</span>';
-    btnValidate.addEventListener("click", function() {
-      var result = {};
-      form.querySelectorAll("input[type='checkbox']").forEach(function(c) {
-        if (c.checked) {
-          var valEl = c.nextElementSibling.querySelector("input, textarea");
-          if (valEl && valEl.value.trim()) result[c.dataset.key] = valEl.value.trim();
-        }
-      });
-      if (finalPoster) result.posterUrl = finalPoster;
-      closeModal();
-      cb(result);
-    });
-    var btnCancel = el("button");
-    btnCancel.innerHTML = '<span class="ic">' + ic("x") + '</span><span>Annuler</span>';
-    btnCancel.addEventListener("click", closeModal);
-    foot.appendChild(btnValidate);
-    foot.appendChild(btnCancel);
-    
-  } catch(e) {
-    body.innerHTML = '<div class="status error" style="text-align:center;padding:20px;">Erreur : ' + e.message + '</div>';
+  var doc = null, fullText = "";
+  try {
+    doc = new DOMParser().parseFromString(text, "text/html");
+    fullText = (doc && doc.body) ? (doc.body.innerText || doc.body.textContent || "") : text;
+  } catch(e) { fullText = text; }
+  fullText = String(fullText || "").replace(/\r/g, "");
+
+  // Nettoyage du texte brut (enlève le bruit de code / menus / cookies)
+  var noise = /(cookie|mention|l[eé]gal|privacy|confidentialit|panier|cart|connexion|login|s'abonner|newsletter|javascript|function\(|=>|<\/|<div|<span|<button|<a href|var |let |const |\.click|\.attr|\.bind|\.then|null\b|undefined)/i;
+  var lines = fullText.split("\n").map(function(l) { return l.trim(); }).filter(function(l) {
+    return l.length > 12 && !noise.test(l);
+  });
+  extracted.brut = lines.join("\n").trim().slice(0, 6000);
+
+  // Titre
+  if (doc) {
+    var tEl = doc.querySelector("h1") || doc.querySelector("h2") || doc.querySelector("title");
+    if (tEl) extracted.titre = String(tEl.textContent || "").replace(/\s*[-–|]\s*.*$/i, "").trim();
   }
+  if (!extracted.titre && lines.length) extracted.titre = lines[0].slice(0, 120);
+
+  // EAN
+  var eanM = fullText.match(/\b(\d{13})\b/);
+  if (eanM) extracted.ean = eanM[1];
+  else if (ean && /^\d{8,14}$/.test(ean)) extracted.ean = ean;
+
+  // Date de sortie
+  var dM = fullText.match(/(?:sortie|date\s+de\s+sortie|release|parution|ann[eé]e)\D{0,12}(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{4})/i);
+  if (dM) extracted.dateSortie = dM[1];
+  else { var yM = fullText.match(/\b(19|20)\d{2}\b/); if (yM) extracted.dateSortie = yM[0]; }
+
+  // Réalisateur
+  var rM = fullText.match(/(?:r[eé]alisateur|directeur|mise\s+en\s+sc[eè]ne|de\s+|par\s+)\s*[:\-]?\s*([A-ZÀ-Ý][\wÀ-ÿ'’\-]+(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’\-]+){1,4})/);
+  if (rM) extracted.realisateur = rM[1].trim();
+
+  // Acteurs
+  var aM = fullText.match(/(?:avec|casting|acteurs?|distribution|interpr[eè]t[ée]s?)\s*[:\-]?\s*([A-ZÀ-Ý][\wÀ-ÿ'’\-]+(?:\s*[,;/]\s*[A-ZÀ-Ý][\wÀ-ÿ'’\-]+){1,15})/);
+  if (aM) extracted.acteurs = aM[1].trim();
+
+  // Résumé / Synopsis
+  var sM = fullText.match(/(?:synopsis|r[eé]sum[eé]|histoire|pitch|l['’]histoire)\s*[:\-]?\s*([\s\S]{40,900}?)(?=\n\s*\n|(?:Bonus|Contenu|Descriptif|Caract[eé]rist|Distribution|R[eé]alisateur|$))/i);
+  if (sM) extracted.resume = sM[1].trim();
+
+  // Description / Présentation
+  var pM = fullText.match(/(?:pr[eé]sentation|description|[àa]\s+propos|about|r[eé]dacteur)\s*[:\-]?\s*([\s\S]{40,1200}?)(?=\n\s*\n|(?:Bonus|Contenu|Descriptif|Caract[eé]rist|Format|$))/i);
+  if (pM) extracted.description = pM[1].trim();
+
+  // Bonus / Contenu
+  var bM = fullText.match(/(?:bonus|suppl[eé]ments?|contenu\s+(?:du|de\s+l['’])?disque|special\s+features|interviews?)\s*[:\-]?\s*([\s\S]{15,1500}?)(?=\n\s*\n|(?:Descriptif|Caract[eé]rist|Format|Audio|Sous-?titres|$))/i);
+  if (bM) extracted.bonus = bM[1].trim();
+
+  // Descriptif technique
+  var tM = fullText.match(/(?:descriptif\s+technique|caract[eé]ristiques?|format|sp[eé]cifications?|d[eé]tails?\s+techniques?)\s*[:\-]?\s*([\s\S]{15,1200}?)(?=\n\s*\n|(?:Conformit|Avertissement|Code\s+postal|$))/i);
+  if (tM) extracted.technique = tM[1].trim();
+
+  // Langue
+  var lM = fullText.match(/(?:langue|audio|language|version)\s*[:\-]?\s*([A-ZÀ-Ý][\wÀ-ÿ'’\-]+(?:\s*[,;/]\s*[A-ZÀ-Ý][\wÀ-ÿ'’\-]+){0,8})/);
+  if (lM) extracted.langue = lM[1].trim();
+
+  // Durée
+  var duM = fullText.match(/(?:dur[eé]e|duration|runtime|temps)\s*[:\-]?\s*(\d+\s*(?:min|minutes?|h|heures?))/i);
+  if (duM) extracted.duree = duM[1].trim();
+
+  // Éditeur / Studio
+  var edM = fullText.match(/(?:[eé]diteur|studio|distributeur|maison\s+d['’]e|label)\s*[:\-]?\s*([A-ZÀ-Ý][\wÀ-ÿ'’\-&]+(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’\-&]+){0,4})/);
+  if (edM) extracted.editeur = edM[1].trim();
+
+  // Support / Packaging (détection large)
+  var low = (extracted.titre + " " + fullText).toLowerCase();
+  extracted.support = low.indexOf("4k") >= 0 || low.indexOf("uhd") >= 0 ? "Physique - 4K UHD" :
+                      low.indexOf("blu-ray") >= 0 || low.indexOf("bluray") >= 0 ? "Physique - Blu-ray" :
+                      low.indexOf("dvd") >= 0 ? "Physique - DVD" :
+                      low.indexOf("vo") >= 0 && low.indexOf("vostfr") >= 0 ? "Physique - DVD" : "";
+  extracted.packaging = low.indexOf("steelbook") >= 0 || low.indexOf("boîtier m") >= 0 || low.indexOf("boitier m") >= 0 ? "Steelbook" :
+                        low.indexOf("digipack") >= 0 ? "Digipack" :
+                        low.indexOf("coffret") >= 0 || low.indexOf("box") >= 0 ? "Coffret / Box" : "";
+
+  // Enrichissement TMDB (titre officiel + affiche)
+  var finalPoster = "";
+  var searchTitle = String(extracted.titre || currentTitle || "").split(" - ")[0].split(" (")[0].trim();
+  if (searchTitle && typeof searchTMDB === "function") {
+    searchTMDB(searchTitle, "movie").then(function(res) {
+      if (res && res.length) {
+        if (res[0].title) extracted.titre = res[0].title;
+        if (res[0].poster) finalPoster = res[0].poster;
+      }
+      buildResultSheet(extracted, finalPoster, cb, ean, currentTitle);
+    }).catch(function() {
+      buildResultSheet(extracted, finalPoster, cb, ean, currentTitle);
+    });
+  } else {
+    buildResultSheet(extracted, finalPoster, cb, ean, currentTitle);
+  }
+}
+
+function buildResultSheet(extracted, finalPoster, cb, ean, currentTitle) {
+  var form = el("div");
+  form.style.cssText = "display:flex;flex-direction:column;gap:12px;";
+
+  function makeRow(label, value, key, isTextarea) {
+    if (!value) return null;
+    var row = el("div");
+    row.style.cssText = "display:flex;align-items:flex-start;gap:10px;";
+    var cbx = el("input");
+    cbx.type = "checkbox"; cbx.checked = false; cbx.dataset.key = key;
+    cbx.style.cssText = "margin-top:12px;width:18px;height:18px;accent-color:var(--acc);cursor:pointer;flex-shrink:0;";
+    var info = el("div"); info.style.cssText = "flex:1;min-width:0;";
+    var lbl = el("div"); lbl.style.cssText = "font-size:12px;font-weight:700;color:var(--dim);margin-bottom:4px;"; lbl.textContent = label;
+    var val = isTextarea ? el("textarea") : el("input");
+    val.value = value;
+    val.style.cssText = "width:100%;padding:8px;font-size:14px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;color:var(--tx);box-sizing:border-box;" + (isTextarea ? "min-height:90px;resize:vertical;font-family:inherit;" : "");
+    var clr = el("button", "sq-btn");
+    clr.setAttribute("aria-label", "Effacer ce champ");
+    clr.innerHTML = '<span class="ic">' + ic("x") + '</span>';
+    clr.style.cssText = "width:32px;height:32px;min-width:32px;padding:0;margin-top:8px;flex-shrink:0;";
+    clr.addEventListener("click", function() { val.value = ""; });
+    info.appendChild(lbl); info.appendChild(val);
+    row.appendChild(cbx); row.appendChild(info); row.appendChild(clr);
+    return row;
+  }
+
+  var defs = [
+    ["Titre", extracted.titre, "titre", false],
+    ["EAN", extracted.ean, "ean", false],
+    ["Date de sortie", extracted.dateSortie, "dateSortie", false],
+    ["Réalisateur", extracted.realisateur, "realisateur", false],
+    ["Acteurs", extracted.acteurs, "acteurs", false],
+    ["Résumé / Synopsis", extracted.resume, "resume", true],
+    ["Description", extracted.description, "description", true],
+    ["Bonus / Contenu disque", extracted.bonus, "bonus", true],
+    ["Descriptif technique", extracted.technique, "technique", true],
+    ["Langue / Audio", extracted.langue, "langue", false],
+    ["Durée", extracted.duree, "duree", false],
+    ["Éditeur / Studio", extracted.editeur, "editeur", false],
+    ["Support détecté", extracted.support, "support", false],
+    ["Packaging détecté", extracted.packaging, "packaging", false],
+    ["Texte complet (brut nettoyé)", extracted.brut, "brut", true]
+  ];
+
+  var added = 0;
+  defs.forEach(function(d) {
+    var r = makeRow(d[0], d[1], d[2], d[3]);
+    if (r) { form.appendChild(r); added++; }
+  });
+
+  if (!added) {
+    form.appendChild(el("p", "status", "Aucune information exploitable. Essaie de copier la page visible plutôt que le code source."));
+  } else {
+    var note = el("div");
+    note.style.cssText = "font-size:12px;color:var(--dim);text-align:center;margin-bottom:2px;";
+    note.textContent = "Tout est décoché : coche uniquement ce que tu veux garder.";
+    form.insertBefore(note, form.firstChild);
+  }
+
+  function applyFn() {
+    var result = {}, secs = [];
+    form.querySelectorAll("input[type='checkbox']").forEach(function(c) {
+      if (!c.checked) return;
+      var v = c.parentElement.querySelector("input:not([type=checkbox]), textarea");
+      var val = v ? v.value.trim() : "";
+      if (!val) return;
+      var k = c.dataset.key;
+      var lab = c.parentElement.querySelector("div div").textContent;
+      if (k === "titre") result.titre = val;
+      else if (k === "support") result.support = val;
+      else if (k === "packaging") result.packaging = val;
+      else if (k === "ean") result.ean = val;
+      else if (k === "brut") { result.formattedDescription = (result.formattedDescription ? result.formattedDescription + "\n\n" : "") + val; }
+      else { secs.push({ label: lab, value: val }); }
+    });
+    if (secs.length) {
+      var fd = secs.map(function(s, i) { return (i ? "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" : "") + "▸ " + s.label.toUpperCase() + "\n" + s.value; }).join("");
+      result.formattedDescription = (result.formattedDescription ? result.formattedDescription + "\n\n" : "") + fd;
+    }
+    if (finalPoster) result.posterUrl = finalPoster;
+    closeMenu();
+    if (cb) cb(result);
+  }
+
+  setSheet("Résultat de l'analyse", form, [
+    ["Appliquer à la fiche", "primary", applyFn, "check"],
+    ["Retour (re-coller)", "", function() { openSmartScrapeAssistant(ean, currentTitle, cb); }, "x"]
+  ]);
 }
