@@ -900,13 +900,12 @@ async function searchFromUrl(url) {
 // 9. PIPELINE EAN (Fnac -> DVDfr -> TMDB)
 // ==========================================
 async function searchEANSearch(ean) {
-  // 1. PRIORITÉ : Fnac (souvent meilleur pour les films/jeux FR)
+  // 1. PRIORITÉ : Fnac
   var urlFnac = "https://www.fnac.com/SearchResult/ResultList.aspx?Search=" + ean;
   var htmlFnac = await urlFetchHTML(urlFnac);
   
   if (htmlFnac) {
     var docF = new DOMParser().parseFromString(htmlFnac, "text/html");
-    // Cherche un produit qui correspond exactement ou contient l'EAN
     var prod = docF.querySelector('.data-pricetab-main a[href*="/Product/"], .fnac-grid__item a');
     if (prod) {
       var titleF = (prod.querySelector('.fnac-grid__title') || {}).textContent || "";
@@ -922,7 +921,7 @@ async function searchEANSearch(ean) {
   var htmlDvd = await urlFetchHTML(urlDvd);
   if (htmlDvd) {
     var docD = new DOMParser().parseFromString(htmlDvd, "text/html");
-    var prodD = docD.querySelector(".product-title a, h3 a"); // Sélecteur générique DVDfr
+    var prodD = docD.querySelector(".product-title a, h3 a");
     if (prodD) {
       var titleD = prodD.textContent.trim();
       var linkD = prodD.getAttribute("href");
@@ -932,7 +931,7 @@ async function searchEANSearch(ean) {
     }
   }
   
-  return null; // Si rien trouvé
+  return null;
 }
 
 async function searchMerchantPage(url) {
@@ -943,15 +942,12 @@ async function searchMerchantPage(url) {
   
   var contenu = "", imageUrl = "", packaging = "", support = "Physique";
   
-  // Extraction Description/Bonus (Sélecteurs larges)
   var descEl = doc.querySelector("#description_produit, .desc_produit, .fiche_desc, p[itemprop='description'], .product-description");
   if(descEl) contenu = descEl.innerText.trim();
   
-  // Extraction Image
   var imgEl = doc.querySelector("#img_produit, .main_img, img[itemprop='image']");
   if(imgEl) imageUrl = imgEl.src;
 
-  // Détection Support/Packaging via texte global
   var blob = (contenu + " " + (doc.title || "")).toLowerCase();
   if(blob.indexOf("steelbook") >= 0 || blob.indexOf("boîtier métal") >= 0) packaging = "Steelbook";
   if(blob.indexOf("4k") >= 0 || blob.indexOf("uhd") >= 0) support = "Physique - 4K UHD";
@@ -981,7 +977,6 @@ async function searchFromEAN(ean) {
   var support = merchantData ? merchantData.support : "Physique";
   var merchantUrl = eanData ? eanData.merchantUrl : "";
   
-  // Enrichissement TMDB si on a un titre
   if (title) {
     try {
       var tmdbRes = await searchTMDB(title, "movie");
@@ -1001,7 +996,6 @@ async function searchFromEAN(ean) {
   if (st) st.textContent = "";
   renderPanel(null);
   
-  // Pré-remplissage des champs avancés
   if(support) ST.advFields.support = support;
   if(packaging) ST.advFields.packaging = packaging;
   if(contenu) ST.advFields.contenu = contenu;
