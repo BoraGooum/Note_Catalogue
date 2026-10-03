@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Labo - Titre Live Twitch</title>
+<title>Labo - Titre Live Twitch (GitHub Pages)</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -11,7 +11,7 @@
     background: #0f0f23;
     color: #e2e8f0;
     padding: 20px;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
   }
   h1 {
@@ -32,13 +32,16 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
   }
   .channel-input label {
     color: #9147ff;
     font-weight: 600;
+    flex: 0 0 auto;
   }
   .channel-input input {
     flex: 1;
+    min-width: 200px;
     background: #2d3748;
     border: 1px solid #4a5568;
     color: #e2e8f0;
@@ -49,6 +52,20 @@
   .channel-input input:focus {
     outline: none;
     border-color: #9147ff;
+  }
+  .btn-run-all {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .btn-run-all:hover {
+    background: #2f855a;
   }
   .method {
     background: #1a202c;
@@ -104,6 +121,10 @@
     background: rgba(237, 137, 54, 0.2);
     border: 1px solid #ed8936;
   }
+  .result.loading {
+    background: rgba(66, 153, 225, 0.2);
+    border: 1px solid #4299e1;
+  }
   .result-title {
     font-weight: 600;
     margin-bottom: 8px;
@@ -116,6 +137,7 @@
     background: rgba(0,0,0,0.3);
     border-radius: 6px;
     margin-top: 8px;
+    white-space: pre-wrap;
   }
   .note {
     background: rgba(237, 137, 54, 0.1);
@@ -130,83 +152,138 @@
     padding: 15px;
     border-radius: 8px;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 11px;
     overflow-x: auto;
     margin-bottom: 15px;
     color: #68d391;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
+  .summary {
+    background: #2d3748;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+  }
+  .summary h3 {
+    color: #9147ff;
+    margin-bottom: 15px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #4a5568;
+  }
+  th {
+    color: #9147ff;
+    font-weight: 600;
+  }
+  .check { color: #48bb78; }
+  .cross { color: #f56565; }
+  .info { color: #4299e1; }
 </style>
 </head>
 <body>
 
 <h1>🔬 Labo - Récupération Titre Live Twitch</h1>
-<p class="subtitle">Utilise l'API DecAPI (publique, sans CORS) pour récupérer le titre du live</p>
+<p class="subtitle">Test de 8 méthodes pour récupérer le titre du live (compatible GitHub Pages)</p>
 
 <div class="channel-input">
   <label>Nom de la chaîne :</label>
   <input type="text" id="channelInput" value="hugodelire" placeholder="hugodelire">
 </div>
 
-<!-- Méthode 1 : DecAPI Title -->
+<button class="btn-run-all" onclick="runAllTests()">⚡ Tester les 8 méthodes</button>
+
+<!-- Méthode 1 -->
 <div class="method">
-  <h2>Méthode 1 : DecAPI /twitch/title (Recommandée)</h2>
-  <p>
-    Utilise l'API publique <code>api.decapi.me/twitch/title/{channel}</code> qui retourne directement le titre du live. C'est la même API qu'on utilise déjà pour les avatars.
-  </p>
-  <div class="code-block">
-fetch('https://api.decapi.me/twitch/title/hugodelire')
-  .then(r => r.text())
-  .then(title => console.log(title));
-  </div>
-  <button class="btn" onclick="testDecApiTitle()">Récupérer le titre</button>
-  <div class="result" id="result1"></div>
+  <h2>1. API Twitch GQL (Client-ID public)</h2>
+  <p>Utilise l'API GraphQL officielle de Twitch avec le Client-ID public (celui qu'on utilise pour les avatars).</p>
+  <button class="btn" onclick="testMethod('gql')">Tester</button>
+  <div class="result" id="r-gql"></div>
 </div>
 
-<!-- Méthode 2 : DecAPI Status -->
+<!-- Méthode 2 -->
 <div class="method">
-  <h2>Méthode 2 : DecAPI /twitch/status</h2>
-  <p>
-    Retourne le statut complet : "Titre du live (Jeu)" ou "offline" si pas de live.
-  </p>
-  <div class="code-block">
-fetch('https://api.decapi.me/twitch/status/hugodelire')
-  .then(r => r.text())
-  .then(status => console.log(status));
-  </div>
-  <button class="btn" onclick="testDecApiStatus()">Récupérer le statut</button>
-  <div class="result" id="result2"></div>
+  <h2>2. DecAPI direct</h2>
+  <p>API publique DecAPI (api.decapi.me/twitch/title).</p>
+  <button class="btn" onclick="testMethod('decapi')">Tester</button>
+  <div class="result" id="r-decapi"></div>
 </div>
 
-<!-- Méthode 3 : DecAPI Game -->
+<!-- Méthode 3 -->
 <div class="method">
-  <h2>Méthode 3 : DecAPI /twitch/game</h2>
-  <p>
-    Retourne le jeu en cours (utile pour vérifier si le live est actif).
-  </p>
-  <div class="code-block">
-fetch('https://api.decapi.me/twitch/game/hugodelire')
-  .then(r => r.text())
-  .then(game => console.log(game));
-  </div>
-  <button class="btn" onclick="testDecApiGame()">Récupérer le jeu</button>
-  <div class="result" id="result3"></div>
+  <h2>3. DecAPI via corsproxy.io</h2>
+  <p>DecAPI passée par un proxy CORS public (corsproxy.io).</p>
+  <button class="btn" onclick="testMethod('decapi-proxy')">Tester</button>
+  <div class="result" id="r-decapi-proxy"></div>
 </div>
 
-<!-- Méthode 4 : Toutes les infos en une fois -->
+<!-- Méthode 4 -->
 <div class="method">
-  <h2>Méthode 4 : Toutes les infos combinées</h2>
-  <p>
-    Récupère titre, jeu et statut en parallèle pour avoir une vue complète.
-  </p>
-  <button class="btn" onclick="testAll()">Récupérer tout</button>
-  <div class="result" id="result4"></div>
+  <h2>4. Scraping HTML twitch.tv via allorigins</h2>
+  <p>Récupère la page HTML de twitch.tv via api.allorigins.win et cherche la balise <code>&lt;h4 title="..."&gt;</code>.</p>
+  <button class="btn" onclick="testMethod('scrape-allorigins')">Tester</button>
+  <div class="result" id="r-scrape-allorigins"></div>
+</div>
+
+<!-- Méthode 5 -->
+<div class="method">
+  <h2>5. Scraping HTML m.twitch.tv via corsproxy.io</h2>
+  <p>Version mobile via corsproxy.io, HTML souvent plus simple.</p>
+  <button class="btn" onclick="testMethod('scrape-mobile')">Tester</button>
+  <div class="result" id="r-scrape-mobile"></div>
+</div>
+
+<!-- Méthode 6 -->
+<div class="method">
+  <h2>6. Scraping HTML via thingproxy.freeboard.io</h2>
+  <p>Autre proxy CORS public pour contourner les restrictions.</p>
+  <button class="btn" onclick="testMethod('scrape-thingproxy')">Tester</button>
+  <div class="result" id="r-scrape-thingproxy"></div>
+</div>
+
+<!-- Méthode 7 -->
+<div class="method">
+  <h2>7. API StreamElements (si intégrée)</h2>
+  <p>StreamElements expose parfois les infos de stream via leur API publique.</p>
+  <button class="btn" onclick="testMethod('streamelements')">Tester</button>
+  <div class="result" id="r-streamelements"></div>
+</div>
+
+<!-- Méthode 8 -->
+<div class="method">
+  <h2>8. Vérification CORS (diagnostic)</h2>
+  <p>Teste si les APIs répondent correctement aux requêtes OPTIONS (preflight CORS).</p>
+  <button class="btn" onclick="testMethod('cors-check')">Tester</button>
+  <div class="result" id="r-cors-check"></div>
+</div>
+
+<div class="summary" id="summary" style="display:none;">
+  <h3>📊 Résumé des tests</h3>
+  <table id="summaryTable">
+    <thead>
+      <tr>
+        <th>Méthode</th>
+        <th>Statut</th>
+        <th>Résultat</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <div class="note">
-  💡 <strong>Pourquoi ça marche ?</strong> DecAPI est une API publique conçue pour être appelée depuis n'importe où (navigateurs, bots, scripts). Elle a des headers CORS permissifs qui permettent les requêtes cross-origin, contrairement à l'API Twitch officielle qui bloque tout sauf les domaines autorisés.
+  💡 <strong>Note importante</strong> : Si hugodelire n'est pas en live au moment du test, toutes les méthodes retourneront "offline" ou rien. C'est normal. Teste quand tu sais qu'il est en live pour voir le vrai titre.
 </div>
 
 <script>
+const results = {};
+
 function showResult(id, type, title, content) {
   const el = document.getElementById(id);
   el.className = `result show ${type}`;
@@ -214,98 +291,202 @@ function showResult(id, type, title, content) {
     <div class="result-title">${title}</div>
     <div class="result-content">${content}</div>
   `;
+  results[id.replace('r-', '')] = { type, title, content };
 }
 
-async function testDecApiTitle() {
+async function testMethod(method) {
   const channel = document.getElementById('channelInput').value.trim();
-  const result = document.getElementById('result1');
-  result.className = 'result show';
-  result.innerHTML = '<div class="result-title">Chargement...</div>';
-  
+  const resultId = `r-${method}`;
+  showResult(resultId, 'loading', 'Chargement...', 'Requête en cours...');
+
   try {
-    const response = await fetch(`https://api.decapi.me/twitch/title/${channel}`);
-    const title = await response.text();
-    
-    if (title.toLowerCase().includes('offline') || !title.trim()) {
-      showResult('result1', 'offline', 'Pas de live en cours', title || 'La chaîne est hors ligne');
-    } else {
-      showResult('result1', 'success', 'Titre du live trouvé', title);
+    let title = null;
+    let error = null;
+
+    switch(method) {
+      case 'gql':
+        try {
+          const payload = {
+            query: `query { user(login: "${channel}") { stream { title } } }`
+          };
+          const response = await fetch('https://gql.twitch.tv/gql', {
+            method: 'POST',
+            headers: {
+              'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          const user = data?.data?.user;
+          if (!user) {
+            error = 'Utilisateur introuvable';
+          } else if (!user.stream) {
+            title = 'Hors ligne';
+          } else {
+            title = user.stream.title;
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'decapi':
+        try {
+          const response = await fetch(`https://api.decapi.me/twitch/title/${channel}`);
+          title = await response.text();
+          if (title.toLowerCase().includes('offline') || !title.trim()) {
+            title = 'Hors ligne';
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'decapi-proxy':
+        try {
+          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(`https://api.decapi.me/twitch/title/${channel}`)}`;
+          const response = await fetch(proxyUrl);
+          title = await response.text();
+          if (title.toLowerCase().includes('offline') || !title.trim()) {
+            title = 'Hors ligne';
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'scrape-allorigins':
+        try {
+          const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://www.twitch.tv/${channel}`)}`;
+          const response = await fetch(proxyUrl);
+          const html = await response.text();
+          
+          // Chercher h4 avec title (la balise que tu m'as donnée)
+          const h4Match = html.match(/<h4[^>]*title="([^"]+)"[^>]*class="[^"]*CoreText[^"]*"[^>]*>([^<]+)<\/h4>/i);
+          if (h4Match) {
+            title = h4Match[2].trim();
+          } else {
+            // Fallback : chercher dans meta og:title
+            const metaMatch = html.match(/<meta[^>]*property="og:title"[^>]*content="([^"]+)"/i);
+            if (metaMatch) {
+              title = metaMatch[1].trim();
+            } else {
+              error = 'Balise h4 non trouvée dans le HTML';
+            }
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'scrape-mobile':
+        try {
+          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(`https://m.twitch.tv/${channel}`)}`;
+          const response = await fetch(proxyUrl);
+          const html = await response.text();
+          
+          const h4Match = html.match(/<h4[^>]*title="([^"]+)"[^>]*>([^<]+)<\/h4>/i);
+          if (h4Match) {
+            title = h4Match[2].trim();
+          } else {
+            error = 'Balise h4 non trouvée';
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'scrape-thingproxy':
+        try {
+          const proxyUrl = `https://thingproxy.freeboard.io/fetch/https://www.twitch.tv/${channel}`;
+          const response = await fetch(proxyUrl);
+          const html = await response.text();
+          
+          const h4Match = html.match(/<h4[^>]*title="([^"]+)"[^>]*>([^<]+)<\/h4>/i);
+          if (h4Match) {
+            title = h4Match[2].trim();
+          } else {
+            error = 'Balise h4 non trouvée';
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'streamelements':
+        try {
+          const response = await fetch(`https://api.streamelements.com/kappa/v2/channels/${channel}`);
+          const data = await response.json();
+          if (data && data.streamInfo) {
+            title = data.streamInfo.title || 'Hors ligne';
+          } else {
+            error = 'Pas de données streamInfo';
+          }
+        } catch (err) {
+          error = err.message;
+        }
+        break;
+
+      case 'cors-check':
+        try {
+          const response = await fetch('https://api.decapi.me/twitch/title/' + channel, {
+            method: 'OPTIONS'
+          });
+          const corsHeader = response.headers.get('Access-Control-Allow-Origin');
+          showResult(resultId, 'success', 'Diagnostic CORS', 
+            `Status: ${response.status}\n` +
+            `Access-Control-Allow-Origin: ${corsHeader || 'Non présent'}\n` +
+            `Headers: ${JSON.stringify([...response.headers.entries()], null, 2)}`);
+          return;
+        } catch (err) {
+          error = err.message;
+        }
+        break;
     }
-  } catch (err) {
-    showResult('result1', 'error', 'Erreur', err.message);
-  }
-}
 
-async function testDecApiStatus() {
-  const channel = document.getElementById('channelInput').value.trim();
-  const result = document.getElementById('result2');
-  result.className = 'result show';
-  result.innerHTML = '<div class="result-title">Chargement...</div>';
-  
-  try {
-    const response = await fetch(`https://api.decapi.me/twitch/status/${channel}`);
-    const status = await response.text();
-    
-    if (status.toLowerCase() === 'offline') {
-      showResult('result2', 'offline', 'Statut', 'Hors ligne');
+    if (error) {
+      showResult(resultId, 'error', 'Erreur', error);
+    } else if (title) {
+      const type = title.toLowerCase().includes('hors ligne') ? 'offline' : 'success';
+      showResult(resultId, type, 'Résultat', title);
     } else {
-      showResult('result2', 'success', 'Statut complet', status);
+      showResult(resultId, 'error', 'Erreur', 'Aucun résultat');
     }
+
   } catch (err) {
-    showResult('result2', 'error', 'Erreur', err.message);
+    showResult(resultId, 'error', 'Erreur inattendue', err.message);
   }
 }
 
-async function testDecApiGame() {
-  const channel = document.getElementById('channelInput').value.trim();
-  const result = document.getElementById('result3');
-  result.className = 'result show';
-  result.innerHTML = '<div class="result-title">Chargement...</div>';
+async function runAllTests() {
+  const methods = ['gql', 'decapi', 'decapi-proxy', 'scrape-allorigins', 'scrape-mobile', 'scrape-thingproxy', 'streamelements', 'cors-check'];
   
-  try {
-    const response = await fetch(`https://api.decapi.me/twitch/game/${channel}`);
-    const game = await response.text();
+  for (const method of methods) {
+    await testMethod(method);
+  }
+  
+  // Afficher le résumé
+  setTimeout(() => {
+    const summary = document.getElementById('summary');
+    const tbody = document.querySelector('#summaryTable tbody');
+    tbody.innerHTML = '';
     
-    if (game.toLowerCase().includes('offline') || !game.trim()) {
-      showResult('result3', 'offline', 'Jeu', 'Pas de live en cours');
-    } else {
-      showResult('result3', 'success', 'Jeu en cours', game);
+    for (const [method, result] of Object.entries(results)) {
+      const row = document.createElement('tr');
+      const statusIcon = result.type === 'success' ? '✓' : (result.type === 'offline' ? '~' : '✗');
+      const statusClass = result.type === 'success' ? 'check' : (result.type === 'offline' ? 'info' : 'cross');
+      
+      row.innerHTML = `
+        <td>${method}</td>
+        <td class="${statusClass}">${statusIcon} ${result.type}</td>
+        <td>${result.content.substring(0, 50)}${result.content.length > 50 ? '...' : ''}</td>
+      `;
+      tbody.appendChild(row);
     }
-  } catch (err) {
-    showResult('result3', 'error', 'Erreur', err.message);
-  }
-}
-
-async function testAll() {
-  const channel = document.getElementById('channelInput').value.trim();
-  const result = document.getElementById('result4');
-  result.className = 'result show';
-  result.innerHTML = '<div class="result-title">Chargement...</div>';
-  
-  try {
-    const [titleRes, statusRes, gameRes] = await Promise.all([
-      fetch(`https://api.decapi.me/twitch/title/${channel}`),
-      fetch(`https://api.decapi.me/twitch/status/${channel}`),
-      fetch(`https://api.decapi.me/twitch/game/${channel}`)
-    ]);
     
-    const title = await titleRes.text();
-    const status = await statusRes.text();
-    const game = await gameRes.text();
-    
-    const isOffline = status.toLowerCase() === 'offline';
-    
-    const content = `
-      <strong>Titre :</strong> ${title || 'N/A'}<br>
-      <strong>Jeu :</strong> ${game || 'N/A'}<br>
-      <strong>Statut :</strong> ${status}
-    `;
-    
-    showResult('result4', isOffline ? 'offline' : 'success', 
-               isOffline ? 'Chaîne hors ligne' : 'Toutes les infos', content);
-  } catch (err) {
-    showResult('result4', 'error', 'Erreur', err.message);
-  }
+    summary.style.display = 'block';
+  }, 500);
 }
 </script>
 
