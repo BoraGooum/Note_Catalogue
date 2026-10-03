@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Labo - Récupération Titre Live Twitch</title>
+<title>Labo - Titre Live Twitch</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -11,7 +11,7 @@
     background: #0f0f23;
     color: #e2e8f0;
     padding: 20px;
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
   }
   h1 {
@@ -22,6 +22,33 @@
     color: #a0aec0;
     margin-bottom: 30px;
     font-size: 14px;
+  }
+  .channel-input {
+    background: #1a202c;
+    border: 2px solid #2d3748;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .channel-input label {
+    color: #9147ff;
+    font-weight: 600;
+  }
+  .channel-input input {
+    flex: 1;
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    color: #e2e8f0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .channel-input input:focus {
+    outline: none;
+    border-color: #9147ff;
   }
   .method {
     background: #1a202c;
@@ -34,34 +61,11 @@
     color: #9147ff;
     font-size: 18px;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
-  .method h2 .badge {
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .badge.client { background: #3182ce; }
-  .badge.server { background: #38a169; }
-  .badge.recommended { background: #d69e2e; }
   .method p {
     color: #a0aec0;
     margin-bottom: 15px;
     line-height: 1.6;
-  }
-  .code-block {
-    background: #2d3748;
-    padding: 15px;
-    border-radius: 8px;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    overflow-x: auto;
-    margin-bottom: 15px;
-    color: #68d391;
   }
   .btn {
     background: #9147ff;
@@ -76,12 +80,10 @@
   }
   .btn:hover {
     background: #7c3aed;
-    transform: translateY(-2px);
   }
   .btn:disabled {
     background: #4a5568;
     cursor: not-allowed;
-    transform: none;
   }
   .result {
     margin-top: 15px;
@@ -98,9 +100,9 @@
     background: rgba(245, 101, 101, 0.2);
     border: 1px solid #f56565;
   }
-  .result.info {
-    background: rgba(66, 153, 225, 0.2);
-    border: 1px solid #4299e1;
+  .result.offline {
+    background: rgba(237, 137, 54, 0.2);
+    border: 1px solid #ed8936;
   }
   .result-title {
     font-weight: 600;
@@ -108,8 +110,12 @@
   }
   .result-content {
     font-family: monospace;
-    font-size: 13px;
+    font-size: 14px;
     word-break: break-word;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    margin-top: 8px;
   }
   .note {
     background: rgba(237, 137, 54, 0.1);
@@ -119,224 +125,85 @@
     font-size: 13px;
     color: #fbb040;
   }
-  .comparison {
+  .code-block {
     background: #2d3748;
     padding: 15px;
     border-radius: 8px;
-    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+    color: #68d391;
   }
-  .comparison h3 {
-    color: #9147ff;
-    margin-bottom: 10px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #4a5568;
-  }
-  th {
-    color: #9147ff;
-    font-weight: 600;
-  }
-  .check { color: #48bb78; }
-  .cross { color: #f56565; }
-  .info { color: #4299e1; }
 </style>
 </head>
 <body>
 
-<h1>🔬 Labo - Récupération du Titre de Live Twitch</h1>
-<p class="subtitle">Test de 4 méthodes pour récupérer le titre du live de <strong>hugodelire</strong></p>
+<h1>🔬 Labo - Récupération Titre Live Twitch</h1>
+<p class="subtitle">Utilise l'API DecAPI (publique, sans CORS) pour récupérer le titre du live</p>
 
-<!-- Méthode 1 -->
+<div class="channel-input">
+  <label>Nom de la chaîne :</label>
+  <input type="text" id="channelInput" value="hugodelire" placeholder="hugodelire">
+</div>
+
+<!-- Méthode 1 : DecAPI Title -->
 <div class="method">
-  <h2>
-    Méthode 1 : fetch() direct vers la page Twitch
-    <span class="badge client">Client-Side</span>
-  </h2>
+  <h2>Méthode 1 : DecAPI /twitch/title (Recommandée)</h2>
   <p>
-    Tentative de récupération directe via JavaScript en utilisant <code>fetch()</code> vers la page HTML de Twitch.
+    Utilise l'API publique <code>api.decapi.me/twitch/title/{channel}</code> qui retourne directement le titre du live. C'est la même API qu'on utilise déjà pour les avatars.
   </p>
   <div class="code-block">
-fetch('https://www.twitch.tv/hugodelire')
+fetch('https://api.decapi.me/twitch/title/hugodelire')
   .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const title = doc.querySelector('p.CoreText-sc-1txzju1-0');
-    console.log(title?.textContent);
-  });
+  .then(title => console.log(title));
   </div>
-  <button class="btn" onclick="testMethod1()">Tester Méthode 1</button>
+  <button class="btn" onclick="testDecApiTitle()">Récupérer le titre</button>
   <div class="result" id="result1"></div>
-  <div class="note">
-    ⚠️ <strong>Problème CORS</strong> : Twitch bloque les requêtes cross-origin depuis un navigateur. Cette méthode échouera systématiquement.
-  </div>
 </div>
 
-<!-- Méthode 2 -->
+<!-- Méthode 2 : DecAPI Status -->
 <div class="method">
-  <h2>
-    Méthode 2 : Proxy CORS (allorigins.win)
-    <span class="badge client">Client-Side</span>
-  </h2>
+  <h2>Méthode 2 : DecAPI /twitch/status</h2>
   <p>
-    Utilisation d'un service proxy pour contourner CORS. Le proxy récupère la page et nous la renvoie.
+    Retourne le statut complet : "Titre du live (Jeu)" ou "offline" si pas de live.
   </p>
   <div class="code-block">
-fetch('https://api.allorigins.win/raw?url=' + 
-      encodeURIComponent('https://www.twitch.tv/hugodelire'))
+fetch('https://api.decapi.me/twitch/status/hugodelire')
   .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const title = doc.querySelector('p.CoreText-sc-1txzju1-0');
-    console.log(title?.textContent);
-  });
+  .then(status => console.log(status));
   </div>
-  <button class="btn" onclick="testMethod2()">Tester Méthode 2</button>
+  <button class="btn" onclick="testDecApiStatus()">Récupérer le statut</button>
   <div class="result" id="result2"></div>
-  <div class="note">
-    ℹ️ Peut fonctionner mais dépend d'un service tiers (instable, lent, peut être bloqué par Twitch).
-  </div>
 </div>
 
-<!-- Méthode 3 -->
+<!-- Méthode 3 : DecAPI Game -->
 <div class="method">
-  <h2>
-    Méthode 3 : yt-dlp --print title
-    <span class="badge server">Server-Side</span>
-    <span class="badge recommended">Recommandé</span>
-  </h2>
+  <h2>Méthode 3 : DecAPI /twitch/game</h2>
   <p>
-    <strong>Ce qu'on fait déjà !</strong> Utilisation de <code>yt-dlp</code> côté serveur pour extraire le titre. C'est la méthode la plus fiable car yt-dlp gère déjà l'authentification, les cookies, et l'API Twitch.
+    Retourne le jeu en cours (utile pour vérifier si le live est actif).
   </p>
   <div class="code-block">
-# Python (server.py)
-import subprocess
-
-def get_title(url):
-    result = subprocess.run(
-        ["yt-dlp", "--print", "title", "--no-warnings", url],
-        capture_output=True,
-        text=True,
-        timeout=15
-    )
-    return result.stdout.strip()
-
-# Exemple
-title = get_title("https://www.twitch.tv/hugodelire")
-print(title)  # → "[Live] On joue à Minecraft !"
+fetch('https://api.decapi.me/twitch/game/hugodelire')
+  .then(r => r.text())
+  .then(game => console.log(game));
   </div>
-  <button class="btn" onclick="testMethod3()">Voir le Code Actuel</button>
+  <button class="btn" onclick="testDecApiGame()">Récupérer le jeu</button>
   <div class="result" id="result3"></div>
-  <div class="note">
-    ✅ <strong>Avantages</strong> : Fiable, rapide, gère les cookies automatiquement, déjà implémenté dans ton serveur.<br>
-    ❓ <strong>Question</strong> : Est-ce que le titre récupéré est correct ? (Parfois yt-dlp retourne le nom de la chaîne au lieu du titre du live)
-  </div>
 </div>
 
-<!-- Méthode 4 -->
+<!-- Méthode 4 : Toutes les infos en une fois -->
 <div class="method">
-  <h2>
-    Méthode 4 : Scraping HTML côté serveur (urllib)
-    <span class="badge server">Server-Side</span>
-  </h2>
+  <h2>Méthode 4 : Toutes les infos combinées</h2>
   <p>
-    Récupération directe du HTML de la page Twitch côté serveur Python, puis parsing avec BeautifulSoup ou regex pour extraire le titre.
+    Récupère titre, jeu et statut en parallèle pour avoir une vue complète.
   </p>
-  <div class="code-block">
-# Python (server.py)
-import urllib.request
-from html.parser import HTMLParser
-
-class TitleParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.in_title = False
-        self.title = None
-        
-    def handle_starttag(self, tag, attrs):
-        attrs_dict = dict(attrs)
-        if tag == 'p' and 'CoreText-sc-1txzju1-0' in attrs_dict.get('class', ''):
-            self.in_title = True
-            
-    def handle_data(self, data):
-        if self.in_title:
-            self.title = data
-            self.in_title = False
-
-def get_title_scrape(channel):
-    url = f"https://www.twitch.tv/{channel}"
-    req = urllib.request.Request(url, headers={
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
-    })
-    html = urllib.request.urlopen(req, timeout=10).read().decode('utf-8')
-    
-    parser = TitleParser()
-    parser.feed(html)
-    return parser.title
-
-# Exemple
-title = get_title_scrape("hugodelire")
-print(title)
-  </div>
-  <button class="btn" onclick="testMethod4()">Tester Méthode 4 (Simulation)</button>
+  <button class="btn" onclick="testAll()">Récupérer tout</button>
   <div class="result" id="result4"></div>
-  <div class="note">
-    ⚠️ <strong>Risques</strong> : Twitch peut bloquer les scrapers, la structure HTML peut changer (classes CSS dynamiques), nécessite de gérer les cookies manuellement.<br>
-    💡 <strong>Alternative</strong> : Utiliser l'API GQL Twitch (comme pour les avatars) qui retourne aussi le titre du live.
-  </div>
 </div>
 
-<!-- Comparaison -->
-<div class="comparison">
-  <h3>📊 Comparaison des Méthodes</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Méthode</th>
-        <th>Fiable</th>
-        <th>Rapide</th>
-        <th>Maintenable</th>
-        <th>Recommandation</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1. fetch() direct</td>
-        <td class="cross">✗ CORS</td>
-        <td class="cross">✗</td>
-        <td class="cross">✗</td>
-        <td class="cross">À éviter</td>
-      </tr>
-      <tr>
-        <td>2. Proxy CORS</td>
-        <td class="info">~</td>
-        <td class="cross">✗ Lent</td>
-        <td class="cross">✗ Tiers</td>
-        <td class="cross">Déconseillé</td>
-      </tr>
-      <tr>
-        <td>3. yt-dlp (actuel)</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check">✓</td>
-        <td class="check"><strong>✓ Garder</strong></td>
-      </tr>
-      <tr>
-        <td>4. Scraping serveur</td>
-        <td class="info">~ Fragile</td>
-        <td class="check">✓</td>
-        <td class="cross">✗</td>
-        <td class="info">Si yt-dlp échoue</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="note">
+  💡 <strong>Pourquoi ça marche ?</strong> DecAPI est une API publique conçue pour être appelée depuis n'importe où (navigateurs, bots, scripts). Elle a des headers CORS permissifs qui permettent les requêtes cross-origin, contrairement à l'API Twitch officielle qui bloque tout sauf les domaines autorisés.
 </div>
 
 <script>
@@ -349,73 +216,96 @@ function showResult(id, type, title, content) {
   `;
 }
 
-async function testMethod1() {
+async function testDecApiTitle() {
+  const channel = document.getElementById('channelInput').value.trim();
+  const result = document.getElementById('result1');
+  result.className = 'result show';
+  result.innerHTML = '<div class="result-title">Chargement...</div>';
+  
   try {
-    const response = await fetch('https://www.twitch.tv/hugodelire');
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const title = doc.querySelector('p.CoreText-sc-1txzju1-0');
+    const response = await fetch(`https://api.decapi.me/twitch/title/${channel}`);
+    const title = await response.text();
     
-    if (title) {
-      showResult('result1', 'success', 'Titre trouvé :', title.textContent);
+    if (title.toLowerCase().includes('offline') || !title.trim()) {
+      showResult('result1', 'offline', 'Pas de live en cours', title || 'La chaîne est hors ligne');
     } else {
-      showResult('result1', 'error', 'Élément non trouvé', 'La balise <p class="CoreText-sc-1txzju1-0"> n\'existe pas dans le HTML récupéré.');
+      showResult('result1', 'success', 'Titre du live trouvé', title);
     }
   } catch (err) {
-    showResult('result1', 'error', 'Erreur CORS', `Impossible de récupérer la page : ${err.message}<br><br>C'est le comportement attendu : Twitch bloque les requêtes cross-origin depuis un navigateur.`);
+    showResult('result1', 'error', 'Erreur', err.message);
   }
 }
 
-async function testMethod2() {
+async function testDecApiStatus() {
+  const channel = document.getElementById('channelInput').value.trim();
+  const result = document.getElementById('result2');
+  result.className = 'result show';
+  result.innerHTML = '<div class="result-title">Chargement...</div>';
+  
   try {
-    const proxyUrl = 'https://api.allorigins.win/raw?url=' + 
-                     encodeURIComponent('https://www.twitch.tv/hugodelire');
-    const response = await fetch(proxyUrl);
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const title = doc.querySelector('p.CoreText-sc-1txzju1-0');
+    const response = await fetch(`https://api.decapi.me/twitch/status/${channel}`);
+    const status = await response.text();
     
-    if (title) {
-      showResult('result2', 'success', 'Titre trouvé :', title.textContent);
+    if (status.toLowerCase() === 'offline') {
+      showResult('result2', 'offline', 'Statut', 'Hors ligne');
     } else {
-      // Essayer d'autres sélecteurs
-      const metaTitle = doc.querySelector('meta[property="og:title"]');
-      const h1 = doc.querySelector('h1');
-      
-      let found = 'Aucun titre trouvé avec le sélecteur spécifié.';
-      if (metaTitle) found += `<br>Meta title : ${metaTitle.content}`;
-      if (h1) found += `<br>H1 : ${h1.textContent}`;
-      
-      showResult('result2', 'info', 'Page récupérée via proxy', found);
+      showResult('result2', 'success', 'Statut complet', status);
     }
   } catch (err) {
-    showResult('result2', 'error', 'Erreur', `${err.message}<br><br>Le proxy peut être lent ou bloqué par Twitch.`);
+    showResult('result2', 'error', 'Erreur', err.message);
   }
 }
 
-function testMethod3() {
-  showResult('result3', 'info', 'Code actuel dans server.py', 
-    `La fonction <code>get_title()</code> utilise déjà <code>yt-dlp --print title</code>.<br><br>
-    <strong>Pour tester</strong> : lance un téléchargement et vérifie le titre dans les logs.<br>
-    Si le titre n'est pas celui du live, on peut améliorer avec la méthode 4 ou l'API GQL.`);
-}
-
-async function testMethod4() {
-  showResult('result4', 'info', 'Simulation (nécessite le serveur)', 
-    `Cette méthode doit être exécutée côté serveur Python.<br><br>
-    <strong>Alternative recommandée</strong> : Utiliser l'API GQL Twitch (comme pour les avatars) :<br>
-    <div class="code-block" style="margin-top:10px;">
-query {
-  user(login: "hugodelire") {
-    stream {
-      title
+async function testDecApiGame() {
+  const channel = document.getElementById('channelInput').value.trim();
+  const result = document.getElementById('result3');
+  result.className = 'result show';
+  result.innerHTML = '<div class="result-title">Chargement...</div>';
+  
+  try {
+    const response = await fetch(`https://api.decapi.me/twitch/game/${channel}`);
+    const game = await response.text();
+    
+    if (game.toLowerCase().includes('offline') || !game.trim()) {
+      showResult('result3', 'offline', 'Jeu', 'Pas de live en cours');
+    } else {
+      showResult('result3', 'success', 'Jeu en cours', game);
     }
+  } catch (err) {
+    showResult('result3', 'error', 'Erreur', err.message);
   }
 }
-    </div>
-    Ça retourne directement le titre du live en cours, sans scraping HTML.`);
+
+async function testAll() {
+  const channel = document.getElementById('channelInput').value.trim();
+  const result = document.getElementById('result4');
+  result.className = 'result show';
+  result.innerHTML = '<div class="result-title">Chargement...</div>';
+  
+  try {
+    const [titleRes, statusRes, gameRes] = await Promise.all([
+      fetch(`https://api.decapi.me/twitch/title/${channel}`),
+      fetch(`https://api.decapi.me/twitch/status/${channel}`),
+      fetch(`https://api.decapi.me/twitch/game/${channel}`)
+    ]);
+    
+    const title = await titleRes.text();
+    const status = await statusRes.text();
+    const game = await gameRes.text();
+    
+    const isOffline = status.toLowerCase() === 'offline';
+    
+    const content = `
+      <strong>Titre :</strong> ${title || 'N/A'}<br>
+      <strong>Jeu :</strong> ${game || 'N/A'}<br>
+      <strong>Statut :</strong> ${status}
+    `;
+    
+    showResult('result4', isOffline ? 'offline' : 'success', 
+               isOffline ? 'Chaîne hors ligne' : 'Toutes les infos', content);
+  } catch (err) {
+    showResult('result4', 'error', 'Erreur', err.message);
+  }
 }
 </script>
 
